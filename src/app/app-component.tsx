@@ -3,7 +3,7 @@ import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { appMappings, appThemes } from './app-theming';
-import { Mapping, Theme, useThemingService } from '../services/theme.service';
+import { Mapping, Theme, Theming } from '../services/theme.service';
 import { AppStorage } from '../services/app-storage.service';
 import { AppearanceProvider } from 'react-native-appearance';
 import { AppLoading, Task } from './app-loading';
@@ -18,31 +18,29 @@ const loadingTasks: Task[] = [
 
 const defaultConfig: { mapping: Mapping; theme: Theme } = {
     mapping: 'eva',
-    theme: 'dark',
+    theme: 'brand',
 };
 
 const AppContainer: React.FC<{ mapping: Mapping; theme: Theme }> = ({ mapping, theme }) => {
-    const { useMapping, useTheming, MappingContext, ThemeContext } = useThemingService();
-
-    const [mappingContext, currentMapping] = useMapping(appMappings, mapping);
-    const [themeContext, currentTheme] = useTheming(appThemes, mapping, theme);
+    const [mappingContext, currentMapping] = Theming.useMapping(appMappings, mapping);
+    const [themeContext, currentTheme] = Theming.useTheming(appThemes, mapping, theme);
 
     return (
-        <>
+        <React.Fragment>
             <IconRegistry icons={[EvaIconsPack]} />
             <AppearanceProvider>
                 <ApplicationProvider {...currentMapping} theme={currentTheme}>
-                    <MappingContext.Provider value={mappingContext}>
-                        <ThemeContext.Provider value={themeContext}>
+                    <Theming.MappingContext.Provider value={mappingContext}>
+                        <Theming.ThemeContext.Provider value={themeContext}>
                             <SafeAreaProvider>
                                 <StatusBar />
                                 <AppNavigator />
                             </SafeAreaProvider>
-                        </ThemeContext.Provider>
-                    </MappingContext.Provider>
+                        </Theming.ThemeContext.Provider>
+                    </Theming.MappingContext.Provider>
                 </ApplicationProvider>
             </AppearanceProvider>
-        </>
+        </React.Fragment>
     );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Appearance, AppearancePreferences, ColorSchemeName } from 'react-native-appearance';
 import { AppStorage } from './app-storage.service';
 
-export type Mapping = 'eva' | 'material' | string;
+export type Mapping = 'eva' | 'material';
 export type Theme = 'light' | 'dark' | 'brand' | string;
 
 export interface MappingContextValue {
@@ -39,22 +39,10 @@ export interface ThemeContextValue {
     createTheme: (upstreamTheme: Theme) => any;
 }
 
-const initMapping: MappingContextValue = {
-    setCurrentMapping: () => {},
-    currentMapping: 'eve',
-    isEva: () => true,
-};
+export class Theming {
+    static MappingContext = React.createContext<MappingContextValue>({} as any);
+    static ThemeContext = React.createContext<ThemeContextValue>({} as any);
 
-const initTheme: ThemeContextValue = {
-    currentTheme: 'light',
-    createTheme: () => {},
-    setCurrentTheme: () => {},
-    isDarkMode: () => false,
-};
-
-export const useThemingService = () => {
-    const MappingContext = React.createContext<MappingContextValue>(initMapping);
-    const ThemeContext = React.createContext<ThemeContextValue>(initTheme);
     /**
      * @see MappingContextValue
      *
@@ -71,7 +59,7 @@ export const useThemingService = () => {
      * - value to be set in `MappingContext.Provider`
      * - and `mapping` and `customMapping` to be set in `ApplicationProvider`.
      */
-    const useMapping = (mappings: Record<Mapping, any>, mapping: Mapping): [MappingContextValue, any] => {
+    static useMapping = (mappings: Record<Mapping, any>, mapping: Mapping): [MappingContextValue, any] => {
         /**
          * Currently, there is no way to switch during the run time,
          * so the Async Storage and Expo Updates is used.
@@ -94,6 +82,7 @@ export const useThemingService = () => {
 
         return [mappingContext, mappings[mapping]];
     };
+
     /**
      * @see ThemeContextValue
      *
@@ -112,21 +101,23 @@ export const useThemingService = () => {
      * - value to be set in `ThemeContext.Provider`
      * - and theme to be set in `ApplicationProvider`.
      */
-    const useTheming = (
+    static useTheming = (
         themes: Record<Mapping, Record<Theme, any>>,
         mapping: Mapping,
         theme: Theme
     ): [ThemeContextValue, any] => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const [currentTheme, setCurrentTheme] = React.useState<Theme>(theme);
 
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
             const subscription = Appearance.addChangeListener((preferences: AppearancePreferences): void => {
-                const appearanceTheme: Theme = createAppearanceTheme(preferences.colorScheme, theme);
+                const appearanceTheme: Theme = Theming.createAppearanceTheme(preferences.colorScheme, theme);
                 setCurrentTheme(appearanceTheme);
             });
 
             return () => subscription.remove();
-        }, [theme]);
+        }, []);
 
         const isDarkMode = (): boolean => {
             return currentTheme === 'dark';
@@ -149,19 +140,16 @@ export const useThemingService = () => {
         return [themeContext, themes[mapping][currentTheme]];
     };
 
-    const createAppearanceTheme = (appearance: ColorSchemeName, preferredTheme: Theme): Theme => {
+    static useTheme = (upstreamTheme: Theme): any => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const themeContext: ThemeContextValue = React.useContext(Theming.ThemeContext);
+        return themeContext.createTheme(upstreamTheme);
+    };
+
+    private static createAppearanceTheme = (appearance: ColorSchemeName, preferredTheme: Theme): Theme => {
         if (appearance === 'no-preference') {
             return preferredTheme;
         }
         return appearance;
     };
-
-    const useTheme = (upstreamTheme: Theme): any => {
-        const { ...theming } = useThemingService();
-        const themeContext: ThemeContextValue = React.useContext(theming.ThemeContext);
-        // @ts-ignore
-        return themeContext.createTheme(upstreamTheme);
-    };
-
-    return { useTheme, ThemeContext, MappingContext, useTheming, useMapping };
-};
+}

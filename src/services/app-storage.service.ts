@@ -24,4 +24,14 @@ export class AppStorage {
     static setTheme = (theme: Theme): Promise<void> => {
         return AsyncStorage.setItem(THEME_KEY, <string>theme);
     };
+
+    static getItem = async (key: string): Promise<any> => {
+        const result = await AsyncStorage.getItem(key);
+        return JSON.parse(result ?? '');
+    };
+
+    static setItem = async (key: string, object: any): Promise<any> => {
+        const data = JSON.stringify(object);
+        return await AsyncStorage.setItem(key, data);
+    };
 }

@@ -3,6 +3,7 @@ import * as material from '@eva-design/material';
 import { default as customEva } from './configs/app-mapping-eva.json';
 import { default as customMaterial } from './configs/app-mapping-material.json';
 import { default as appTheme } from './configs/app-theme.json';
+import { greenie } from './themes';
 
 export const appMappings = {
     eva: {
@@ -17,8 +18,8 @@ export const appMappings = {
 
 export const appThemes = {
     eva: {
-        light: eva.light,
-        dark: eva.dark,
+        light: greenie.light,
+        dark: greenie.dark,
         brand: {
             light: appTheme,
             dark: appTheme,

@@ -1,65 +1,127 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Input, Text } from '@ui-kitten/components';
-import { ImageOverlay } from './extra/image-overlay.component';
-import { ArrowForwardIcon, FacebookIcon, GoogleIcon, TwitterIcon } from './extra/icons';
+import { FastField, Formik, FormikValues } from 'formik';
+import { Button, Text } from '@ui-kitten/components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
+import { LoadingIndicator } from '../../../components/loading-indicator';
+import { ImageOverlay } from './extra/image-overlay.component';
+import * as yup from 'yup';
+import { FieldInput, PasswordInput } from '../../../components/form-inputs';
+import { LockIcon, PersonIcon } from '../../../components/Icons';
+import { FacebookIcon, GoogleIcon, TwitterIcon } from './extra/icons';
+
+const LoginSchema = yup.object().shape({
+    email: yup.string().email().typeError('Email is invalid').required('Email is required'),
+    password: yup.string().required('Password is required'),
+});
 
 const SignIn = ({ navigation }: any): React.ReactElement => {
-    const [email, setEmail] = React.useState<string>();
-    const [password, setPassword] = React.useState<string>();
-
-    const onSignInButtonPress = (): void => {
-        navigation && navigation.goBack();
+    const onSignInButtonPress = (values: FormikValues): void => {
+        //navigation && navigation.goBack();
+        console.log(values);
     };
 
     const onSignUpButtonPress = (): void => {
         navigation && navigation.navigate('SignUp');
     };
 
+    const onForgotPress = (): void => {
+        navigation && navigation.navigate('ForgotPassword');
+    };
+
+    const initialValues = {
+        email: '',
+        password: '',
+    };
+
     return (
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={styles.container}>
             <ImageOverlay style={styles.container} source={require('./assets/image-background.jpg')}>
-                <View style={styles.signInContainer}>
-                    <Text style={styles.signInLabel} status="control" category="h4">
-                        SIGN IN
+                <View style={styles.headerContainer}>
+                    <Text category="h1" status="control">
+                        Hello
                     </Text>
-                    <Button
-                        style={styles.signUpButton}
-                        appearance="ghost"
-                        status="control"
-                        size="giant"
-                        accessoryLeft={ArrowForwardIcon}
-                        onPress={onSignUpButtonPress}
-                    >
-                        Sign Up
-                    </Button>
-                </View>
-                <View style={styles.formContainer}>
-                    <Input label="EMAIL" placeholder="Email" status="control" value={email} onChangeText={setEmail} />
-                    <Input
-                        style={styles.passwordInput}
-                        secureTextEntry={true}
-                        placeholder="Password"
-                        label="PASSWORD"
-                        status="control"
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-                </View>
-                <Button status="control" size="large" onPress={onSignInButtonPress}>
-                    SIGN IN
-                </Button>
-                <View style={styles.socialAuthContainer}>
-                    <Text style={styles.socialAuthHintText} status="control">
-                        Sign with a social account
+                    <Text style={styles.signInLabel} category="s1" status="control">
+                        Sign in to your account
                     </Text>
-                    <View style={styles.socialAuthButtonsContainer}>
-                        <Button appearance="ghost" size="giant" status="control" accessoryLeft={GoogleIcon} />
-                        <Button appearance="ghost" size="giant" status="control" accessoryLeft={FacebookIcon} />
-                        <Button appearance="ghost" size="giant" status="control" accessoryLeft={TwitterIcon} />
-                    </View>
                 </View>
+                <Formik initialValues={initialValues} onSubmit={onSignInButtonPress} validationSchema={LoginSchema}>
+                    {({ handleBlur, handleChange, handleSubmit, isSubmitting }) => (
+                        <View style={styles.formContainer}>
+                            <FastField
+                                name={'email'}
+                                label={'Email'}
+                                accessoryLeft={PersonIcon}
+                                handleChange={handleChange('email')}
+                                handleBlur={handleBlur('email')}
+                                component={FieldInput}
+                            />
+
+                            <FastField
+                                style={styles.passwordInput}
+                                name={'password'}
+                                label={'Password'}
+                                accessoryLeft={LockIcon}
+                                handleChange={handleChange('password')}
+                                handleBlur={handleBlur('password')}
+                                component={PasswordInput}
+                            />
+                            <View style={styles.forgotPasswordContainer}>
+                                <Button
+                                    style={styles.forgotPasswordButton}
+                                    appearance="ghost"
+                                    status="control"
+                                    onPress={onForgotPress}
+                                >
+                                    Forgot your password?
+                                </Button>
+                            </View>
+                            <View>
+                                <Button
+                                    style={styles.signInButton}
+                                    status={'primary'}
+                                    size="giant"
+                                    accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
+                                    onPress={(props) => handleSubmit(props)}
+                                    children="Sign In"
+                                />
+                                <Button
+                                    style={styles.signUpButton}
+                                    appearance="ghost"
+                                    status="control"
+                                    onPress={onSignUpButtonPress}
+                                >
+                                    Don't have an account? Sign Up
+                                </Button>
+                            </View>
+                            <View style={styles.socialAuthContainer}>
+                                <Text style={styles.socialAuthHintText} status={'control'}>
+                                    Sign with a social account
+                                </Text>
+                                <View style={styles.socialAuthButtonsContainer}>
+                                    <Button
+                                        appearance="ghost"
+                                        size="giant"
+                                        status="control"
+                                        accessoryLeft={GoogleIcon}
+                                    />
+                                    <Button
+                                        appearance="ghost"
+                                        size="giant"
+                                        status="control"
+                                        accessoryLeft={FacebookIcon}
+                                    />
+                                    <Button
+                                        appearance="ghost"
+                                        size="giant"
+                                        status="control"
+                                        accessoryLeft={TwitterIcon}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                </Formik>
             </ImageOverlay>
         </KeyboardAvoidingView>
     );
@@ -68,33 +130,35 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 24,
-        paddingHorizontal: 16,
     },
-    signInContainer: {
-        flexDirection: 'row',
+    headerContainer: {
+        justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 24,
-    },
-    socialAuthContainer: {
-        marginTop: 48,
-    },
-    evaButton: {
-        maxWidth: 72,
-        paddingHorizontal: 0,
+        minHeight: 216,
     },
     formContainer: {
         flex: 1,
-        marginTop: 48,
+        marginTop: 32,
+        paddingHorizontal: 16,
+    },
+    signInLabel: {
+        marginTop: 16,
+    },
+    signInButton: {
+        marginHorizontal: 16,
+    },
+    signUpButton: {
+        marginVertical: 12,
+        marginHorizontal: 16,
+    },
+    forgotPasswordContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
     },
     passwordInput: {
         marginTop: 16,
     },
-    signInLabel: {
-        flex: 1,
-    },
-    signUpButton: {
-        flexDirection: 'row-reverse',
+    forgotPasswordButton: {
         paddingHorizontal: 0,
     },
     socialAuthButtonsContainer: {
@@ -104,6 +168,9 @@ const styles = StyleSheet.create({
     socialAuthHintText: {
         alignSelf: 'center',
         marginBottom: 16,
+    },
+    socialAuthContainer: {
+        marginTop: 24,
     },
 });
 

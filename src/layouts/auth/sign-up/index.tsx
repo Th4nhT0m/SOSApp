@@ -1,16 +1,29 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button, CheckBox, Datepicker, Divider, Input, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Button, CheckBox, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { ImageOverlay } from './extra/image-overlay.component';
 import { ArrowForwardIconOutline, FacebookIcon, GoogleIcon, HeartIconFill, TwitterIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
+import * as yup from 'yup';
+import { identityCardRegExp, passwordRegExp, phoneRegExp } from '../../../app/app-constants';
+import { FastField, Formik } from 'formik';
+import { LoadingIndicator } from '../../../components/loading-indicator';
+import { FieldInput, DatePicker, PasswordInput, SelectInput } from '../../../components/form-inputs';
 
 const SignUp = ({ navigation }: any): React.ReactElement => {
-    const [firstName, setFirstName] = React.useState<string>();
-    const [lastName, setLastName] = React.useState<string>();
-    const [email, setEmail] = React.useState<string>();
-    const [password, setPassword] = React.useState<string>();
-    const [dob, setDob] = React.useState<Date>();
+    const SignUpSchema = yup.object().shape({
+        name: yup.string().required('Name is required').typeError('Invalid name'),
+        email: yup.string().email().typeError('Invalid email').required('Email is required'),
+        password: yup
+            .string()
+            .matches(passwordRegExp, 'Please enter a longer password')
+            .required('Password is required'),
+        identityCard: yup.string().matches(identityCardRegExp, 'Invalid ID').required('ID is required'),
+        numberPhone: yup.string().matches(phoneRegExp, 'Invalid phone number').required('Phone number is required'),
+        address: yup.string().required('Address is required.'),
+        sex: yup.string().oneOf(['male', 'female', 'other'], 'Gender is required'),
+        dob: yup.date().typeError('Invalid date format').required('Date of birth is required'),
+    });
     const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
     const styles = useStyleSheet(themedStyles);
@@ -31,6 +44,17 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
         ),
         []
     );
+
+    const initValues = {
+        name: '',
+        email: '',
+        password: '',
+        identityCard: '',
+        numberPhone: '',
+        address: '',
+        sex: 'male',
+        dob: new Date(),
+    };
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -76,55 +100,73 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
             <Text style={styles.emailSignLabel}>Sign up with Email</Text>
-            <View style={[styles.container, styles.formContainer]}>
-                <Input
-                    placeholder="Ally"
-                    label="FIRST NAME"
-                    autoCapitalize="words"
-                    value={firstName}
-                    onChangeText={setFirstName}
-                />
-                <Input
-                    style={styles.formInput}
-                    placeholder="Watsan"
-                    label="LAST NAME"
-                    autoCapitalize="words"
-                    value={lastName}
-                    onChangeText={setLastName}
-                />
-                <Datepicker
-                    style={styles.formInput}
-                    placeholder="18/10/1995"
-                    label="Date of Birth"
-                    date={dob}
-                    onSelect={setDob}
-                />
-                <Input
-                    style={styles.formInput}
-                    placeholder="ally.watsan@gmail.com"
-                    label="EMAIL"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-                <Input
-                    style={styles.formInput}
-                    label="PASSWORD"
-                    placeholder="Password"
-                    secureTextEntry={true}
-                    value={password}
-                    onChangeText={setPassword}
-                />
-                <CheckBox
-                    style={styles.termsCheckBox}
-                    checked={termsAccepted}
-                    onChange={(checked: boolean) => setTermsAccepted(checked)}
-                >
-                    {renderCheckboxLabel}
-                </CheckBox>
-            </View>
-            <Button style={styles.signUpButton} size="large" onPress={onSignUpButtonPress}>
-                SIGN UP
-            </Button>
+            <Formik onSubmit={onSignInButtonPress} initialValues={initValues} validationSchema={SignUpSchema}>
+                {({ handleBlur, handleChange, handleSubmit, isSubmitting }) => (
+                    <>
+                        <View style={[styles.container, styles.formContainer]}>
+                            <FastField
+                                placeholder="Ally"
+                                label="NAME"
+                                name={'name'}
+                                autoCapitalize="words"
+                                component={FieldInput}
+                                handleBlur={handleBlur('name')}
+                                handleChange={handleChange('name')}
+                            />
+                            <FastField
+                                name={'dob'}
+                                style={styles.formInput}
+                                placeholder="18/10/1995"
+                                label="Date of Birth"
+                                component={DatePicker}
+                                handleChange={handleChange('dob')}
+                            />
+                            <FastField
+                                style={styles.formInput}
+                                placeholder="ally.watsan@gmail.com"
+                                label="EMAIL"
+                                component={FieldInput}
+                                name={'email'}
+                                handleBlur={handleBlur('email')}
+                                handleChange={handleChange('email')}
+                            />
+                            <FastField
+                                style={styles.formInput}
+                                label="PASSWORD"
+                                placeholder="Password"
+                                component={PasswordInput}
+                                name={'password'}
+                                handleBlur={handleBlur('password')}
+                                handleChange={handleChange('password')}
+                            />
+                            <FastField
+                                style={styles.formInput}
+                                label="GENDER"
+                                component={SelectInput}
+                                options={['male', 'female', 'other']}
+                                name={'sex'}
+                                handleBlur={handleBlur('sex')}
+                                handleChange={handleChange('sex')}
+                            />
+                            <CheckBox
+                                style={styles.termsCheckBox}
+                                checked={termsAccepted}
+                                onChange={(checked: boolean) => setTermsAccepted(checked)}
+                            >
+                                {renderCheckboxLabel}
+                            </CheckBox>
+                        </View>
+                        <Button
+                            style={styles.signUpButton}
+                            size="large"
+                            onPress={handleSubmit}
+                            accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
+                        >
+                            SIGN UP
+                        </Button>
+                    </>
+                )}
+            </Formik>
         </KeyboardAvoidingView>
     );
 };

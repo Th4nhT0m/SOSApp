@@ -1,19 +1,16 @@
 import React from 'react';
-import { ListRenderItemInfo, StyleSheet } from 'react-native';
-import { Divider, List, ThemeProvider, Toggle, TopNavigation, TopNavigationAction } from '@ui-kitten/components';
+import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import { List, ThemeProvider, Toggle } from '@ui-kitten/components';
 import { ThemeCard } from './theme-card.component';
-import { MappingContextValue, ThemeContextValue, useThemingService } from '../../services/theme.service';
+import { MappingContextValue, ThemeContextValue, Theming } from '../../services/theme.service';
 import { ThemesService } from './themes.service';
 import { ThemeItem } from './type';
 import { appThemes } from '../../app/app-theming';
-import { MenuIcon } from '../../components/icons';
 import { RestartAppModal } from './restart-app-modal.component';
-import { SafeAreaLayout } from '../../components/safe-area-layout';
 
-export const ThemesScreen = ({ navigation }: any): React.ReactElement => {
-    const { MappingContext, ThemeContext } = useThemingService();
-    const mappingContext: MappingContextValue = React.useContext(MappingContext);
-    const themeContext: ThemeContextValue = React.useContext(ThemeContext);
+export const ThemesScreen = (): React.ReactElement => {
+    const mappingContext: MappingContextValue = React.useContext(Theming.MappingContext);
+    const themeContext: ThemeContextValue = React.useContext(Theming.ThemeContext);
     const [evaToggleChecked, setEvaToggleChecked] = React.useState<boolean>(mappingContext.isEva());
     const [restartModalVisible, setRestartModalVisible] = React.useState<boolean>(false);
 
@@ -26,7 +23,7 @@ export const ThemesScreen = ({ navigation }: any): React.ReactElement => {
     };
 
     const onItemPress = (info: ListRenderItemInfo<ThemeItem>): void => {
-        themeContext?.setCurrentTheme(info.item.name);
+        themeContext.setCurrentTheme(info.item.name);
     };
 
     const isActiveTheme = (theme: ThemeItem): boolean => {
@@ -44,10 +41,6 @@ export const ThemesScreen = ({ navigation }: any): React.ReactElement => {
     const toggleRestartModal = (): void => {
         setRestartModalVisible(!restartModalVisible);
     };
-
-    const renderDrawerAction = (): React.ReactElement => (
-        <TopNavigationAction icon={MenuIcon} onPress={navigation.toggleDrawer} />
-    );
 
     const renderItem = (info: ListRenderItemInfo<ThemeItem>): React.ReactElement => (
         <ThemeProvider theme={info.item.theme}>
@@ -68,11 +61,9 @@ export const ThemesScreen = ({ navigation }: any): React.ReactElement => {
     );
 
     return (
-        <SafeAreaLayout style={styles.safeArea} insets="top">
-            <TopNavigation title="Kitten Tricks" accessoryLeft={renderDrawerAction} />
-            <Divider />
+        <View style={styles.container}>
             <List
-                contentContainerStyle={styles.container}
+                // contentContainerStyle={styles.container}
                 data={themes}
                 renderItem={renderItem}
                 ListFooterComponent={renderFooter}
@@ -82,16 +73,14 @@ export const ThemesScreen = ({ navigation }: any): React.ReactElement => {
                 onBackdropPress={toggleRestartModal}
                 onGotItButtonPress={toggleRestartModal}
             />
-        </SafeAreaLayout>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-    },
     container: {
-        padding: 8,
+        width: '100%',
+        marginTop: 5,
     },
     item: {
         margin: 8,
