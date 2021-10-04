@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios-config.service';
-import { ObtainTokenProps, SignUpProps } from './types';
+import { Email, LoginInProps, LogoutTokenPors, ObtainTokenProps, Password, SignUpProps } from './types';
 import { AppStorage } from '../app-storage.service';
 
 function obtainToken(props: ObtainTokenProps) {
@@ -24,8 +24,41 @@ function getLocalRefreshToken() {
     return '';
 }
 
+function logIn(props: LoginInProps) {
+    return axiosInstance.post('auth/login', { ...props });
+}
+
+function logOut(props: LogoutTokenPors) {
+    return axiosInstance.post('auth/logout', { ...props });
+}
+
+function forgotPassword(props: Email) {
+    return axiosInstance.post('auth/forgot-password', { ...props });
+}
+
+function resetPassword(props: Password) {
+    return axiosInstance.post('auth/forgot-password', { ...props });
+}
+function verrifyEmail() {
+    return axiosInstance.post('auth/verify-email', {
+        refreshToken: getLocalRefreshToken(),
+    });
+}
+
+function sendVerrifyEmail() {
+    return axiosInstance.post('auth/verify-email', {
+        refreshToken: getLocalRefreshToken(),
+    });
+}
+
 export const AuthRequest = {
     obtainToken,
     refreshToken,
+    logIn,
     signUp,
+    logOut,
+    forgotPassword,
+    resetPassword,
+    verrifyEmail,
+    sendVerrifyEmail,
 };
