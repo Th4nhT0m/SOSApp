@@ -10,6 +10,8 @@ import { FieldInput, PasswordInput } from '../../../components/form-inputs';
 import { LockIcon, PersonIcon } from '../../../components/Icons';
 import { FacebookIcon, GoogleIcon, TwitterIcon } from './extra/icons';
 
+import { AuthRequest } from '../../../services/requests/authentication';
+
 const LoginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
     password: yup.string().required('Password is required'),
@@ -17,8 +19,10 @@ const LoginSchema = yup.object().shape({
 
 const SignIn = ({ navigation }: any): React.ReactElement => {
     const onSignInButtonPress = (values: FormikValues): void => {
-        //navigation && navigation.goBack();
         console.log(values);
+        if (AuthRequest.logIn(values) != null) {
+            navigation && navigation.navigate('');
+        }
     };
 
     const onSignUpButtonPress = (): void => {

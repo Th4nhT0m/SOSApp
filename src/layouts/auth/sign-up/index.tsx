@@ -6,7 +6,7 @@ import { ArrowForwardIconOutline, FacebookIcon, GoogleIcon, HeartIconFill, Twitt
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import * as yup from 'yup';
 import { identityCardRegExp, passwordRegExp, phoneRegExp } from '../../../app/app-constants';
-import { FastField, Formik } from 'formik';
+import { FastField, Formik, FormikValues } from 'formik';
 import { LoadingIndicator } from '../../../components/loading-indicator';
 import { FieldInput, DatePicker, PasswordInput, SelectInput } from '../../../components/form-inputs';
 
@@ -21,15 +21,15 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
         identityCard: yup.string().matches(identityCardRegExp, 'Invalid ID').required('ID is required'),
         numberPhone: yup.string().matches(phoneRegExp, 'Invalid phone number').required('Phone number is required'),
         address: yup.string().required('Address is required.'),
-        sex: yup.string().oneOf(['male', 'female', 'other'], 'Gender is required'),
+        sex: yup.string().oneOf(['Male', 'Female', 'Other'], 'Gender is required'),
         dob: yup.date().typeError('Invalid date format').required('Date of birth is required'),
     });
     const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
     const styles = useStyleSheet(themedStyles);
 
-    const onSignUpButtonPress = (): void => {
-        navigation && navigation.goBack();
+    const onSignUpButtonPress = (values: FormikValues): void => {
+        console.log(values);
     };
 
     const onSignInButtonPress = (): void => {
@@ -52,7 +52,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
         identityCard: '',
         numberPhone: '',
         address: '',
-        sex: 'male',
+        sex: 'Male',
         dob: new Date(),
     };
 
@@ -100,7 +100,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
             <Text style={styles.emailSignLabel}>Sign up with Email</Text>
-            <Formik onSubmit={onSignInButtonPress} initialValues={initValues} validationSchema={SignUpSchema}>
+            <Formik onSubmit={onSignUpButtonPress} initialValues={initValues} validationSchema={SignUpSchema}>
                 {({ handleBlur, handleChange, handleSubmit, isSubmitting }) => (
                     <>
                         <View style={[styles.container, styles.formContainer]}>
@@ -141,12 +141,42 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                             />
                             <FastField
                                 style={styles.formInput}
+                                placeholder="Identity Card?"
+                                label="Identity Card"
+                                name={'identityCard'}
+                                autoCapitalize="words"
+                                component={FieldInput}
+                                handleBlur={handleBlur('identityCard')}
+                                handleChange={handleChange('identityCard')}
+                            />
+                            <FastField
+                                style={styles.formInput}
+                                placeholder="Number Phone?"
+                                label="Number Phone"
+                                name={'numberPhone'}
+                                component={FieldInput}
+                                handleBlur={handleBlur('numberPhone')}
+                                handleChange={handleChange('numberPhone')}
+                            />
+
+                            <FastField
+                                style={styles.formInput}
                                 label="GENDER"
                                 component={SelectInput}
-                                options={['male', 'female', 'other']}
+                                options={['Male', 'Female', 'Other']}
                                 name={'sex'}
                                 handleBlur={handleBlur('sex')}
                                 handleChange={handleChange('sex')}
+                            />
+                            <FastField
+                                style={styles.formInput}
+                                placeholder="Where are you?"
+                                label="ADDRESS"
+                                name={'address'}
+                                autoCapitalize="words"
+                                component={FieldInput}
+                                handleBlur={handleBlur('address')}
+                                handleChange={handleChange('address')}
                             />
                             <CheckBox
                                 style={styles.termsCheckBox}
@@ -159,7 +189,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                         <Button
                             style={styles.signUpButton}
                             size="large"
-                            onPress={handleSubmit}
+                            onPress={(props) => handleSubmit(props)}
                             accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
                         >
                             SIGN UP
