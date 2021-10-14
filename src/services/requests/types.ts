@@ -2,14 +2,14 @@ export interface ObtainTokenProps {
     email: string;
     password: string;
 }
-export interface LogoutTokenPors {
+export interface LogoutTokenProps {
     token: string;
 }
-export interface Email {
+export interface ForgotPasswordProps {
     email: string;
 }
 
-export interface Password {
+export interface ResetPasswordProps {
     password: string;
 }
 

@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios-config.service';
-import { Email, LoginInProps, LogoutTokenPors, ObtainTokenProps, Password, SignUpProps } from './types';
+import { ResetPasswordProps, LogoutTokenProps, ObtainTokenProps, ForgotPasswordProps, SignUpProps } from './types';
 import { AppStorage } from '../app-storage.service';
 
 function obtainToken(props: ObtainTokenProps) {
@@ -15,7 +15,7 @@ function refreshToken() {
     });
 }
 
-function signUp(props: SignUpProps) {
+function register(props: SignUpProps) {
     return axiosInstance.post('/auth/register', { ...props });
 }
 
@@ -24,29 +24,25 @@ function getLocalRefreshToken() {
     return '';
 }
 
-function logIn(props: LoginInProps) {
-    return axiosInstance.post('auth/login', { ...props });
+function logOut(props: LogoutTokenProps) {
+    return axiosInstance.post('/auth/logout', { ...props });
 }
 
-function logOut(props: LogoutTokenPors) {
-    return axiosInstance.post('auth/logout', { ...props });
+function forgotPassword(props: ForgotPasswordProps) {
+    return axiosInstance.post('/auth/forgot-password', { props });
 }
 
-function forgotPassword(props: Email) {
-    return axiosInstance.post('auth/forgot-password', { ...props });
+function resetPassword(props: ResetPasswordProps) {
+    return axiosInstance.post('/auth/forgot-password', { ...props });
 }
-
-function resetPassword(props: Password) {
-    return axiosInstance.post('auth/forgot-password', { ...props });
-}
-function verrifyEmail() {
-    return axiosInstance.post('auth/verify-email', {
+function verifyEmail() {
+    return axiosInstance.post('/auth/verify-email', {
         refreshToken: getLocalRefreshToken(),
     });
 }
 
-function sendVerrifyEmail() {
-    return axiosInstance.post('auth/verify-email', {
+function sendVerifyEmail() {
+    return axiosInstance.post('/auth/verify-email', {
         refreshToken: getLocalRefreshToken(),
     });
 }
@@ -54,11 +50,10 @@ function sendVerrifyEmail() {
 export const AuthRequest = {
     obtainToken,
     refreshToken,
-    logIn,
-    signUp,
+    register,
     logOut,
     forgotPassword,
     resetPassword,
-    verrifyEmail,
-    sendVerrifyEmail,
+    verifyEmail,
+    sendVerifyEmail,
 };

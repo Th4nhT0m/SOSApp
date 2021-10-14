@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FastField, Formik, FormikValues } from 'formik';
+import { FastField, Formik } from 'formik';
 import { Button, Text } from '@ui-kitten/components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { LoadingIndicator } from '../../../components/loading-indicator';
@@ -9,8 +9,10 @@ import * as yup from 'yup';
 import { FieldInput, PasswordInput } from '../../../components/form-inputs';
 import { LockIcon, PersonIcon } from '../../../components/Icons';
 import { FacebookIcon, GoogleIcon, TwitterIcon } from './extra/icons';
-
-import { AuthRequest } from '../../../services/requests/authentication';
+import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { RootState } from '../../../app/store-provider';
+import { authActions } from '../../../actions/auth-actions';
+import { LoginInProps } from '../../../services/requests/types';
 
 const LoginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
@@ -18,11 +20,12 @@ const LoginSchema = yup.object().shape({
 });
 
 const SignIn = ({ navigation }: any): React.ReactElement => {
-    const onSignInButtonPress = (values: FormikValues): void => {
+    const dispatch = useAppDispatch();
+    const auth = useAppSelector((state: RootState) => state.auth);
+    const onSignInButtonPress = (values: LoginInProps): void => {
+        dispatch(authActions.login(values));
         console.log(values);
-        if (AuthRequest.logIn(values) != null) {
-            navigation && navigation.navigate('');
-        }
+        console.log(auth);
     };
 
     const onSignUpButtonPress = (): void => {

@@ -1,5 +1,7 @@
 import { Animated, ViewStyle } from 'react-native';
 import React from 'react';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../app/store-provider';
 
 export const useVisibilityAnimation = (visible: boolean): ViewStyle => {
     const animation = React.useRef<Animated.Value>(new Animated.Value(visible ? 1 : 0));
@@ -18,3 +20,6 @@ export const useVisibilityAnimation = (visible: boolean): ViewStyle => {
         ...(visible && { position: 'absolute' }),
     };
 };
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

@@ -119,6 +119,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                                 placeholder="18/10/1995"
                                 label="Date of Birth"
                                 component={DatePicker}
+                                handleBlur={handleBlur('dob')}
                                 handleChange={handleChange('dob')}
                             />
                             <FastField
@@ -158,12 +159,11 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                                 handleBlur={handleBlur('numberPhone')}
                                 handleChange={handleChange('numberPhone')}
                             />
-
                             <FastField
-                                style={styles.formInput}
+                                style={styles.formContainer}
                                 label="GENDER"
+                                options={['Male', 'Female', 'Other'] as any}
                                 component={SelectInput}
-                                options={['Male', 'Female', 'Other']}
                                 name={'sex'}
                                 handleBlur={handleBlur('sex')}
                                 handleChange={handleChange('sex')}

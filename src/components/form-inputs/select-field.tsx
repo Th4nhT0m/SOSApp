@@ -33,7 +33,7 @@ const SelectField: React.FC<FieldProps<SelectProps> & SelectFieldProps> = (props
                 onBlur={handleBlur}
             >
                 {options.map((obj, index) => (
-                    <SelectItem key={index} title={obj.title} {...obj.itemProps} />
+                    <SelectItem key={index} title={obj.title} />
                 ))}
             </Select>
         </Layout>
