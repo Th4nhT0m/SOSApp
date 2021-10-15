@@ -1,35 +1,39 @@
 import React from 'react';
-import { FieldProps, getIn } from 'formik';
-import { InputProps } from '@ui-kitten/components/ui/input/input.component';
-import { Input } from '@ui-kitten/components';
-import { View, ViewProps } from 'react-native';
+import { Control, useController } from 'react-hook-form';
+import { Input, InputProps } from '@ui-kitten/components';
+import { View } from 'react-native';
 
-interface InputFieldProps {
-    handleChange: () => void;
-    handleBlur: () => void;
-    containerProps?: ViewProps;
+export interface InputFieldProps extends InputProps {
+    name: string;
+    control: Control<any>;
+    label?: string;
 }
 
-const InputField: React.FC<FieldProps<InputProps> & InputProps & InputFieldProps> = (props) => {
-    const isTouched = getIn(props.form.touched, props.field.name);
-    const errorMessage = getIn(props.form.errors, props.field.name);
-
-    const { caption, label, handleBlur, handleChange, containerProps, ...rest } = props;
+const InputField = (props: InputFieldProps) => {
+    const { name, control, label, ...rest } = props;
+    const {
+        field: { value, onChange, onBlur, ref },
+        fieldState: { invalid, error },
+    } = useController({
+        name,
+        control,
+    });
 
     return (
-        <View {...containerProps}>
+        <View>
             <Input
-                label={label ?? 'InputField'}
-                style={{ width: '100%' }}
-                status={isTouched && errorMessage ? 'danger' : 'basic'}
-                caption={caption ?? (isTouched && errorMessage ? errorMessage : undefined)}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                onChangeText={handleChange}
-                value={props.field.value.value}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                label={label}
+                ref={ref}
+                status={invalid ? 'danger' : 'basic'}
+                caption={error?.message}
                 {...rest}
             />
         </View>
     );
 };
+
 export default InputField;

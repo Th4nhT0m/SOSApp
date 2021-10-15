@@ -3,11 +3,12 @@ import { AppStorage } from './app-storage.service';
 import { AuthRequest } from './requests/authentication';
 
 export const axiosInstance = axios.create({
-    baseURL: 'localhost:3000/v1',
+    baseURL: 'http://10.0.2.2:3000/v1',
     timeout: 30000,
     headers: {
-        accept: 'application/json',
-        contentType: 'application/json',
+        accept: 'Token',
+        contentType: 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
     },
 });
 

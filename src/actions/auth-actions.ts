@@ -5,7 +5,9 @@ import { SignUpProps } from '../services/requests/types';
 import { LoginResponseProps } from '../slices/auth-slice';
 
 const login = createAsyncThunk('auth/login', async (props: LoginInProps) => {
+    console.log(props);
     const response = await AuthRequest.obtainToken(props);
+    console.log(response);
     return response.data as LoginResponseProps;
 });
 

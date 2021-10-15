@@ -1,3 +1,5 @@
+import { date } from 'yup';
+
 export interface ObtainTokenProps {
     email: string;
     password: string;
@@ -20,7 +22,7 @@ export interface SignUpProps {
     identityCard: string;
     numberPhone: string;
     address: string;
-    sex: 'male' | 'female' | 'other';
+    sex: string;
     dob: Date;
 }
 export interface LoginInProps {
