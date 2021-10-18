@@ -32,9 +32,12 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state: RootState) => state.auth);
     const onSignInButtonPress = (values: LoginInProps): void => {
-        console.log(values);
-        console.log(auth);
         dispatch(authActions.login(values));
+        if (auth.isLogin) {
+            navigation && navigation.navigate('Home');
+        } else {
+            console.log(auth.error);
+        }
     };
 
     const onSignUpButtonPress = (): void => {

@@ -51,13 +51,17 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
     const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
     const styles = useStyleSheet(themedStyles);
-    const auth = useAppSelector((state: RootState) => state.auth);
+    const register = useAppSelector((state: RootState) => state.register);
     const dispatch = useAppDispatch();
     const onSignUpButtonPress = (values: SignUpProps): void => {
-        const { sex, ...rest } = values;
+        const { sex = 'Male', ...rest } = values;
         const sexStr = genderOptions[parseInt(sex, 10)].title;
         dispatch(authActions.register({ sex: sexStr, ...rest }));
-
+        if (register.registerSusses) {
+            console.log(register);
+        } else {
+            register.error;
+        }
     };
 
     const onSignInButtonPress = (): void => {

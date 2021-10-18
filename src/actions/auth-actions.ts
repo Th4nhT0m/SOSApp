@@ -8,12 +8,12 @@ const login = createAsyncThunk('auth/login', async (props: LoginInProps) => {
     console.log(props);
     const response = await AuthRequest.obtainToken(props);
     console.log(response);
-    return response.data as LoginResponseProps;
+    return response as LoginResponseProps;
 });
 
 const register = createAsyncThunk('auth/register', async (props: SignUpProps) => {
     const response = await AuthRequest.register(props);
-    return response.data;
+    return response;
 });
 
 export const authActions = {

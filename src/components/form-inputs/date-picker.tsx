@@ -7,9 +7,16 @@ export interface DatePickerProps extends DPProps {
     control: Control<any>;
     name: string;
 }
+const yesterday = new Date(1956, 0, 0);
+const tomorrow = new Date(2022, 0, 0);
+const useDatepickerState = (initialDate = null) => {
+    const [date, setDate] = React.useState(initialDate);
+    return { date, onSelect: setDate };
+};
 
 const DatePicker = (props: DatePickerProps) => {
     const { name, control, label, ...rest } = props;
+
     const {
         field: { value, onChange, onBlur },
         fieldState: { invalid, error },
@@ -18,10 +25,16 @@ const DatePicker = (props: DatePickerProps) => {
         control,
     });
 
+    const minMaxPickerState = useDatepickerState();
+
     return (
         <View>
             <Datepicker
                 label={label}
+                placeholder="Min / Max"
+                min={yesterday}
+                max={tomorrow}
+                {...minMaxPickerState}
                 date={value}
                 onSelect={onChange}
                 onBlur={onBlur}
