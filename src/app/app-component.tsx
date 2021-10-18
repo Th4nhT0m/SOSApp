@@ -10,6 +10,8 @@ import { AppLoading, Task } from './app-loading';
 import RNBootSplash from 'react-native-bootsplash';
 import { AppNavigator } from '../navigation/app.navigator';
 import { StatusBar } from '../components/status-bar.component';
+import { Provider } from 'react-redux';
+import { store } from './store-provider';
 
 const loadingTasks: Task[] = [
     (): any => AppStorage.getMapping(defaultConfig.mapping).then((result) => ['mapping', result]),
@@ -52,9 +54,16 @@ const App = (): React.ReactElement => {
     };
 
     return (
-        <AppLoading tasks={loadingTasks} initialConfig={defaultConfig} loading={loading} onTasksFinish={handleFinish}>
-            {(props) => <AppContainer {...props} />}
-        </AppLoading>
+        <Provider store={store}>
+            <AppLoading
+                tasks={loadingTasks}
+                initialConfig={defaultConfig}
+                loading={loading}
+                onTasksFinish={handleFinish}
+            >
+                {(props) => <AppContainer {...props} />}
+            </AppLoading>
+        </Provider>
     );
 };
 

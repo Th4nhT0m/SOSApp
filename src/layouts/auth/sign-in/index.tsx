@@ -1,24 +1,43 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FastField, Formik, FormikValues } from 'formik';
 import { Button, Text } from '@ui-kitten/components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { LoadingIndicator } from '../../../components/loading-indicator';
 import { ImageOverlay } from './extra/image-overlay.component';
 import * as yup from 'yup';
-import { FieldInput, PasswordInput } from '../../../components/form-inputs';
-import { LockIcon, PersonIcon } from '../../../components/Icons';
 import { FacebookIcon, GoogleIcon, TwitterIcon } from './extra/icons';
+import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { RootState } from '../../../app/store-provider';
+import { authActions } from '../../../actions/auth-actions';
+import { LoginInProps, SignUpProps } from '../../../services/requests/types';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import InputField from '../../../components/form-inputs/input-field';
+import PasswordField from '../../../components/form-inputs/password-field';
 
-const LoginSchema = yup.object().shape({
+const loginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
     password: yup.string().required('Password is required'),
 });
 
 const SignIn = ({ navigation }: any): React.ReactElement => {
-    const onSignInButtonPress = (values: FormikValues): void => {
-        //navigation && navigation.goBack();
-        console.log(values);
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = useForm<SignUpProps>({
+        resolver: yupResolver(loginSchema),
+    });
+
+    const dispatch = useAppDispatch();
+    const auth = useAppSelector((state: RootState) => state.auth);
+    const onSignInButtonPress = (values: LoginInProps): void => {
+        dispatch(authActions.login(values));
+        if (auth.isLogin) {
+            navigation && navigation.navigate('Home');
+        } else {
+            console.log(auth.error);
+        }
     };
 
     const onSignUpButtonPress = (): void => {
@@ -29,99 +48,57 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
         navigation && navigation.navigate('ForgotPassword');
     };
 
-    const initialValues = {
-        email: '',
-        password: '',
-    };
-
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <ImageOverlay style={styles.container} source={require('./assets/image-background.jpg')}>
+            <ImageOverlay style={styles.container} source={require('./assets/unnamed.png')}>
                 <View style={styles.headerContainer}>
-                    <Text category="h1" status="control">
-                        Hello
-                    </Text>
                     <Text style={styles.signInLabel} category="s1" status="control">
                         Sign in to your account
                     </Text>
                 </View>
-                <Formik initialValues={initialValues} onSubmit={onSignInButtonPress} validationSchema={LoginSchema}>
-                    {({ handleBlur, handleChange, handleSubmit, isSubmitting }) => (
-                        <View style={styles.formContainer}>
-                            <FastField
-                                name={'email'}
-                                label={'Email'}
-                                accessoryLeft={PersonIcon}
-                                handleChange={handleChange('email')}
-                                handleBlur={handleBlur('email')}
-                                component={FieldInput}
-                            />
 
-                            <FastField
-                                style={styles.passwordInput}
-                                name={'password'}
-                                label={'Password'}
-                                accessoryLeft={LockIcon}
-                                handleChange={handleChange('password')}
-                                handleBlur={handleBlur('password')}
-                                component={PasswordInput}
-                            />
-                            <View style={styles.forgotPasswordContainer}>
-                                <Button
-                                    style={styles.forgotPasswordButton}
-                                    appearance="ghost"
-                                    status="control"
-                                    onPress={onForgotPress}
-                                >
-                                    Forgot your password?
-                                </Button>
-                            </View>
-                            <View>
-                                <Button
-                                    style={styles.signInButton}
-                                    status={'primary'}
-                                    size="giant"
-                                    accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
-                                    onPress={(props) => handleSubmit(props)}
-                                    children="Sign In"
-                                />
-                                <Button
-                                    style={styles.signUpButton}
-                                    appearance="ghost"
-                                    status="control"
-                                    onPress={onSignUpButtonPress}
-                                >
-                                    Don't have an account? Sign Up
-                                </Button>
-                            </View>
-                            <View style={styles.socialAuthContainer}>
-                                <Text style={styles.socialAuthHintText} status={'control'}>
-                                    Sign with a social account
-                                </Text>
-                                <View style={styles.socialAuthButtonsContainer}>
-                                    <Button
-                                        appearance="ghost"
-                                        size="giant"
-                                        status="control"
-                                        accessoryLeft={GoogleIcon}
-                                    />
-                                    <Button
-                                        appearance="ghost"
-                                        size="giant"
-                                        status="control"
-                                        accessoryLeft={FacebookIcon}
-                                    />
-                                    <Button
-                                        appearance="ghost"
-                                        size="giant"
-                                        status="control"
-                                        accessoryLeft={TwitterIcon}
-                                    />
-                                </View>
-                            </View>
+                <View style={styles.formContainer}>
+                    <View style={styles.forgotPasswordContainer}>
+                        <Button
+                            style={styles.forgotPasswordButton}
+                            appearance="ghost"
+                            status="control"
+                            onPress={onForgotPress}
+                        >
+                            Forgot your password?
+                        </Button>
+                    </View>
+                    <View>
+                        <InputField label={'Email'} name={'email'} control={control} />
+                        <PasswordField name={'password'} control={control} />
+                        <Button
+                            style={styles.signInButton}
+                            status={'primary'}
+                            size="giant"
+                            accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
+                            onPress={handleSubmit(onSignInButtonPress)}
+                            children="Sign In"
+                        />
+                        <Button
+                            style={styles.signUpButton}
+                            appearance="ghost"
+                            status="control"
+                            onPress={onSignUpButtonPress}
+                        >
+                            Don't have an account? Sign Up
+                        </Button>
+                    </View>
+                    <View style={styles.socialAuthContainer}>
+                        <Text style={styles.socialAuthHintText} status={'control'}>
+                            Sign with a social account
+                        </Text>
+                        <View style={styles.socialAuthButtonsContainer}>
+                            <Button appearance="ghost" size="giant" status="control" accessoryLeft={GoogleIcon} />
+                            <Button appearance="ghost" size="giant" status="control" accessoryLeft={FacebookIcon} />
+                            <Button appearance="ghost" size="giant" status="control" accessoryLeft={TwitterIcon} />
                         </View>
-                    )}
-                </Formik>
+                    </View>
+                </View>
             </ImageOverlay>
         </KeyboardAvoidingView>
     );

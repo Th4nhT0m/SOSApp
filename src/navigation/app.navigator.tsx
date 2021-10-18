@@ -24,7 +24,7 @@ export const AppNavigator = (): React.ReactElement => {
     return (
         <NavigationContainer theme={navigatorTheme}>
             {/*{isSigned ? <HomeNavigator /> : <AuthNavigator />}*/}
-            <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Home'}>
+            <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Authenticate'}>
                 <Stack.Screen name={'Home'} component={HomeNavigator} />
                 <Stack.Screen name={'Authenticate'} component={AuthNavigator} />
             </Stack.Navigator>

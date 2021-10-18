@@ -3,29 +3,30 @@ import { AppStorage } from './app-storage.service';
 import { AuthRequest } from './requests/authentication';
 
 export const axiosInstance = axios.create({
-    baseURL: 'localhost:3000',
+    baseURL: 'http://10.0.2.2:3000/v1',
     timeout: 30000,
     headers: {
-        'Content-Type': 'application/json',
+        accept: 'Token',
+        contentType: 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
     },
 });
 
 axiosInstance.interceptors.request.use(
-    function (config: AxiosRequestConfig) {
+    async function (config: AxiosRequestConfig) {
         let token: string;
-        AppStorage.getItem('token').then((result) => {
-            token = result.data;
-            if (token.length > 0) {
-                return {
-                    ...config,
-                    Authorization: 'Bearer ' + token,
-                };
-            }
-            return config;
-        });
+        const result = await AppStorage.getItem('token');
+        token = (result && result.data) ?? '';
+        if (token.length > 0) {
+            return {
+                ...config,
+                Authorization: 'Bearer ' + token,
+            };
+        }
+        return config;
     },
     function (error) {
-        // Do something with request error
+        console.log(error);
         return Promise.reject(error);
     }
 );
@@ -34,14 +35,13 @@ axiosInstance.interceptors.response.use(
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
         const { status, data } = response;
-
         if (status === 401) {
             return AuthRequest.refreshToken().then((res: any) => {
                 const { token } = res.data;
-                AppStorage.setItem('token', token);
+                AppStorage.setItem('token', token ?? {});
             });
         }
-
+        console.log(axiosInstance);
         return data;
     },
     function (error) {

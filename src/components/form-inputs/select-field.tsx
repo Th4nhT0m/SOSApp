@@ -1,42 +1,55 @@
 import React from 'react';
-import { FieldProps, getIn } from 'formik';
-import { Layout, Select, SelectItem, SelectProps } from '@ui-kitten/components';
-import { SelectItemProps } from '@ui-kitten/components/ui/select/selectItem.component';
-import { ViewProps } from 'react-native';
+import { Control, useController } from 'react-hook-form';
+import { IndexPath, Select, SelectItem, SelectItemProps } from '@ui-kitten/components';
+import { View, Text } from 'react-native';
 
-export interface SelectFieldProps {
-    options: {
-        title: string;
-        itemProps?: SelectItemProps;
-    }[];
-    handleChange: () => void;
-    handleBlur: () => void;
-    containerProps?: ViewProps;
+export interface SelectOption {
+    title: string;
+    props?: SelectItemProps;
 }
 
-const SelectField: React.FC<FieldProps<SelectProps> & SelectFieldProps> = (props) => {
-    const isTouched = getIn(props.form.touched, props.field.name);
-    const errorMessage = getIn(props.form.errors, props.field.name);
+export interface SelectFieldProps {
+    name: string;
+    control: Control<any>;
+    label?: string;
+    disabled?: boolean;
+    options: SelectOption[];
+}
+const SelectField = (props: SelectFieldProps) => {
+    const [selectedIndex, setSelectedIndex] = React.useState(new IndexPath(0));
+    const { label, name, control, options, ...rest } = props;
+    const {
+        field: { value, onChange, onBlur },
+        fieldState: { invalid, error },
+    } = useController({
+        name,
+        control,
+    });
 
-    const { options, field, handleBlur, handleChange, ...rest } = props;
-    const { label, value, caption, ...fields } = field.value;
+    const displayValue = options[selectedIndex.row];
 
     return (
-        <Layout level="1">
+        <View>
             <Select
-                caption={caption ?? (isTouched && errorMessage ? errorMessage : undefined)}
-                status={isTouched && errorMessage ? 'danger' : 'basic'}
-                label={label ?? 'SelectField'}
-                onSelect={handleChange}
+                status={invalid ? 'danger' : 'basic'}
+                caption={error?.message}
+                onBlur={onBlur}
+                label={label ?? 'Select'}
+                value={displayValue.title ?? 'NULL'}
+                selectedIndex={selectedIndex}
+                onSelect={(p: any) => {
+                    onChange(p.row);
+                    setSelectedIndex(p);
+                    console.log('Value selected: ', value);
+                }}
                 {...rest}
-                value={value}
-                onBlur={handleBlur}
             >
                 {options.map((obj, index) => (
-                    <SelectItem key={index} title={obj.title} {...obj.itemProps} />
+                    <SelectItem title={obj.title} key={index} {...props} />
                 ))}
             </Select>
-        </Layout>
+            <Text>{error?.message}</Text>
+        </View>
     );
 };
 

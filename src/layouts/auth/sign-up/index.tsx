@@ -6,30 +6,62 @@ import { ArrowForwardIconOutline, FacebookIcon, GoogleIcon, HeartIconFill, Twitt
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import * as yup from 'yup';
 import { identityCardRegExp, passwordRegExp, phoneRegExp } from '../../../app/app-constants';
-import { FastField, Formik } from 'formik';
 import { LoadingIndicator } from '../../../components/loading-indicator';
-import { FieldInput, DatePicker, PasswordInput, SelectInput } from '../../../components/form-inputs';
+import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { RootState } from '../../../app/store-provider';
+import { authActions } from '../../../actions/auth-actions';
+import { SignUpProps } from '../../../services/requests/types';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import PasswordField from '../../../components/form-inputs/password-field';
+import SelectField from '../../../components/form-inputs/select-field';
+import InputField from '../../../components/form-inputs/input-field';
+import DatePicker from '../../../components/form-inputs/date-picker';
+
+const signUpSchema = yup.object().shape({
+    name: yup.string().required('Name is required').typeError('Invalid name'),
+    email: yup.string().email().typeError('Invalid email').required('Email is required'),
+    password: yup.string().matches(passwordRegExp, 'Please enter a longer password').required('Password is required'),
+    identityCard: yup.string().matches(identityCardRegExp, 'Invalid ID').required('ID is required'),
+    numberPhone: yup.string().matches(phoneRegExp, 'Invalid phone number').required('Phone number is required'),
+    address: yup.string().required('Address is required.'),
+    dob: yup.date().typeError('Invalid date format').required('Date of birth is required'),
+});
+const genderOptions = [{ title: 'Male' }, { title: 'Female' }, { title: 'Other' }];
+const initValues: SignUpProps = {
+    name: '',
+    email: '',
+    password: '',
+    identityCard: '',
+    numberPhone: '',
+    address: '',
+    sex: '',
+    dob: new Date(),
+};
 
 const SignUp = ({ navigation }: any): React.ReactElement => {
-    const SignUpSchema = yup.object().shape({
-        name: yup.string().required('Name is required').typeError('Invalid name'),
-        email: yup.string().email().typeError('Invalid email').required('Email is required'),
-        password: yup
-            .string()
-            .matches(passwordRegExp, 'Please enter a longer password')
-            .required('Password is required'),
-        identityCard: yup.string().matches(identityCardRegExp, 'Invalid ID').required('ID is required'),
-        numberPhone: yup.string().matches(phoneRegExp, 'Invalid phone number').required('Phone number is required'),
-        address: yup.string().required('Address is required.'),
-        sex: yup.string().oneOf(['male', 'female', 'other'], 'Gender is required'),
-        dob: yup.date().typeError('Invalid date format').required('Date of birth is required'),
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = useForm<SignUpProps>({
+        resolver: yupResolver(signUpSchema),
+        defaultValues: initValues,
     });
     const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
     const styles = useStyleSheet(themedStyles);
-
-    const onSignUpButtonPress = (): void => {
-        navigation && navigation.goBack();
+    const register = useAppSelector((state: RootState) => state.register);
+    const dispatch = useAppDispatch();
+    const onSignUpButtonPress = (values: SignUpProps): void => {
+        const { sex = 'Male', ...rest } = values;
+        const sexStr = genderOptions[parseInt(sex, 10)].title;
+        dispatch(authActions.register({ sex: sexStr, ...rest }));
+        if (register.registerSusses) {
+            console.log(register);
+        } else {
+            register.error;
+        }
     };
 
     const onSignInButtonPress = (): void => {
@@ -44,17 +76,6 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
         ),
         []
     );
-
-    const initValues = {
-        name: '',
-        email: '',
-        password: '',
-        identityCard: '',
-        numberPhone: '',
-        address: '',
-        sex: 'male',
-        dob: new Date(),
-    };
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -100,73 +121,39 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
             <Text style={styles.emailSignLabel}>Sign up with Email</Text>
-            <Formik onSubmit={onSignInButtonPress} initialValues={initValues} validationSchema={SignUpSchema}>
-                {({ handleBlur, handleChange, handleSubmit, isSubmitting }) => (
-                    <>
-                        <View style={[styles.container, styles.formContainer]}>
-                            <FastField
-                                placeholder="Ally"
-                                label="NAME"
-                                name={'name'}
-                                autoCapitalize="words"
-                                component={FieldInput}
-                                handleBlur={handleBlur('name')}
-                                handleChange={handleChange('name')}
-                            />
-                            <FastField
-                                name={'dob'}
-                                style={styles.formInput}
-                                placeholder="18/10/1995"
-                                label="Date of Birth"
-                                component={DatePicker}
-                                handleChange={handleChange('dob')}
-                            />
-                            <FastField
-                                style={styles.formInput}
-                                placeholder="ally.watsan@gmail.com"
-                                label="EMAIL"
-                                component={FieldInput}
-                                name={'email'}
-                                handleBlur={handleBlur('email')}
-                                handleChange={handleChange('email')}
-                            />
-                            <FastField
-                                style={styles.formInput}
-                                label="PASSWORD"
-                                placeholder="Password"
-                                component={PasswordInput}
-                                name={'password'}
-                                handleBlur={handleBlur('password')}
-                                handleChange={handleChange('password')}
-                            />
-                            <FastField
-                                style={styles.formInput}
-                                label="GENDER"
-                                component={SelectInput}
-                                options={['male', 'female', 'other']}
-                                name={'sex'}
-                                handleBlur={handleBlur('sex')}
-                                handleChange={handleChange('sex')}
-                            />
-                            <CheckBox
-                                style={styles.termsCheckBox}
-                                checked={termsAccepted}
-                                onChange={(checked: boolean) => setTermsAccepted(checked)}
-                            >
-                                {renderCheckboxLabel}
-                            </CheckBox>
-                        </View>
-                        <Button
-                            style={styles.signUpButton}
-                            size="large"
-                            onPress={handleSubmit}
-                            accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
-                        >
-                            SIGN UP
-                        </Button>
-                    </>
-                )}
-            </Formik>
+
+            <View style={[styles.container, styles.formContainer]}>
+                <InputField name={'name'} control={control} label={'Full name'} />
+                <InputField name={'email'} control={control} label={'Email'} />
+                <PasswordField name={'password'} control={control} />
+                <InputField name={'identityCard'} control={control} label={'ID Number'} />
+                <InputField name={'numberPhone'} control={control} label={'Phone number'} />
+                <DatePicker control={control} name={'dob'} label={'Date of birth'} />
+                <SelectField name={'sex'} control={control} options={genderOptions} />
+                <InputField
+                    style={styles.formInput}
+                    placeholder="Where are you?"
+                    label="Address"
+                    name={'address'}
+                    autoCapitalize="words"
+                    control={control}
+                />
+                <CheckBox
+                    style={styles.termsCheckBox}
+                    checked={termsAccepted}
+                    onChange={(checked: boolean) => setTermsAccepted(checked)}
+                >
+                    {renderCheckboxLabel}
+                </CheckBox>
+            </View>
+            <Button
+                style={styles.signUpButton}
+                size="large"
+                onPress={handleSubmit(onSignUpButtonPress)}
+                accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
+            >
+                SIGN UP
+            </Button>
         </KeyboardAvoidingView>
     );
 };
