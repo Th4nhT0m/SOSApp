@@ -1,4 +1,4 @@
-import { date } from 'yup';
+
 
 export interface ObtainTokenProps {
     email: string;
@@ -28,4 +28,21 @@ export interface SignUpProps {
 export interface LoginInProps {
     email: string;
     password: string;
+}
+
+export interface AccidentsPros {
+    nameAccidents: string;
+    status: string;
+    content: string;
+    locationName: string;
+    latitude: string;
+    longitude: string;
+    user: string;
+    people: string;
+}
+export interface UrgentPros {
+    locationName: string;
+    latitude: string;
+    longitude: string;
+    user: string;
 }

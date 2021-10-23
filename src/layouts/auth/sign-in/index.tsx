@@ -14,7 +14,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputField from '../../../components/form-inputs/input-field';
 import PasswordField from '../../../components/form-inputs/password-field';
-
 const loginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
     password: yup.string().required('Password is required'),
@@ -28,18 +27,15 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
     } = useForm<SignUpProps>({
         resolver: yupResolver(loginSchema),
     });
-
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state: RootState) => state.auth);
     const onSignInButtonPress = (values: LoginInProps): void => {
         dispatch(authActions.login(values));
         if (auth.isLogin) {
+            // dispatch(authActions.token());
             navigation && navigation.navigate('Home');
-        } else {
-            console.log(auth.error);
         }
     };
-
     const onSignUpButtonPress = (): void => {
         navigation && navigation.navigate('SignUp');
     };
@@ -50,7 +46,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <ImageOverlay style={styles.container} source={require('./assets/unnamed.png')}>
+            <ImageOverlay style={styles.container} source={require('../sign-up/assets/unnamed.png')}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.signInLabel} category="s1" status="control">
                         Sign in to your account
