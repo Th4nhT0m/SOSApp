@@ -54,13 +54,13 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
     const register = useAppSelector((state: RootState) => state.register);
     const dispatch = useAppDispatch();
     const onSignUpButtonPress = (values: SignUpProps): void => {
-        const { sex = 'Male', ...rest } = values;
-        const sexStr = genderOptions[parseInt(sex, 10)].title;
+        const { sex, ...rest } = values;
+        const sexStr = genderOptions[parseInt(sex, 1)].title;
         dispatch(authActions.register({ sex: sexStr, ...rest }));
         if (register.registerSusses) {
             console.log(register);
         } else {
-            register.error;
+            console.log(register.error);
         }
     };
 
@@ -79,7 +79,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <ImageOverlay style={styles.headerContainer as any} source={require('./assets/image-background.jpg')}>
+            <ImageOverlay style={styles.headerContainer as any} source={require('./assets/unnamed.png')}>
                 <Button
                     style={styles.evaButton}
                     appearance="ghost"

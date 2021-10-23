@@ -3,6 +3,7 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { HomeNavigator } from './home.navigator';
 import { AuthNavigator } from './auth.navigator';
 import { createStackNavigator } from '@react-navigation/stack';
+import { AccidentsNavigator } from './accidents.navigator';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export const AppNavigator = (): React.ReactElement => {
             <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Authenticate'}>
                 <Stack.Screen name={'Home'} component={HomeNavigator} />
                 <Stack.Screen name={'Authenticate'} component={AuthNavigator} />
+                {/*<Stack.Screen name={'Accidents'} component={AccidentsNavigator} />*/}
             </Stack.Navigator>
         </NavigationContainer>
     );

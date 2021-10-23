@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { authActions } from '../actions/auth-actions';
 
-export interface registerResponseProps {
+export interface urgentResponseProps {
     code?: string;
     message?: string;
 }
+
 interface Props {
     isLoading: boolean;
     error?: string;
@@ -15,8 +17,8 @@ const initialState: Props = {
     registerSusses: false,
 };
 
-const registerSlice = createSlice({
-    name: 'register',
+const urgentSlice = createSlice({
+    name: 'urgent',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
@@ -24,10 +26,11 @@ const registerSlice = createSlice({
             state.isLoading = false;
             state.registerSusses = true;
         });
-        builder.addCase(authActions.register.fulfilled, (state) => {
+        builder.addCase(authActions.register.fulfilled, (state, action) => {
             state.isLoading = true;
+            state.error = action.payload.message;
         });
     },
 });
 
-export const registerReducer = registerSlice.reducer;
+export const urgentReducer = urgentSlice.reducer;
