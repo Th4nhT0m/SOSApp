@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AppStorage } from './app-storage.service';
-import { AuthRequest } from './requests/authentication';
+import { TokenProps } from '../slices/auth-slice';
+import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://10.0.2.2:3000/v1',
+    baseURL: 'http://192.168.1.9:3000/v1',
     timeout: 30000,
     headers: {
         accept: 'Token',
@@ -12,11 +13,28 @@ export const axiosInstance = axios.create({
     },
 });
 
+async function getLocalRefreshToken() {
+    const tokens: TokenProps = await AppStorage.getItem('tokens').catch((error) => {
+        console.log(error);
+    });
+    return tokens?.refresh?.token ?? '';
+}
+
+async function refreshToken() {
+    return axiosInstance
+        .post('/auth/refresh-tokens', {
+            refreshToken: getLocalRefreshToken(),
+        })
+        .catch((error) => {
+            return error;
+        });
+}
+
 axiosInstance.interceptors.request.use(
     async function (config: AxiosRequestConfig) {
         let token: string;
-        const result = await AppStorage.getItem('token');
-        token = (result && result.data) ?? '';
+        const result: TokenProps = await AppStorage.getItem('tokens');
+        token = (result && result.access?.token) ?? '';
         if (token.length > 0) {
             return {
                 ...config,
@@ -26,30 +44,54 @@ axiosInstance.interceptors.request.use(
         return config;
     },
     function (error) {
-        console.log(error);
-        return Promise.reject(error);
+        Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Hello',
+            text2: error.message,
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+        });
+        if (!error.status) {
+            console.log('Request: ', error);
+        } else {
+            return Promise.reject(error);
+        }
     }
 );
 axiosInstance.interceptors.response.use(
-    function (response: AxiosResponse) {
+    async function (response: AxiosResponse) {
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
-        const { status, data } = response;
-        if (status === 401) {
-            return AuthRequest.refreshToken().then((res: any) => {
-                const { token } = res.data;
-                AppStorage.setItem('token', token ?? {});
-            });
-        }
-        console.log(axiosInstance);
+        const { data } = response;
+        console.log('Response:', response);
         return data;
     },
-    function (error) {
+    async function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-
-        // if (typeof error === "string")
-
-        return Promise.reject(error);
+        Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Error Message',
+            text2: error.response.data.message,
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+        });
+        if (!error.status) {
+            console.log('Response: ', error);
+        } else {
+            const { status } = error;
+            if (status === 401) {
+                return await refreshToken().then(async (res: TokenProps) => {
+                    await AppStorage.setItem('tokens', res ?? {});
+                });
+            }
+            return Promise.reject(error);
+        }
     }
 );

@@ -3,7 +3,7 @@ export interface ObtainTokenProps {
     password: string;
 }
 export interface LogoutTokenProps {
-    token: string;
+    refreshToken: string;
 }
 export interface ForgotPasswordProps {
     email: string;

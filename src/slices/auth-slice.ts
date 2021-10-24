@@ -40,12 +40,15 @@ const authSlice = createSlice({
         builder.addCase(authActions.login.fulfilled, (state, action) => {
             state.isLoading = false;
             state.isLogin = true;
-            state.tokens = action.payload.tokens;
+            state.tokens = action.payload?.tokens;
         });
         builder.addCase(authActions.login.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
             state.isLogin = false;
+        });
+        builder.addCase(authActions.isLoggedIn.fulfilled, (state, action) => {
+            state.isLogin = action.payload;
         });
     },
 });

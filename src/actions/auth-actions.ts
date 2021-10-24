@@ -1,12 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthRequest } from '../services/requests/authentication';
-import { LoginInProps } from '../services/requests/types';
-import { SignUpProps } from '../services/requests/types';
-import { LoginResponseProps } from '../slices/auth-slice';
+import { LoginInProps, SignUpProps } from '../services/requests/types';
+import { LoginResponseProps, TokenProps } from '../slices/auth-slice';
 import { registerResponseProps } from '../slices/register-slice';
+import { AppStorage } from '../services/app-storage.service';
 
 const login = createAsyncThunk('auth/login', async (props: LoginInProps) => {
     const response = await AuthRequest.obtainToken(props);
+    if (response.access !== null) {
+        await AppStorage.setItem('tokens', response);
+    }
     return response as LoginResponseProps;
 });
 
@@ -16,12 +19,26 @@ const register = createAsyncThunk('auth/register', async (props: SignUpProps) =>
 });
 
 const token = createAsyncThunk('auth/refreshToken', async () => {
-    const response = await AuthRequest.refreshToken();
-    return response;
+    return await AuthRequest.refreshToken();
+});
+
+const isLoggedIn = createAsyncThunk('auth/isLoggedIn', async () => {
+    const tokens: TokenProps = await AppStorage.getItem('tokens');
+    console.log(tokens);
+    return tokens !== null && tokens !== undefined;
+});
+
+const logout = createAsyncThunk('auth/logout', async () => {
+    const tokens: TokenProps = await AppStorage.getItem('tokens');
+    if (tokens.refresh?.token !== undefined) {
+        return await AuthRequest.logOut({ refreshToken: tokens.refresh?.token });
+    }
 });
 
 export const authActions = {
     login,
     register,
     token,
+    isLoggedIn,
+    logout,
 };

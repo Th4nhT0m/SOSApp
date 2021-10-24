@@ -3,12 +3,20 @@ import { StyleSheet } from 'react-native';
 import { Layout } from '@ui-kitten/components';
 import { Setting } from './extra/settings-section.component';
 import { ThemesScreen } from '../../screens/themes/theme-settings';
+import { useAppDispatch } from '../../services/hooks';
+import { authActions } from '../../actions/auth-actions';
 
 interface SettingsProps {
     navigation: any;
 }
 const Settings = ({ navigation }: SettingsProps): React.ReactElement => {
-    const onLogoutPress = () => navigation.navigate('Authenticate');
+    const dispatch = useAppDispatch();
+
+    const onLogoutPress = () => {
+        dispatch(authActions.logout());
+        dispatch(authActions.isLoggedIn());
+    };
+
     return (
         <Layout style={styles.container}>
             <Setting style={styles.setting} hint="Edit Profile" />

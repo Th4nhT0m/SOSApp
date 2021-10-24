@@ -31,10 +31,9 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
     const auth = useAppSelector((state: RootState) => state.auth);
     const onSignInButtonPress = (values: LoginInProps): void => {
         dispatch(authActions.login(values));
-        if (auth.isLogin) {
-            // dispatch(authActions.token());
-            navigation && navigation.navigate('Home');
-        }
+        // if (auth.isLogin) {
+        //     navigation && navigation.navigate('Home');
+        // }
     };
     const onSignUpButtonPress = (): void => {
         navigation && navigation.navigate('SignUp');

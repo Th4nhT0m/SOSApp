@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { HomeNavigator } from './home.navigator';
 import { AuthNavigator } from './auth.navigator';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AccidentsNavigator } from './accidents.navigator';
+import { useAppDispatch, useAppSelector } from '../services/hooks';
+import { authActions } from '../actions/auth-actions';
 
 const Stack = createStackNavigator();
 
@@ -20,15 +22,26 @@ const navigatorTheme = {
 };
 
 export const AppNavigator = (): React.ReactElement => {
-    const [isSigned, setSigned] = React.useState(false);
+    const dispatch = useAppDispatch();
+    const auth = useAppSelector((state) => state.auth);
+
+    useEffect(() => {
+        dispatch(authActions.isLoggedIn());
+    }, [dispatch]);
+
+    const privateStack = () => (
+        <>
+            <Stack.Screen name={'Home'} component={HomeNavigator} />
+            {/*<Stack.Screen name={'Accidents'} component={AccidentsNavigator} />*/}
+        </>
+    );
+
+    const publicStack = () => <Stack.Screen name={'Authenticate'} component={AuthNavigator} />;
 
     return (
         <NavigationContainer theme={navigatorTheme}>
-            {/*{isSigned ? <HomeNavigator /> : <AuthNavigator />}*/}
             <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Authenticate'}>
-                <Stack.Screen name={'Home'} component={HomeNavigator} />
-                {/*<Stack.Screen name={'Authenticate'} component={AuthNavigator} />*/}
-                {/*<Stack.Screen name={'Accidents'} component={AccidentsNavigator} />*/}
+                {auth.isLogin ? privateStack() : publicStack()}
             </Stack.Navigator>
         </NavigationContainer>
     );
