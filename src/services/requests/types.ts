@@ -39,8 +39,8 @@ export interface AccidentsProps {
     people: string;
 }
 export interface UrgentProps {
-    locationName: string;
+    locationName?: string;
     latitude: string;
     longitude: string;
-    user: string;
+    user?: string;
 }

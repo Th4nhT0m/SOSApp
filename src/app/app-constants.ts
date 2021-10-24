@@ -4,3 +4,6 @@ export const passwordRegExp = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
 export const identityCardRegExp = /^([0-9]{9})(X|V)$|^([0-9]{11})/gis;
 
 export const apiURL = 'localhost:3000';
+
+export const TOKENs = 'tokens';
+export const USER_INFO = 'userInfo';

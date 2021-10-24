@@ -7,7 +7,7 @@ export const axiosInstance = axios.create({
     baseURL: 'http://192.168.1.9:3000/v1',
     timeout: 30000,
     headers: {
-        accept: 'Token',
+        accept: '*/*',
         contentType: 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
     },
@@ -30,18 +30,22 @@ async function refreshToken() {
         });
 }
 
+export const authHeader = async () => {
+    let token: string;
+    const result: TokenProps = await AppStorage.getItem('tokens');
+    token = (result && result.access?.token) ?? '';
+    if (token.length > 0) {
+        return {
+            'Authorization': 'Bearer ' + token,
+        };
+    }
+    return {};
+};
+
 axiosInstance.interceptors.request.use(
     async function (config: AxiosRequestConfig) {
-        let token: string;
-        const result: TokenProps = await AppStorage.getItem('tokens');
-        token = (result && result.access?.token) ?? '';
-        if (token.length > 0) {
-            return {
-                ...config,
-                Authorization: 'Bearer ' + token,
-            };
-        }
-        return config;
+        const headers = await authHeader();
+        return { ...config, headers };
     },
     function (error) {
         Toast.show({
@@ -66,7 +70,6 @@ axiosInstance.interceptors.response.use(
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
         const { data } = response;
-        console.log('Response:', response);
         return data;
     },
     async function (error) {

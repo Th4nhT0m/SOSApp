@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import SelectField from '../../../components/form-inputs/select-field';
 import InputField from '../../../components/form-inputs/input-field';
 import { useForm } from 'react-hook-form';
-import { AccidentsPros } from '../../../services/requests/types';
+import { AccidentsProps } from '../../../services/requests/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { RootState } from '../../../app/store-provider';
@@ -26,7 +26,7 @@ const Accidents = ({ navigation }: any): React.ReactElement => {
         control,
         handleSubmit,
         formState: { isSubmitting },
-    } = useForm<AccidentsPros>({
+    } = useForm<AccidentsProps>({
         resolver: yupResolver(accidentsSchema),
     });
 
@@ -34,7 +34,7 @@ const Accidents = ({ navigation }: any): React.ReactElement => {
 
     const accidents = useAppSelector((state: RootState) => state.accidents);
     const dispatch = useAppDispatch();
-    const onAccidentsButtonPress = (values: AccidentsPros): void => {
+    const onAccidentsButtonPress = (values: AccidentsProps): void => {
         dispatch(accidentsActions.create({ ...values }));
         if (accidents.issusses) {
             console.log(accidents);
