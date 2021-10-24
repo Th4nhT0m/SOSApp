@@ -34,4 +34,8 @@ export class AppStorage {
         const data = object && JSON.stringify(object);
         return data !== null ? await AsyncStorage.setItem(key, data) : null;
     };
+
+    static removeItem = async (key: string): Promise<any> => {
+        return await AsyncStorage.removeItem(key);
+    };
 }

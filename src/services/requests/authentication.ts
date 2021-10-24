@@ -1,6 +1,7 @@
 import { axiosInstance } from '../axios-config.service';
 import { ResetPasswordProps, LogoutTokenProps, ObtainTokenProps, ForgotPasswordProps, SignUpProps } from './types';
 import { AppStorage } from '../app-storage.service';
+import { TokenProps } from '../../slices/auth-slice';
 
 async function obtainToken(props: ObtainTokenProps) {
     return await axiosInstance
@@ -30,12 +31,15 @@ async function register(props: SignUpProps) {
 }
 
 async function getLocalRefreshToken() {
-    return await AppStorage.getItem('refreshToken').catch((error) => {
-        return error;
+    const tokens: TokenProps = await AppStorage.getItem('tokens').catch((error) => {
+        console.log(error);
     });
+    return tokens?.refresh?.token ?? '';
 }
 
 async function logOut(props: LogoutTokenProps) {
+    const result = await AppStorage.removeItem('tokens');
+    console.log('Logout : ', result);
     return await axiosInstance.post('/auth/logout', { ...props }).catch((error) => {
         return error;
     });

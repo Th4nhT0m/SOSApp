@@ -1,4 +1,5 @@
 import React from 'react';
+import Toast from 'react-native-toast-message';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -37,6 +38,7 @@ const AppContainer: React.FC<{ mapping: Mapping; theme: Theme }> = ({ mapping, t
                             <SafeAreaProvider>
                                 <StatusBar />
                                 <AppNavigator />
+                                <Toast ref={(ref) => Toast.setRef(ref)} />
                             </SafeAreaProvider>
                         </Theming.ThemeContext.Provider>
                     </Theming.MappingContext.Provider>
