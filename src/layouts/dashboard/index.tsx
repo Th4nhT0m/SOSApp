@@ -1,52 +1,68 @@
 import React from 'react';
-import { SafeAreaLayout } from '../../components/safe-area-layout';
-import { StyleSheet } from 'react-native';
-import { View } from 'react-native';
-import { Button } from '@ui-kitten/components';
-import { UrgentPros } from '../../services/requests/types';
-import { accidentsActions } from '../../actions/accidents-ations';
-import { useAppDispatch } from '../../services/hooks';
+import { Dimensions, View } from 'react-native';
+import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { useAppDispatch, useCurrentGPSPosition } from '../../services/hooks';
+import MapViewComponent from '../../components/map-view.component';
+import { SOSIcon } from './extra/icons';
+import { Camera } from 'react-native-maps';
 
-//Accidents
+const window = Dimensions.get('window');
+
 const Dashboard = () => {
+    const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
-    const onAccidentsButtonPress = (): void => {
-        // const onAccidentsButtonPress = (values: UrgentPros) => {
-        // dispatch(accidentsActions.createUrgent(values));
-        // console.log(accidentsActions.createUrgent(values));
-    };
+    const { location } = useCurrentGPSPosition();
+
+    const onAccidentsButtonPress = () => {};
 
     return (
-        <SafeAreaLayout>
-            <View style={[styles.container, styles.formContainer]}>
-                <Button onPress={onAccidentsButtonPress} />
+        <View style={[styles.container]}>
+            <Card style={{ ...styles.userInfo }} status={'primary'}>
+                <View style={styles.infoContainer}>
+                    <Avatar size={'giant'} source={require('../../assets/images/icon-avatar.png')} />
+                    <Text>Hello, "Name of the user"</Text>
+                </View>
+            </Card>
+
+            <MapViewComponent
+                height={window.height * 0.5}
+                loadingEnabled={true}
+                showsMyLocationButton={true}
+                onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}
+            />
+            <View style={styles.sosButton}>
+                <Button appearance="ghost" status="danger" accessoryLeft={SOSIcon} />
             </View>
-        </SafeAreaLayout>
+        </View>
     );
 };
 
 export default Dashboard;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
     container: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flex: 1,
+        // alignItems: 'flex-start',
+        justifyContent: 'center',
     },
     text: {
         marginHorizontal: 8,
     },
-    homeContainer: {
+    userInfo: {
+        marginVertical: 10,
+        width: '80%',
+    },
+    infoContainer: {
+        display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        marginTop: 32,
     },
-    formContainer: {
-        marginTop: 48,
-        paddingHorizontal: 16,
-    },
-    btnSoS: {
-        marginTop: 48,
-        paddingHorizontal: 100,
+    sosButton: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: 'auto',
+        height: 'auto',
+        marginBottom: 90,
     },
 });

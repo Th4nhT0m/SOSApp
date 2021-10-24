@@ -1,5 +1,3 @@
-
-
 export interface ObtainTokenProps {
     email: string;
     password: string;
@@ -30,7 +28,7 @@ export interface LoginInProps {
     password: string;
 }
 
-export interface AccidentsPros {
+export interface AccidentsProps {
     nameAccidents: string;
     status: string;
     content: string;
@@ -40,7 +38,7 @@ export interface AccidentsPros {
     user: string;
     people: string;
 }
-export interface UrgentPros {
+export interface UrgentProps {
     locationName: string;
     latitude: string;
     longitude: string;

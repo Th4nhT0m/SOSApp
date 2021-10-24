@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AccidentsScreen } from '../screens/accidents/accidents-creat';
+import { AccidentsScreen } from '../screens/accidents/accidents-create';
 
 const Stack = createStackNavigator();
 
