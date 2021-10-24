@@ -1,10 +1,12 @@
 import React from 'react';
 import { Dimensions, View } from 'react-native';
 import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { useAppDispatch, useCurrentGPSPosition } from '../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import MapViewComponent from '../../components/map-view.component';
 import { SOSIcon } from './extra/icons';
-import { Camera } from 'react-native-maps';
+import { usersActions } from '../../actions/user-actions';
+import { accidentsActions } from '../../actions/accidents-ations';
+import faker from 'faker';
 
 const window = Dimensions.get('window');
 
@@ -13,14 +15,31 @@ const Dashboard = () => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
 
-    const onAccidentsButtonPress = () => {};
+    const userInfo = useAppSelector((state) => state.users);
+
+    React.useEffect(() => {
+        dispatch(usersActions.getCurrentUserInfo());
+    }, [dispatch]);
+
+    const onAccidentsButtonPress = () => {
+        if (location !== undefined) {
+            dispatch(
+                accidentsActions.createUrgent({
+                    //locationName: faker.address.cityName(),
+                    latitude: String(location.coords.latitude),
+                    //user: userInfo.currentUser.id,
+                    longitude: String(location.coords.longitude),
+                })
+            );
+        }
+    };
 
     return (
         <View style={[styles.container]}>
             <Card style={{ ...styles.userInfo }} status={'primary'}>
                 <View style={styles.infoContainer}>
                     <Avatar size={'giant'} source={require('../../assets/images/icon-avatar.png')} />
-                    <Text>Hello, "Name of the user"</Text>
+                    <Text>Hello, {userInfo.currentUser.name}</Text>
                 </View>
             </Card>
 
@@ -31,7 +50,7 @@ const Dashboard = () => {
                 onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}
             />
             <View style={styles.sosButton}>
-                <Button appearance="ghost" status="danger" accessoryLeft={SOSIcon} />
+                <Button appearance="ghost" status="danger" accessoryLeft={SOSIcon} onPress={onAccidentsButtonPress} />
             </View>
         </View>
     );
