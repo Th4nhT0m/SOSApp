@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import { authActions } from '../actions/auth-actions';
 
 export interface urgentResponseProps {

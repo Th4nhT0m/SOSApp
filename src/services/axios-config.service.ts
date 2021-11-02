@@ -36,7 +36,7 @@ export const authHeader = async () => {
     token = (result && result.access?.token) ?? '';
     if (token.length > 0) {
         return {
-            'Authorization': 'Bearer ' + token,
+            Authorization: 'Bearer ' + token,
         };
     }
     return {};
