@@ -47,26 +47,7 @@ const Accidents = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView>
-            <View>
-                <InputField name={'nameAccidents'} control={control} label={'Name Accidents'} />
-                <SelectField name={'status'} control={control} options={genderOptions} />
-                <InputField name={'locationName'} control={control} label={'Location Name'} />
-                <InputField name={'people'} control={control} label={'People'} />
-            </View>
-            <Button
-                size="large"
-                onPress={handleSubmit(onAccidentsButtonPress)}
-                accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
-            >
-                Create
-            </Button>
-            <Button
-                size="large"
-                onPress={handleSubmit(onHomeButtonPress)}
-                accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
-            >
-                GO BACK
-            </Button>
+
         </KeyboardAvoidingView>
     );
 };

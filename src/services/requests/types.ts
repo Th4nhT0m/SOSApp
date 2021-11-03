@@ -44,3 +44,14 @@ export interface UrgentProps {
     longitude: string;
     user?: string;
 }
+export interface Accidents {
+    id: string;
+    nameAccident: string;
+    status: string;
+    latitude: string;
+    longitude: string;
+    created_by: string;
+    modified_by: string;
+    description: string;
+    timeStart: Date;
+}

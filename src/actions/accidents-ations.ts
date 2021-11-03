@@ -12,8 +12,13 @@ const createUrgent = createAsyncThunk('accidents/Urgent', async (props: UrgentPr
     const response = await AccidentsRequest.creatUrgentAccident(props);
     return response as urgentResponseProps;
 });
+const getAllAccidents = createAsyncThunk('getAllAccidents', async () => {
+    const response = await AccidentsRequest.getAllAccident();
+    return response;
+});
 
 export const accidentsActions = {
     create,
     createUrgent,
+    getAllAccidents,
 };

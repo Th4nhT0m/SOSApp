@@ -1,42 +1,53 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Dimensions, ListRenderItemInfo, View } from 'react-native';
-import { NotificationProps } from '../../screens/notification/types';
 import { DoneAllIcon } from '../../components/Icons';
-// @ts-ignore
-import moment from 'moment';
-import * as faker from 'faker';
-
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
+import { accidentsActions } from '../../actions/accidents-ations';
+import { Accidents } from '../../services/requests/types';
 const Notification = (): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
+    const dispatch = useAppDispatch();
+    const setAccidents = useAppSelector((state) => state.accidents.data);
 
-    const notifies: NotificationProps[] = [...Array(5)].map(() => ({
-        avatar: require('../../assets/images/icon-avatar.png'),
-        contents: faker.lorem.lines(2),
-        date: new Date(2020, 10, 15),
-        firstName: faker.name.firstName(),
-        title: faker.name.title(),
-        lastName: faker.name.lastName(),
+    React.useEffect(() => {
+        dispatch(accidentsActions.getAllAccidents());
+    }, [dispatch]);
+
+    // const setOnAccidents = () => {
+    //
+    // };
+    const notifies: Accidents[] = setAccidents.results.map((pops) => ({
+        id: pops.id,
+        nameAccident: pops.nameAccident,
+        latitude: pops.latitude,
+        longitude: pops.longitude,
+        created_by: pops.created_by,
+        modified_by: pops.modified_by,
+        description: pops.description,
+        timeStart: pops.timeStart,
     }));
 
-    const renderItemFooter = (info: ListRenderItemInfo<NotificationProps>): React.ReactElement => (
+    const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
-            <Text category="s1">{moment(info.item?.date).fromNow()}</Text>
+            {/*<Text category="s1">{info.item?.latitude + ' ' + info.item?.longitude}</Text>*/}
+            <Text category="s1">{info.item?.timeStart}</Text>
             <Button style={styles.iconButton} size="small" accessoryLeft={DoneAllIcon} />
         </View>
     );
 
-    const renderNotifies = (info: ListRenderItemInfo<NotificationProps>): React.ReactElement => (
+    const renderNotifies = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <Card footer={() => renderItemFooter(info)}>
             <View style={styles.itemHeader}>
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
                 <View>
-                    <Text category="s2">{info.item?.firstName + ' ' + info.item?.lastName}</Text>
-                    <Text category="s1">{info.item?.title}</Text>
+                    <Text category="s2">{info.item?.nameAccident}</Text>
+                    <Text category="s1">{info.item?.description}</Text>
+                    <Text category="s1">{'User created: ' + info.item?.timeStart}</Text>
                 </View>
             </View>
             <Divider />
-            <Text style={{ marginTop: 15 }}>{info.item?.contents}</Text>
+            <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
         </Card>
     );
 
