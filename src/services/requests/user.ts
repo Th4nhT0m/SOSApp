@@ -1,7 +1,7 @@
 import { axiosInstance } from '../axios-config.service';
 
 async function getCurrentUserInfo() {
-    return await axiosInstance.get('auth/me').catch((error) => error);
+    return await axiosInstance.get('auth/me').catch((error) => console.log(error));
 }
 
 async function getUserInfo(id: string) {

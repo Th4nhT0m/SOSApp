@@ -6,7 +6,6 @@ import MapViewComponent from '../../components/map-view.component';
 import { SOSIcon } from './extra/icons';
 import { usersActions } from '../../actions/user-actions';
 import { accidentsActions } from '../../actions/accidents-ations';
-import faker from 'faker';
 
 const window = Dimensions.get('window');
 

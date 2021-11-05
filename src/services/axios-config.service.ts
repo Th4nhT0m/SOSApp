@@ -4,7 +4,7 @@ import { TokenProps } from '../slices/auth-slice';
 import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://192.168.1.9:3000/v1',
+    baseURL: 'http://192.168.1.6:3000/v1',
     timeout: 30000,
     headers: {
         accept: '*/*',
@@ -36,7 +36,7 @@ export const authHeader = async () => {
     token = (result && result.access?.token) ?? '';
     if (token.length > 0) {
         return {
-            'Authorization': 'Bearer ' + token,
+            Authorization: 'Bearer ' + token,
         };
     }
     return {};
