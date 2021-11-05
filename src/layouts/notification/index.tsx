@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../ser
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import { DetailAccidentsAction } from '../../actions/details-accident-actions';
-const Notification = (): React.ReactElement => {
+const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
@@ -51,10 +51,20 @@ const Notification = (): React.ReactElement => {
                             })
                         );
                         console.log('Success');
+                        onScreen();
                     }
                 },
             },
         ]);
+    };
+    const onDetailProgress = (): void => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Setting',
+                params: { screen: 'DetailProgress' },
+            });
+        console.log('Susses');
+        navigation && navigation.navigate('Setting');
     };
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
@@ -64,9 +74,10 @@ const Notification = (): React.ReactElement => {
                 style={styles.iconButton}
                 size="small"
                 accessoryLeft={DoneAllIcon}
-                onPress={() => {
-                    setOnAccidents(info.item.id);
-                }}
+                // onPress={() => {
+                //     setOnAccidents(info.item.id);
+                // }}
+                onPress={onDetailProgress}
             />
         </View>
     );
