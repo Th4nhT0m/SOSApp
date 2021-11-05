@@ -1,38 +1,73 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
 import { DoneAllIcon } from '../../components/Icons';
-import { useAppDispatch, useAppSelector } from '../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
+import { DetailAccidentsAction } from '../../actions/details-accident-actions';
 const Notification = (): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
+    const { location } = useCurrentGPSPosition();
     const setAccidents = useAppSelector((state) => state.accidents.data);
-
+    const getUser = useAppSelector((state) => state.users.currentUser.id);
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
     }, [dispatch]);
 
-    // const setOnAccidents = () => {
-    //
-    // };
     const notifies: Accidents[] = setAccidents.results.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
+        description: pops.description,
         latitude: pops.latitude,
         longitude: pops.longitude,
         created_by: pops.created_by,
         modified_by: pops.modified_by,
-        description: pops.description,
+        accidentType: pops.accidentType,
         timeStart: pops.timeStart,
     }));
 
+    const setOnAccidents = (id: string): void => {
+        Alert.alert('Confirm help', 'Do you want to help?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: () => {
+                    if (location != undefined) {
+                        console.log(location.coords.latitude + ' ' + location.coords.latitude);
+                        console.log(id);
+                        console.log(getUser);
+                        dispatch(
+                            DetailAccidentsAction.creatDetails({
+                                accident: id,
+                                user: getUser,
+                                latitude: String(location.coords.latitude),
+                                longitude: String(location.coords.longitude),
+                            })
+                        );
+                        console.log('Success');
+                    }
+                },
+            },
+        ]);
+    };
+
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
-            {/*<Text category="s1">{info.item?.latitude + ' ' + info.item?.longitude}</Text>*/}
-            <Text category="s1">{info.item?.timeStart}</Text>
-            <Button style={styles.iconButton} size="small" accessoryLeft={DoneAllIcon} />
+            <Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>
+            <Button
+                style={styles.iconButton}
+                size="small"
+                accessoryLeft={DoneAllIcon}
+                onPress={() => {
+                    setOnAccidents(info.item.id);
+                }}
+            />
         </View>
     );
 
@@ -41,13 +76,12 @@ const Notification = (): React.ReactElement => {
             <View style={styles.itemHeader}>
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
                 <View>
-                    <Text category="s2">{info.item?.nameAccident}</Text>
-                    <Text category="s1">{info.item?.description}</Text>
-                    <Text category="s1">{'User created: ' + info.item?.timeStart}</Text>
+                    <Text category="s2">{'Name Accident: ' + info.item?.nameAccident}</Text>
+                    <Text category="s1">{'User created: ' + info.item?.created_by}</Text>
                 </View>
             </View>
             <Divider />
-            <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
+            <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>
     );
 

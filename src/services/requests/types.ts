@@ -47,11 +47,18 @@ export interface UrgentProps {
 export interface Accidents {
     id: string;
     nameAccident: string;
-    status: string;
+    description: string;
     latitude: string;
     longitude: string;
     created_by: string;
     modified_by: string;
-    description: string;
+    accidentType: string;
     timeStart: Date;
+}
+
+export interface DetailAccidentsProps {
+    accident: string;
+    user: string;
+    latitude: string;
+    longitude: string;
 }

@@ -22,32 +22,31 @@ const accidentsSchema = yup.object().shape({
 });
 
 const Accidents = ({ navigation }: any): React.ReactElement => {
-    const {
-        control,
-        handleSubmit,
-        formState: { isSubmitting },
-    } = useForm<AccidentsProps>({
-        resolver: yupResolver(accidentsSchema),
-    });
-
-    const genderOptions = [{ title: 'Danger' }, { title: 'Normal' }];
-
-    const accidents = useAppSelector((state: RootState) => state.accidents);
-    const dispatch = useAppDispatch();
-    const onAccidentsButtonPress = (values: AccidentsProps): void => {
-        dispatch(accidentsActions.create({ ...values }));
-        if (accidents.issusses) {
-            console.log(accidents);
-        }
-    };
-
-    const onHomeButtonPress = (): void => {
-        navigation && navigation.navigate('Home');
-    };
+    // const {
+    //     control,
+    //     handleSubmit,
+    //     formState: { isSubmitting },
+    // } = useForm<AccidentsProps>({
+    //     resolver: yupResolver(accidentsSchema),
+    // });
+    //
+    // const genderOptions = [{ title: 'Danger' }, { title: 'Normal' }];
+    //
+    // const accidents = useAppSelector((state: RootState) => state.accidents);
+    // const dispatch = useAppDispatch();
+    // const onAccidentsButtonPress = (values: AccidentsProps): void => {
+    //     dispatch(accidentsActions.create({ ...values }));
+    //     if (accidents.issusses) {
+    //         console.log(accidents);
+    //     }
+    // };
+    //
+    // const onHomeButtonPress = (): void => {
+    //     navigation && navigation.navigate('Home');
+    // };
 
     return (
         <KeyboardAvoidingView>
-
         </KeyboardAvoidingView>
     );
 };

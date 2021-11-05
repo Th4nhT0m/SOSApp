@@ -2,7 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { accidentsActions } from '../actions/accidents-ations';
 import { Accidents } from '../services/requests/types';
 import { ListResponse } from '../models/common';
-
+// export interface accidentsProps {
+//     code?: string;
+//     message?: string;
+// }
 interface Props {
     isLoading: boolean;
     data: ListResponse<Accidents>;

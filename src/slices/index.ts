@@ -4,6 +4,7 @@ import { registerReducer } from './register-slice';
 import { accidentsReducer } from './accidents-create-slice';
 import { urgentReducer } from './urgent-create';
 import { usersReducer } from './users-slice';
+import { detailAccidentsReducer } from './details-accidents-slice';
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -11,5 +12,6 @@ const rootReducer = combineReducers({
     accidents: accidentsReducer,
     urgentReducer: urgentReducer,
     users: usersReducer,
+    detailAccidents: detailAccidentsReducer,
 });
 export default rootReducer;
