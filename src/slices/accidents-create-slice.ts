@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { accidentsActions } from '../actions/accidents-ations';
 
 interface Props {
-    issusses: boolean;
+    isSuccess: boolean;
     isLoading: boolean;
 }
 
 const initialState: Props = {
-    issusses: false,
+    isSuccess: false,
     isLoading: false,
 };
 
@@ -20,7 +20,7 @@ const accidentsSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(accidentsActions.create.fulfilled, (state, action) => {
-            state.issusses = true;
+            state.isSuccess = true;
         });
     },
 });

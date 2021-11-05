@@ -4,6 +4,7 @@ import { UserInfo } from '../models/user-info.model';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
 import { EditUserProps } from '../services/requests/types';
+import { userProps } from '../slices/users-slice';
 
 const getCurrentUserInfo = createAsyncThunk('users/currentInfo', async () => {
     const response = await UsersRequests.getCurrentUserInfo();

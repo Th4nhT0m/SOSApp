@@ -5,6 +5,8 @@ import { HomeBottomNavigation } from '../screens/home/bottom-navigation';
 import { SettingsScreen } from '../screens/settings/settings.component';
 import { DashboardScreen } from '../screens/dashboard/dashboard.component';
 import { NotificationScreen } from '../screens/notification/notification.component';
+import ViewUser from '../layouts/users/view-user';
+import { SettingNavigator } from './setting.navigator';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -22,7 +24,7 @@ export const HomeNavigator = (): React.ReactElement => (
     >
         <BottomTab.Screen name="Dashboard" component={DashboardScreen} />
         <BottomTab.Screen name="Notification" component={NotificationScreen} />
-        <BottomTab.Screen name="Settings" component={SettingsScreen} />
+        <BottomTab.Screen name="Settings" component={SettingNavigator} />
     </BottomTab.Navigator>
 );
 

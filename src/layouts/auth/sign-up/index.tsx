@@ -48,6 +48,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
         resolver: yupResolver(signUpSchema),
         defaultValues: initValues,
     });
+
     const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
     const styles = useStyleSheet(themedStyles);

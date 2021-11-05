@@ -2,7 +2,7 @@ import { axiosInstance } from '../axios-config.service';
 import { EditUserProps } from './types';
 
 async function getCurrentUserInfo() {
-    return await axiosInstance.get('auth/me').catch((error) => error);
+    return await axiosInstance.get('/users/me').catch((error) => error);
 }
 
 async function getUserInfo(id: string) {

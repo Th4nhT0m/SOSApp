@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputField from '../../../components/form-inputs/input-field';
 import PasswordField from '../../../components/form-inputs/password-field';
+
 const loginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
     password: yup.string().required('Password is required'),

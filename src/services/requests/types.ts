@@ -54,5 +54,5 @@ export interface EditUserProps {
     numberPhone: string;
     address: string;
     sex: string;
-    dob: Date;
+    // dob: Date;
 }

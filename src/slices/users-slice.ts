@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { usersActions } from '../actions/user-actions';
 
+export interface userProps {
+    code?: string;
+    message?: string;
+}
+
 const initialState = {
     isLoading: false,
     data: {},
@@ -15,6 +20,8 @@ const initialState = {
         numberPhone: '',
         id: '',
     },
+    changeSusses: false,
+    error: '',
 };
 
 const usersSlice = createSlice({
@@ -29,12 +36,32 @@ const usersSlice = createSlice({
             state.isLoading = false;
             state.currentUser = action.payload;
         });
+
         builder.addCase(usersActions.getUserInfo.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(usersActions.getUserInfo.fulfilled, (state, action) => {
             state.isLoading = false;
             state.data = action.payload;
+        });
+
+        // view user
+        builder.addCase(usersActions.getViewUserInfo.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(usersActions.getViewUserInfo.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.currentUser = action.payload;
+        });
+
+        // update user
+        builder.addCase(usersActions.updateUserInfo.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(usersActions.updateUserInfo.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.changeSusses = true;
+            state.currentUser = action.payload;
         });
     },
 });

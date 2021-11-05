@@ -6,10 +6,10 @@ import { ThemesScreen } from '../../screens/themes/theme-settings';
 import { useAppDispatch } from '../../services/hooks';
 import { authActions } from '../../actions/auth-actions';
 
-interface SettingsProps {
-    navigation: any;
-}
-const Settings = ({ navigation }: SettingsProps): React.ReactElement => {
+// interface SettingsProps {
+//     navigation: any;
+// }
+const Settings = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
 
     const onLogoutPress = () => {
@@ -17,9 +17,19 @@ const Settings = ({ navigation }: SettingsProps): React.ReactElement => {
         dispatch(authActions.isLoggedIn());
     };
 
+    const onSignUpButtonPress = () => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Settings',
+                params: {
+                    screen: 'UserView',
+                },
+            });
+    };
+
     return (
         <Layout style={styles.container}>
-            <Setting style={styles.setting} hint="Edit Profile" />
+            <Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />
             <Setting style={styles.setting} hint="Change Password" />
             <Setting style={[styles.setting, styles.themes]} hint="Themes" hintStyles={{ margin: 10 }}>
                 <ThemesScreen />

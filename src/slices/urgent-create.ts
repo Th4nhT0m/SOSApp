@@ -11,6 +11,7 @@ interface Props {
     error?: string;
     registerSusses: boolean;
 }
+
 const initialState: Props = {
     isLoading: false,
     registerSusses: false,
