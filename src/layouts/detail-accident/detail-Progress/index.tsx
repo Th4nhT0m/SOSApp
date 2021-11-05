@@ -6,6 +6,15 @@ import MapViewComponent from '../../../components/map-view.component';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
+    const onNotification = () => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Notification',
+                params: { screen: 'NotificationAccidents' },
+            });
+        console.log('Susses');
+    };
+
     const [coordinates] = React.useState([
         {
             latitude: Number(useAppSelector((state) => state.detailAccidents.data.latitude)),
@@ -16,29 +25,32 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
             longitude: 2.3361663,
         },
     ]);
-    const GOOGLE_API_KEY = 'AIzaSyDZA9nkOmeoAwvNLxn4sUfLNUS23eSSt_0';
+    const GOOGLE_API_KEY = 'AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE';
     return (
         <View style={styles.container}>
             <Button />
-            {/*<MapView*/}
-            {/*    style={styles.maps}*/}
-            {/*    initialRegion={{*/}
-            {/*        latitude: coordinates[0].latitude,*/}
-            {/*        longitude: coordinates[0].longitude,*/}
-            {/*        latitudeDelta: 0.0622,*/}
-            {/*        longitudeDelta: 0.0121,*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*    <MapViewDirections*/}
-            {/*        origin={coordinates[0]}*/}
-            {/*        destination={coordinates[1]}*/}
-            {/*        apikey={GOOGLE_API_KEY} // insert your API Key here*/}
-            {/*        strokeWidth={4}*/}
-            {/*        strokeColor="#111111"*/}
-            {/*    />*/}
-            {/*    <Marker coordinate={coordinates[0]} />*/}
-            {/*    <Marker coordinate={coordinates[1]} />*/}
-            {/*</MapView>*/}
+            <MapView
+                style={styles.maps}
+                initialRegion={{
+                    latitude: coordinates[0].latitude,
+                    longitude: coordinates[0].longitude,
+                    latitudeDelta: 0.0622,
+                    longitudeDelta: 0.0121,
+                }}
+            >
+                <MapViewDirections
+                    origin={coordinates[0]}
+                    destination={coordinates[1]}
+                    apikey={GOOGLE_API_KEY} // insert your API Key here
+                    strokeWidth={4}
+                    strokeColor="#111111"
+                />
+                <Marker coordinate={coordinates[0]} />
+                <Marker coordinate={coordinates[1]} />
+            </MapView>
+            <View>
+                <Button onPress={onNotification} />
+            </View>
         </View>
     );
 };

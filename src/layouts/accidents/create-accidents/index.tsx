@@ -45,10 +45,7 @@ const Accidents = ({ navigation }: any): React.ReactElement => {
     //     navigation && navigation.navigate('Home');
     // };
 
-    return (
-        <KeyboardAvoidingView>
-        </KeyboardAvoidingView>
-    );
+    return <KeyboardAvoidingView />;
 };
 
 export default Accidents;

@@ -50,8 +50,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 longitude: String(location.coords.longitude),
                             })
                         );
-                        console.log('Success');
-                        onScreen();
+                        onDetailProgress();
                     }
                 },
             },
@@ -60,11 +59,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const onDetailProgress = (): void => {
         navigation &&
             navigation.navigate('Home', {
-                screen: 'Setting',
+                screen: 'Notification',
                 params: { screen: 'DetailProgress' },
             });
         console.log('Susses');
-        navigation && navigation.navigate('Setting');
     };
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
@@ -74,10 +72,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 style={styles.iconButton}
                 size="small"
                 accessoryLeft={DoneAllIcon}
-                // onPress={() => {
-                //     setOnAccidents(info.item.id);
-                // }}
-                onPress={onDetailProgress}
+                onPress={() => {
+                    setOnAccidents(info.item.id);
+                }}
+                // onPress={onDetailProgress}
             />
         </View>
     );

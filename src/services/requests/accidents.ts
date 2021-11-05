@@ -1,7 +1,6 @@
 import { axiosInstance } from '../axios-config.service';
 import { UrgentProps, AccidentsProps } from './types';
 
-
 async function creatAccident(props: AccidentsProps) {
     return await axiosInstance.post('/accidents', { ...props }).catch((error) => {
         return error;
