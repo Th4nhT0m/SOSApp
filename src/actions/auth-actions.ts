@@ -1,9 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthRequest } from '../services/requests/authentication';
-import { LoginInProps, SignUpProps } from '../services/requests/types';
+import { ChangePassProps, EditUserProps, LoginInProps, SignUpProps } from '../services/requests/types';
 import { LoginResponseProps, TokenProps } from '../slices/auth-slice';
 import { registerResponseProps } from '../slices/register-slice';
 import { AppStorage } from '../services/app-storage.service';
+import { UsersRequests } from '../services/requests/user';
+import { USER_INFO } from '../app/app-constants';
+import { userProps } from '../slices/users-slice';
 
 const login = createAsyncThunk('auth/login', async (props: LoginInProps) => {
     const response = await AuthRequest.obtainToken(props);
@@ -35,10 +38,18 @@ const logout = createAsyncThunk('auth/logout', async () => {
     }
 });
 
+// change password
+const changePass = createAsyncThunk('auth/change-password', async (props: ChangePassProps) => {
+    const response = await AuthRequest.changePasswordUser(props);
+    await AppStorage.setItem(USER_INFO, response);
+    return response as LoginResponseProps;
+});
+
 export const authActions = {
     login,
     register,
     token,
     isLoggedIn,
     logout,
+    changePass,
 };

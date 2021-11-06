@@ -30,7 +30,8 @@ const getViewUserInfo = createAsyncThunk('/users/me', async () => {
 // update user
 const updateUserInfo = createAsyncThunk('/users/update', async (props: EditUserProps) => {
     const response = await UsersRequests.updateUserInfo(props);
-    return response as UserInfo;
+    await AppStorage.setItem(USER_INFO, response);
+    return response as userProps;
 });
 
 export const usersActions = {

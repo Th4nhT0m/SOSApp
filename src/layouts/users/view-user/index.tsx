@@ -1,17 +1,17 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import * as yup from 'yup';
 import { identityCardRegExp, phoneRegExp } from '../../../app/app-constants';
 import { LoadingIndicator } from '../../../components/loading-indicator';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { usersActions } from '../../../actions/user-actions';
-import { EditUserProps, SignUpProps } from '../../../services/requests/types';
+import { EditUserProps } from '../../../services/requests/types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RootState } from '../../../app/store-provider';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-import { ArrowForwardIconOutLineLeftSide } from './extra/icons';
+import { ArrowForwardIconOutLineLeftSide, SettingIconOutLine } from './extra/icons';
 import InputField from '../../../components/form-inputs/input-field';
 import DatePicker from '../../../components/form-inputs/date-picker';
 import SelectField from '../../../components/form-inputs/select-field';
@@ -24,15 +24,13 @@ const updateUserSchema = yup.object().shape({
     dob: yup.date().typeError('Invalid date format').required('Date of birth is required'),
 });
 
-const genderOptions = [{ title: 'Male' }, { title: 'Female' }, { title: 'Other' }];
+//const genderOptions = [{ title: 'Male' }, { title: 'Female' }, { title: 'Other' }];
 
 const initValues: EditUserProps = {
     name: '',
     identityCard: '',
     numberPhone: '',
     address: '',
-    sex: '',
-    //  dob: new Date(),
 };
 
 const ViewUser = ({ navigation }: any): React.ReactElement => {
@@ -59,19 +57,34 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
         identityCard: updateUser.currentUser.identityCard,
         numberPhone: updateUser.currentUser.numberPhone,
         address: updateUser.currentUser.address,
-        sex: updateUser.currentUser.sex,
-        //   dob: updateUser.currentUser.dob,
     };
 
-    const onSignUpButtonPress = (values: SignUpProps): void => {
-        const { sex, ...rest } = values;
-        const sexStr = genderOptions[parseInt(sex, 1)].title;
-        dispatch(usersActions.updateUserInfo({ sex: sexStr, ...rest }));
-        if (updateUser.changeSusses) {
-            console.log(updateUser);
-        } else {
-            console.log(updateUser.error);
-        }
+    // const onSignUpButtonPress = (values: EditUserProps): void => {
+    //     const { sex, ...rest } = values;
+    //     const sexStr = genderOptions[parseInt(sex, 1)].title;
+    //     console.log(sexStr);
+    //     dispatch(usersActions.updateUserInfo({ sex: sexStr, ...rest }));
+    //     if (updateUser.changeSusses) {
+    //         console.log(updateUser);
+    //     } else {
+    //         console.log(updateUser.error);
+    //     }
+    // };
+
+    const onSignUpButtonPress = (values: EditUserProps): void => {
+        Alert.alert('Notification', 'Do you want to change the information ?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: () => {
+                    dispatch(usersActions.updateUserInfo(values));
+                },
+            },
+        ]);
     };
 
     const onBackButtonPress = (): void => {
@@ -97,6 +110,14 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
                 Back
             </Button>
 
+            <Button
+                style={styles.iconSetting}
+                appearance="ghost"
+                status="control"
+                size="giant"
+                accessoryLeft={SettingIconOutLine}
+            />
+
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h5">
@@ -106,34 +127,41 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <View style={[styles.container, styles.formContainer]}>
-                <InputField name={'name'} control={control} label={'Full name'} value={setDataUser.name} />
+                <InputField name={'name'} control={control} label={'Full name'} placeholder={setDataUser.name} />
                 <InputField
                     name={'identityCard'}
                     control={control}
                     label={'ID Number'}
-                    value={setDataUser.identityCard}
+                    placeholder={setDataUser.identityCard}
                 />
                 <InputField
                     name={'numberPhone'}
                     control={control}
                     label={'Phone number'}
-                    value={setDataUser.numberPhone}
+                    placeholder={setDataUser.numberPhone}
                 />
-                <DatePicker control={control} name={'dob'} label={'Date of birth'} />
-                <SelectField name={'sex'} control={control} options={genderOptions} />
+                <DatePicker
+                    control={control}
+                    name={'dob'}
+                    label={'Date of birth'}
+                    placeholder={updateUser.currentUser.dob}
+                />
+
+                {/*<SelectField name={'sex'} control={control} options={genderOptions} />*/}
+
                 <InputField
                     style={styles.formInput}
-                    placeholder="Where are you?"
+                    // placeholder="Where are you?"
                     label="Address"
                     name={'address'}
                     autoCapitalize="words"
                     control={control}
-                    value={setDataUser.address}
+                    placeholder={setDataUser.address}
                 />
             </View>
 
             <Button
-                style={styles.signUpButton}
+                style={styles.updateButton}
                 size="large"
                 onPress={handleSubmit(onSignUpButtonPress)}
                 accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
@@ -166,15 +194,15 @@ const themedStyles = StyleService.create({
     formInput: {
         marginTop: 16,
     },
-    signUpButton: {
+    updateButton: {
         marginVertical: 24,
         marginHorizontal: 16,
     },
     orContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 16,
-        marginTop: 52,
+        marginHorizontal: 15,
+        marginTop: 2,
     },
     divider: {
         flex: 1,
@@ -182,9 +210,17 @@ const themedStyles = StyleService.create({
     orLabel: {
         marginHorizontal: 8,
     },
+
     backButton: {
         maxWidth: 80,
         paddingHorizontal: 0,
+    },
+
+    iconSetting: {
+        maxWidth: 350,
+        paddingHorizontal: 0,
+        alignSelf: 'center',
+        marginBottom: 16,
     },
 });
 

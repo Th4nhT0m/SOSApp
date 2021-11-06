@@ -30,6 +30,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
     });
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state: RootState) => state.auth);
+
     const onSignInButtonPress = (values: LoginInProps): void => {
         dispatch(authActions.login(values));
         // if (auth.isLogin) {
@@ -64,6 +65,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
                             Forgot your password?
                         </Button>
                     </View>
+
                     <View>
                         <InputField label={'Email'} name={'email'} control={control} />
                         <PasswordField name={'password'} control={control} />
@@ -75,6 +77,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
                             onPress={handleSubmit(onSignInButtonPress)}
                             children="Sign In"
                         />
+
                         <Button
                             style={styles.signUpButton}
                             appearance="ghost"

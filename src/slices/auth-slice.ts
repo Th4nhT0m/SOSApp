@@ -21,12 +21,14 @@ interface Props {
     tokens?: TokenProps;
     isLoading: boolean;
     error?: string;
+    changeSusses: boolean;
 }
 
 const initialState: Props = {
     isLogin: false,
     tokens: {},
     isLoading: false,
+    changeSusses: false,
 };
 
 const authSlice = createSlice({
@@ -49,6 +51,15 @@ const authSlice = createSlice({
         });
         builder.addCase(authActions.isLoggedIn.fulfilled, (state, action) => {
             state.isLogin = action.payload;
+        });
+
+        // change pass
+        builder.addCase(authActions.changePass.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(authActions.changePass.fulfilled, (state) => {
+            state.isLoading = false;
+            state.changeSusses = true;
         });
     },
 });

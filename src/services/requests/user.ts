@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios-config.service';
-import { EditUserProps } from './types';
+import { ChangePassProps, EditUserProps } from './types';
 
 async function getCurrentUserInfo() {
     return await axiosInstance.get('/users/me').catch((error) => error);

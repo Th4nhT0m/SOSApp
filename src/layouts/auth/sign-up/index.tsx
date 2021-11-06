@@ -54,6 +54,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const register = useAppSelector((state: RootState) => state.register);
     const dispatch = useAppDispatch();
+
     const onSignUpButtonPress = (values: SignUpProps): void => {
         const { sex, ...rest } = values;
         const sexStr = genderOptions[parseInt(sex, 1)].title;

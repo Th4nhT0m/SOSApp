@@ -47,12 +47,17 @@ export interface UrgentProps {
     user?: string;
 }
 
-// User
+// update User info
 export interface EditUserProps {
     name: string;
     identityCard: string;
     numberPhone: string;
     address: string;
-    sex: string;
+    //sex: string;
     // dob: Date;
+}
+
+// change passwork
+export interface ChangePassProps {
+    password: string;
 }

@@ -58,10 +58,9 @@ const usersSlice = createSlice({
         builder.addCase(usersActions.updateUserInfo.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(usersActions.updateUserInfo.fulfilled, (state, action) => {
+        builder.addCase(usersActions.updateUserInfo.fulfilled, (state) => {
             state.isLoading = false;
             state.changeSusses = true;
-            state.currentUser = action.payload;
         });
     },
 });

@@ -27,10 +27,20 @@ const Settings = ({ navigation }: any): React.ReactElement => {
             });
     };
 
+    const changePassUpButtonPress = () => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Settings',
+                params: {
+                    screen: 'ChangePass',
+                },
+            });
+    };
+
     return (
         <Layout style={styles.container}>
             <Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />
-            <Setting style={styles.setting} hint="Change Password" />
+            <Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />
             <Setting style={[styles.setting, styles.themes]} hint="Themes" hintStyles={{ margin: 10 }}>
                 <ThemesScreen />
             </Setting>
