@@ -62,3 +62,21 @@ export interface DetailAccidentsProps {
     latitude: string;
     longitude: string;
 }
+
+export interface DetailAccidents {
+    id: string;
+    user: string;
+    accident: string;
+    status: string;
+    latitude: string;
+    longitude: string;
+    content: string;
+    timeOut: Date;
+}
+export interface patchDetailProps {
+    status: string;
+    content: string;
+    timeOut: string;
+    latitude: string;
+    longitude: string;
+}

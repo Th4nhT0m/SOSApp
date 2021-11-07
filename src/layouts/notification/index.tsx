@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../ser
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import { DetailAccidentsAction } from '../../actions/details-accident-actions';
+import { AppStorage } from '../../services/app-storage.service';
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
@@ -28,7 +29,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         timeStart: pops.timeStart,
     }));
 
-    const setOnAccidents = (id: string): void => {
+    const setOnAccidents = (id: string, latitudeAccident: string, longitudeAccident: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
                 text: 'Cancel',
@@ -38,10 +39,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    if (location != undefined) {
-                        console.log(location.coords.latitude + ' ' + location.coords.latitude);
-                        console.log(id);
-                        console.log(getUser);
+                    if (location !== undefined) {
                         dispatch(
                             DetailAccidentsAction.creatDetails({
                                 accident: id,
@@ -73,7 +71,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 size="small"
                 accessoryLeft={DoneAllIcon}
                 onPress={() => {
-                    setOnAccidents(info.item.id);
+                    setOnAccidents(info.item.id, info.item.latitude, info.item.longitude);
                 }}
                 // onPress={onDetailProgress}
             />

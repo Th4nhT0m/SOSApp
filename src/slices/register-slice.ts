@@ -21,11 +21,10 @@ const registerSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(authActions.register.pending, (state) => {
-            state.isLoading = false;
-            state.registerSusses = true;
+            state.isLoading = true;
         });
         builder.addCase(authActions.register.fulfilled, (state) => {
-            state.isLoading = true;
+            state.registerSusses = true;
         });
     },
 });

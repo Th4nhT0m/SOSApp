@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DetailAccidentsAction } from '../actions/details-accident-actions';
-import { DetailAccidentsProps } from '../services/requests/types';
+import { DetailAccidents, DetailAccidentsProps } from '../services/requests/types';
 
 export interface detailsAccidentsProps {
     code?: string;
@@ -8,11 +8,24 @@ export interface detailsAccidentsProps {
 }
 interface Props {
     isLoading: boolean;
-    data: DetailAccidentsProps;
+    dataCreate: DetailAccidentsProps;
+    dataGet: DetailAccidents;
+    isPatch: boolean;
 }
 const initialState: Props = {
+    isPatch: false,
     isLoading: false,
-    data: { accident: '', user: '', latitude: '', longitude: '' },
+    dataCreate: { accident: '', user: '', latitude: '', longitude: '' },
+    dataGet: {
+        id: '',
+        user: '',
+        accident: '',
+        status: '',
+        latitude: '',
+        longitude: '',
+        content: '',
+        timeOut: Date.prototype,
+    },
 };
 
 const detailAccidentsSlice = createSlice({
@@ -24,7 +37,27 @@ const detailAccidentsSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(DetailAccidentsAction.creatDetails.fulfilled, (state, action) => {
-            state.data = action.payload;
+            state.dataCreate = action.payload;
+            state.dataGet = action.payload;
+        });
+        builder.addCase(DetailAccidentsAction.getDetails.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(DetailAccidentsAction.getDetails.fulfilled, (state, action) => {
+            state.dataGet = action.payload;
+        });
+        builder.addCase(DetailAccidentsAction.patchDetails.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(DetailAccidentsAction.patchDetails.fulfilled, (state, action) => {
+            state.dataGet = action.payload;
+            state.isPatch = true;
+        });
+        builder.addCase(DetailAccidentsAction.deleteDetails.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(DetailAccidentsAction.deleteDetails.fulfilled, (state, action) => {
+            state.dataCreate = action.payload;
         });
     },
 });
