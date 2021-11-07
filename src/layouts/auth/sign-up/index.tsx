@@ -57,7 +57,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
 
     const onSignUpButtonPress = (values: SignUpProps): void => {
         const { sex, ...rest } = values;
-        const sexStr = genderOptions[parseInt(sex, 1)].title;
+        const sexStr = genderOptions[parseInt(sex, 10)].title;
         dispatch(authActions.register({ sex: sexStr, ...rest }));
         if (register.registerSusses) {
             console.log(register);

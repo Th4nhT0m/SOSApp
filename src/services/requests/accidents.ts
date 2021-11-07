@@ -11,8 +11,14 @@ async function creatUrgentAccident(props: UrgentProps) {
         return error;
     });
 }
+async function getAllAccident() {
+    return await axiosInstance.get('/accidents').catch((error) => {
+        return error;
+    });
+}
 
 export const AccidentsRequest = {
     creatAccident,
     creatUrgentAccident,
+    getAllAccident,
 };

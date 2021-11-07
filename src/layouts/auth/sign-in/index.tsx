@@ -6,8 +6,7 @@ import { LoadingIndicator } from '../../../components/loading-indicator';
 import { ImageOverlay } from './extra/image-overlay.component';
 import * as yup from 'yup';
 import { FacebookIcon, GoogleIcon, TwitterIcon } from './extra/icons';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
-import { RootState } from '../../../app/store-provider';
+import { useAppDispatch } from '../../../services/hooks';
 import { authActions } from '../../../actions/auth-actions';
 import { LoginInProps, SignUpProps } from '../../../services/requests/types';
 import { useForm } from 'react-hook-form';
@@ -29,13 +28,11 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
         resolver: yupResolver(loginSchema),
     });
     const dispatch = useAppDispatch();
+  
     const auth = useAppSelector((state: RootState) => state.auth);
-
+  
     const onSignInButtonPress = (values: LoginInProps): void => {
         dispatch(authActions.login(values));
-        // if (auth.isLogin) {
-        //     navigation && navigation.navigate('Home');
-        // }
     };
     const onSignUpButtonPress = (): void => {
         navigation && navigation.navigate('SignUp');

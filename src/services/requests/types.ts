@@ -40,11 +40,31 @@ export interface AccidentsProps {
     user: string;
     people: string;
 }
+
 export interface UrgentProps {
     locationName?: string;
     latitude: string;
     longitude: string;
     user?: string;
+}
+
+export interface Accidents {
+    id: string;
+    nameAccident: string;
+    description: string;
+    latitude: string;
+    longitude: string;
+    created_by: string;
+    modified_by: string;
+    accidentType: string;
+    timeStart: Date;
+}
+
+export interface DetailAccidentsProps {
+    accident: string;
+    user: string;
+    latitude: string;
+    longitude: string;
 }
 
 // update User info

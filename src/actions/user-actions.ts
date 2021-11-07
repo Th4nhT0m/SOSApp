@@ -9,7 +9,7 @@ import { userProps } from '../slices/users-slice';
 const getCurrentUserInfo = createAsyncThunk('users/currentInfo', async () => {
     const response = await UsersRequests.getCurrentUserInfo();
     await AppStorage.setItem(USER_INFO, response);
-    return response as UserInfo;
+    return response as unknown as UserInfo;
 });
 
 interface UserInfoProps {

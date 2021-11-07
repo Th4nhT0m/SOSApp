@@ -32,7 +32,7 @@ const isLoggedIn = createAsyncThunk('auth/isLoggedIn', async () => {
 });
 
 const logout = createAsyncThunk('auth/logout', async () => {
-    const tokens: TokenProps = await AppStorage.getItem('tokens');
+    const tokens: TokenProps = await AppStorage.removeItem('tokens');
     if (tokens.refresh?.token !== undefined) {
         return await AuthRequest.logOut({ refreshToken: tokens.refresh?.token });
     }

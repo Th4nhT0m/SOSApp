@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { usersActions } from '../actions/user-actions';
+import { UserInfo } from '../models/user-info.model';
 
 export interface userProps {
     code?: string;

@@ -22,53 +22,30 @@ const accidentsSchema = yup.object().shape({
 });
 
 const Accidents = ({ navigation }: any): React.ReactElement => {
-    const {
-        control,
-        handleSubmit,
-        formState: { isSubmitting },
-    } = useForm<AccidentsProps>({
-        resolver: yupResolver(accidentsSchema),
-    });
+    // const {
+    //     control,
+    //     handleSubmit,
+    //     formState: { isSubmitting },
+    // } = useForm<AccidentsProps>({
+    //     resolver: yupResolver(accidentsSchema),
+    // });
+    //
+    // const genderOptions = [{ title: 'Danger' }, { title: 'Normal' }];
+    //
+    // const accidents = useAppSelector((state: RootState) => state.accidents);
+    // const dispatch = useAppDispatch();
+    // const onAccidentsButtonPress = (values: AccidentsProps): void => {
+    //     dispatch(accidentsActions.create({ ...values }));
+    //     if (accidents.issusses) {
+    //         console.log(accidents);
+    //     }
+    // };
+    //
+    // const onHomeButtonPress = (): void => {
+    //     navigation && navigation.navigate('Home');
+    // };
 
-    const genderOptions = [{ title: 'Danger' }, { title: 'Normal' }];
-
-    const accidents = useAppSelector((state: RootState) => state.accidents);
-    const dispatch = useAppDispatch();
-    const onAccidentsButtonPress = (values: AccidentsProps): void => {
-        dispatch(accidentsActions.create({ ...values }));
-        if (accidents.issusses) {
-            console.log(accidents);
-        }
-    };
-
-    const onHomeButtonPress = (): void => {
-        navigation && navigation.navigate('Home');
-    };
-
-    return (
-        <KeyboardAvoidingView>
-            <View>
-                <InputField name={'nameAccidents'} control={control} label={'Name Accidents'} />
-                <SelectField name={'status'} control={control} options={genderOptions} />
-                <InputField name={'locationName'} control={control} label={'Location Name'} />
-                <InputField name={'people'} control={control} label={'People'} />
-            </View>
-            <Button
-                size="large"
-                onPress={handleSubmit(onAccidentsButtonPress)}
-                accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
-            >
-                Create
-            </Button>
-            <Button
-                size="large"
-                onPress={handleSubmit(onHomeButtonPress)}
-                accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
-            >
-                GO BACK
-            </Button>
-        </KeyboardAvoidingView>
-    );
+    return <KeyboardAvoidingView />;
 };
 
 export default Accidents;
