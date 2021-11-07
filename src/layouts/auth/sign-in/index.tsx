@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputField from '../../../components/form-inputs/input-field';
 import PasswordField from '../../../components/form-inputs/password-field';
+
 const loginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
     password: yup.string().required('Password is required'),
@@ -27,6 +28,9 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
         resolver: yupResolver(loginSchema),
     });
     const dispatch = useAppDispatch();
+  
+    const auth = useAppSelector((state: RootState) => state.auth);
+  
     const onSignInButtonPress = (values: LoginInProps): void => {
         dispatch(authActions.login(values));
     };
@@ -58,6 +62,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
                             Forgot your password?
                         </Button>
                     </View>
+
                     <View>
                         <InputField label={'Email'} name={'email'} control={control} />
                         <PasswordField name={'password'} control={control} />
@@ -69,6 +74,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
                             onPress={handleSubmit(onSignInButtonPress)}
                             children="Sign In"
                         />
+
                         <Button
                             style={styles.signUpButton}
                             appearance="ghost"

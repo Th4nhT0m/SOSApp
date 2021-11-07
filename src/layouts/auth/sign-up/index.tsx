@@ -48,11 +48,13 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
         resolver: yupResolver(signUpSchema),
         defaultValues: initValues,
     });
+
     const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
     const styles = useStyleSheet(themedStyles);
     const register = useAppSelector((state: RootState) => state.register);
     const dispatch = useAppDispatch();
+
     const onSignUpButtonPress = (values: SignUpProps): void => {
         const { sex, ...rest } = values;
         const sexStr = genderOptions[parseInt(sex, 10)].title;

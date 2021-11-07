@@ -1,3 +1,4 @@
+// authentication
 export interface ObtainTokenProps {
     email: string;
     password: string;
@@ -28,6 +29,7 @@ export interface LoginInProps {
     password: string;
 }
 
+// Accident
 export interface AccidentsProps {
     nameAccidents: string;
     status: string;
@@ -38,12 +40,14 @@ export interface AccidentsProps {
     user: string;
     people: string;
 }
+
 export interface UrgentProps {
     locationName?: string;
     latitude: string;
     longitude: string;
     user?: string;
 }
+
 export interface Accidents {
     id: string;
     nameAccident: string;
@@ -61,4 +65,19 @@ export interface DetailAccidentsProps {
     user: string;
     latitude: string;
     longitude: string;
+}
+
+// update User info
+export interface EditUserProps {
+    name: string;
+    identityCard: string;
+    numberPhone: string;
+    address: string;
+    //sex: string;
+    // dob: Date;
+}
+
+// change passwork
+export interface ChangePassProps {
+    password: string;
 }

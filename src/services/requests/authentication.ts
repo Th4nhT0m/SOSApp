@@ -1,5 +1,12 @@
 import { axiosInstance } from '../axios-config.service';
-import { ResetPasswordProps, LogoutTokenProps, ObtainTokenProps, ForgotPasswordProps, SignUpProps } from './types';
+import {
+    ResetPasswordProps,
+    LogoutTokenProps,
+    ObtainTokenProps,
+    ForgotPasswordProps,
+    SignUpProps,
+    ChangePassProps,
+} from './types';
 import { AppStorage } from '../app-storage.service';
 import { TokenProps } from '../../slices/auth-slice';
 
@@ -77,11 +84,19 @@ async function sendVerifyEmail() {
         });
 }
 
+// change password
+async function changePasswordUser(props: ChangePassProps) {
+    return await axiosInstance.patch('/auth/change-password', { ...props }).catch((error) => {
+        return error;
+    });
+}
+
 export const AuthRequest = {
     obtainToken,
     refreshToken,
     register,
     logOut,
+    changePasswordUser,
     forgotPassword,
     resetPassword,
     verifyEmail,

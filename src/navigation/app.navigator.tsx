@@ -5,6 +5,7 @@ import { AuthNavigator } from './auth.navigator';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AccidentsNavigator } from './accidents.navigator';
 import { useAppDispatch, useAppSelector } from '../services/hooks';
+import { SettingNavigator } from './setting.navigator';
 import { authActions } from '../actions/auth-actions';
 
 const Stack = createStackNavigator();
@@ -32,7 +33,6 @@ export const AppNavigator = (): React.ReactElement => {
     const privateStack = () => (
         <>
             <Stack.Screen name={'Home'} component={HomeNavigator} />
-            {/*<Stack.Screen name={'Accidents'} component={AccidentsNavigator} />*/}
         </>
     );
 

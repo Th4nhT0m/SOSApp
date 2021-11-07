@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import { authActions } from '../actions/auth-actions';
 
 export interface urgentResponseProps {
@@ -12,6 +11,7 @@ interface Props {
     error?: string;
     registerSusses: boolean;
 }
+
 const initialState: Props = {
     isLoading: false,
     registerSusses: false,
