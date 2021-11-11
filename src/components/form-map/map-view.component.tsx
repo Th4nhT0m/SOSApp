@@ -48,7 +48,12 @@ const MapViewComponent = (props: MapViewProps) => {
     const renderMap = () => (
         <MapView
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
-            initialRegion={initialPosition}
+            initialRegion={{
+                latitude: initialPosition.latitude,
+                longitude: initialPosition.longitude,
+                latitudeDelta: initialPosition.latitudeDelta,
+                longitudeDelta: initialPosition.longitudeDelta,
+            }}
             onMapReady={onMapReady}
             provider="google"
             mapType="standard"

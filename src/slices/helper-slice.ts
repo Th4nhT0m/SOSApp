@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HelpProps, PatchHelper } from '../services/requests/types';
+import { Helper, HelpProps } from '../services/requests/types';
 import { HelperAction } from '../actions/helper-actions';
 
 export interface HelperProps {
@@ -9,20 +9,23 @@ export interface HelperProps {
 
 interface Props {
     isLoading: boolean;
-    dataCreate: HelpProps;
-
+    dateGet: Helper;
     isPatch: boolean;
 }
 const initialState: Props = {
     isPatch: false,
     isLoading: false,
-    dataCreate: {
-        accident: '',
+    dateGet: {
+        id: '',
         user: '',
-        accidentLatitude: '',
-        accidentLongitude: '',
+        status: '',
+        accident: '',
+        content: '',
         helperLatitude: '',
         helperLongitude: '',
+        accidentLatitude: '',
+        accidentLongitude: '',
+        timeOut: Date.prototype,
     },
 };
 const helpeSlice = createSlice({
@@ -34,13 +37,13 @@ const helpeSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
-            state.dataCreate = action.payload;
+            state.dateGet = action.payload;
         });
         builder.addCase(HelperAction.patchHelper.pending, (state) => {
-            state.isPatch = true;
+            state.isPatch = false;
         });
         builder.addCase(HelperAction.patchHelper.fulfilled, (state, action) => {
-            state.dataCreate = action.payload;
+            state.dateGet = action.payload;
         });
         // builder.addCase(HelperAction.deleteHelper.pending, (state) => {
         //

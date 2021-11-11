@@ -115,10 +115,23 @@ export interface HelpProps {
 //Patch Helper
 export interface PatchHelper {
     status: string;
-    content: string;
-    timeOut: string;
+    timeOut: Date;
     helperLatitude: string;
     helperLongitude: string;
     accidentLatitude: string;
     accidentLongitude: string;
+}
+//get Helper
+
+export interface Helper {
+    id: string;
+    user: string;
+    accident: string;
+    status: string;
+    helperLatitude: string;
+    helperLongitude: string;
+    accidentLatitude: string;
+    accidentLongitude: string;
+    content: string;
+    timeOut: Date;
 }

@@ -8,8 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { RootState } from '../../../app/store-provider';
 import { KeyboardAvoidingView } from '../../auth/sign-in/extra/3rd-party';
-import { Button } from '@ui-kitten/components';
-import { LoadingIndicator } from '../../../components/loading-indicator';
+
 
 import * as yup from 'yup';
 import { accidentsActions } from '../../../actions/accidents-ations';

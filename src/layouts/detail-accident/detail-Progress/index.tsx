@@ -1,20 +1,21 @@
 import { Alert, Dimensions, View } from 'react-native';
 import { Button, StyleService } from '@ui-kitten/components';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import React from 'react';
 import MapDirectionsViewComponent from '../../../components/form-map/map-directions-view.component';
 import { HelperAction } from '../../../actions/helper-actions';
 const window = Dimensions.get('window');
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
-    const getID = useAppSelector((state) => state.helpersReducer.dataCreate.user);
-    const getLatitude = useAppSelector((state) => state.helpersReducer.dataCreate.accidentLatitude);
-    const getLongitude = useAppSelector((state) => state.helpersReducer.dataCreate.accidentLongitude);
+    const { location } = useCurrentGPSPosition();
+    const getID = useAppSelector((state) => state.helpersReducer.dateGet.id);
+    const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
+    const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
 
     // const { location } = useCurrentGPSPosition();
     const onNotification = () => {
         navigation &&
-            navigation.babel('Home', {
+            navigation.navigate('Home', {
                 screen: 'Notification',
                 params: { screen: 'NotificationAccidents' },
             });
@@ -33,10 +34,9 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                     // dispatch(
                     //     HelperAction.patchHelper({
                     //         id: getID,
-                    //         props: {},
+                    //         props: {status:'cancel'},
                     //     })
                     // );
-                    onNotification();
                 },
             },
         ]);
@@ -51,7 +51,22 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    onNotification();
+                    if (location !== undefined) {
+                        dispatch(
+                            HelperAction.patchHelper({
+                                id: getID,
+                                props: {
+                                    status: 'Cancel',
+                                    accidentLongitude: getLongitude,
+                                    accidentLatitude: getLatitude,
+                                    helperLatitude: String(location.coords.latitude),
+                                    helperLongitude: String(location.coords.longitude),
+                                    timeOut: new Date(),
+                                },
+                            })
+                        );
+                        onNotification();
+                    }
                 },
             },
         ]);

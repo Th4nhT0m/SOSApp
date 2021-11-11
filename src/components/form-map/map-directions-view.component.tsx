@@ -12,6 +12,12 @@ export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
 const window = Dimensions.get('window');
 
 const MapDirectionsViewComponent = (props: MapViewProps) => {
+    const { height, width, style, ...rest } = props;
+    const SCREEN_HEIGHT = height ?? window.height;
+    const SCREEN_WIDTH = width ?? window.width;
+    const ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
+    const LATITUDE_DELTA = 0.0922;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const { location } = useCurrentGPSPosition();
     const [paddingTop, setPadding] = useState<any>(1);
     const [initialPosition, setPosition] = React.useState([
@@ -30,7 +36,7 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
         });
     };
 
-    const { height, width, style, ...rest } = props;
+
     React.useEffect(() => {
         if (location !== null && location !== undefined) {
             const { latitude, longitude } = location.coords;
@@ -56,6 +62,12 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
             showsScale={true}
             showsCompass={true}
             {...rest}
+            initialRegion={{
+                latitude: initialPosition[0].latitude,
+                longitude: initialPosition[0].longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+            }}
         >
             <Marker coordinate={initialPosition[0]} />
             <Marker coordinate={initialPosition[1]} />
