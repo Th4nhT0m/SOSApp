@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Image } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import * as yup from 'yup';
 import { passwordRegExp } from '../../../app/app-constants';
@@ -13,6 +13,7 @@ import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ChangeIconOutLine, ArrowForwardIconOutLineLeftSide } from './extra/icons';
 import { authActions } from '../../../actions/auth-actions';
 import PasswordField from '../../../components/form-inputs/password-field';
+import { ImageOverlay } from './extra/image-overlay.component';
 
 const changePassUser = yup.object().shape({
     password: yup.string().matches(passwordRegExp, 'Please enter a longer password').required('Password is required'),
@@ -65,23 +66,21 @@ const ChangePassword = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <Button
-                style={styles.backButton}
-                appearance="ghost"
-                status="control"
-                size="giant"
-                accessoryLeft={ArrowForwardIconOutLineLeftSide}
-                onPress={onBackButtonPress}
-            >
-                Back
-            </Button>
-
-            <Button
-                style={styles.iconSetting}
-                appearance="ghost"
-                status="control"
-                size="giant"
-                accessoryLeft={ChangeIconOutLine}
+            <ImageOverlay style={styles.headerContainer as any}>
+                <Button
+                    style={styles.backButton}
+                    appearance="ghost"
+                    status="control"
+                    size="giant"
+                    accessoryLeft={ArrowForwardIconOutLineLeftSide}
+                    onPress={onBackButtonPress}
+                >
+                    Back
+                </Button>
+            </ImageOverlay>
+            <Image
+                source={require('./assets/changePass.png')}
+                style={{ width: 100, height: 100, alignSelf: 'center' }}
             />
 
             <View style={styles.orContainer}>
@@ -114,10 +113,9 @@ const themedStyles = StyleService.create({
     },
 
     headerContainer: {
-        minHeight: 216,
+        minHeight: 20,
         paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 44,
+        backgroundColor: '#20b2aa',
     },
     socialAuthHintText: {
         alignSelf: 'center',

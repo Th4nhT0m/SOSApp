@@ -25,8 +25,8 @@ export const HomeNavigator = (): React.ReactElement => (
     >
         <BottomTab.Screen name="Dashboard" component={DashboardScreen} />
         <BottomTab.Screen name="Notification" component={NotificationNavigator} />
+        <BottomTab.Screen name="Hospital" component={SettingNavigator} />
         <BottomTab.Screen name="Settings" component={SettingNavigator} />
-
     </BottomTab.Navigator>
 );
 

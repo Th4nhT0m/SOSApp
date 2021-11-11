@@ -1,6 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthRequest } from '../services/requests/authentication';
-import { ChangePassProps, EditUserProps, LoginInProps, SignUpProps } from '../services/requests/types';
+import {
+    ChangePassProps,
+    EditUserProps,
+    ForgotPasswordProps,
+    LoginInProps,
+    SignUpProps,
+} from '../services/requests/types';
 import { LoginResponseProps, TokenProps } from '../slices/auth-slice';
 import { registerResponseProps } from '../slices/register-slice';
 import { AppStorage } from '../services/app-storage.service';
@@ -45,6 +51,12 @@ const changePass = createAsyncThunk('auth/change-password', async (props: Change
     return response as LoginResponseProps;
 });
 
+// forgot password
+const forgotPass = createAsyncThunk('auth/forgot-password', async (props: ForgotPasswordProps) => {
+    const response = await AuthRequest.forgotPassword(props);
+    return response;
+});
+
 export const authActions = {
     login,
     register,
@@ -52,4 +64,5 @@ export const authActions = {
     isLoggedIn,
     logout,
     changePass,
+    forgotPass,
 };

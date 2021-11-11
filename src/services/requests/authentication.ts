@@ -52,8 +52,9 @@ async function logOut(props: LogoutTokenProps) {
     });
 }
 
+// forgot password
 async function forgotPassword(props: ForgotPasswordProps) {
-    return await axiosInstance.post('/auth/forgot-password', { props }).catch((error) => {
+    return await axiosInstance.post('/auth/forgot-password', { ...props }).catch((error) => {
         return error;
     });
 }

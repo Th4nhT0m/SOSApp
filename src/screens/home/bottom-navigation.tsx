@@ -2,7 +2,7 @@ import React from 'react';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { BottomNavigationTab, Divider, StyleService } from '@ui-kitten/components';
 import { BrandBottomNavigation } from '../../components/brand-bottom-navigation.component';
-import { BellIcon, GridIcon, SettingIcon } from '../../components/Icons';
+import { BellIcon, GridIcon, SettingIcon, HospitalLocationIcon } from '../../components/Icons';
 
 export const HomeBottomNavigation: React.FC<BottomTabBarProps> = ({ navigation, state }) => {
     const handleSelect = (index: number) => {
@@ -19,6 +19,7 @@ export const HomeBottomNavigation: React.FC<BottomTabBarProps> = ({ navigation, 
             >
                 <BottomNavigationTab title="Dashboard" icon={GridIcon} />
                 <BottomNavigationTab title="Notification" icon={BellIcon} />
+                <BottomNavigationTab title="Hospital" icon={HospitalLocationIcon} />
                 <BottomNavigationTab title="Settings" icon={SettingIcon} />
             </BrandBottomNavigation>
         </>

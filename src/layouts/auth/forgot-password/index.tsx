@@ -1,15 +1,44 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Input, Text } from '@ui-kitten/components';
+import { Button, Text } from '@ui-kitten/components';
 import { ImageOverlay } from './extra/image-overlay.component';
 import { EmailIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
+import * as yup from 'yup';
+import { ForgotPasswordProps } from '../../../services/requests/types';
+import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { RootState } from '../../../app/store-provider';
+import { authActions } from '../../../actions/auth-actions';
+import { LoadingIndicator } from '../../../components/loading-indicator';
+import InputField from '../../../components/form-inputs/input-field';
+
+const forgotPasswordSchema = yup.object().shape({
+    email: yup.string().email().typeError('Email is invalid').required('Email is required'),
+});
+
+const initValues: ForgotPasswordProps = {
+    email: '',
+};
 
 const ForgotPassword = ({ navigation }: any): React.ReactElement => {
-    const [email, setEmail] = React.useState<string>();
+    const dispatch = useAppDispatch();
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = useForm<ForgotPasswordProps>({
+        resolver: yupResolver(forgotPasswordSchema),
+        defaultValues: initValues,
+    });
 
-    const onResetPasswordButtonPress = (): void => {
-        navigation && navigation.goBack();
+    // const [email, setEmail] = React.useState<string>();
+
+    const forgotPass = useAppSelector((state: RootState) => state.users);
+
+    const onResetPasswordButtonPress = (values: ForgotPasswordProps): void => {
+        dispatch(authActions.forgotPass(values));
     };
 
     return (
@@ -21,16 +50,22 @@ const ForgotPassword = ({ navigation }: any): React.ReactElement => {
                 <Text style={styles.enterEmailLabel} status="control">
                     Please enter your email address
                 </Text>
+
                 <View style={styles.formContainer}>
-                    <Input
-                        status="control"
+                    <InputField
+                        name={'email'}
+                        control={control}
+                        label={'Email'}
                         placeholder="Email"
                         accessoryRight={EmailIcon}
-                        value={email}
-                        onChangeText={setEmail}
                     />
                 </View>
-                <Button size="giant" onPress={onResetPasswordButtonPress}>
+
+                <Button
+                    size="giant"
+                    onPress={handleSubmit(onResetPasswordButtonPress)}
+                    accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
+                >
                     RESET PASSWORD
                 </Button>
             </ImageOverlay>

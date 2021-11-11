@@ -61,6 +61,15 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.changeSusses = true;
         });
+
+        // forgot password
+        builder.addCase(authActions.forgotPass.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(authActions.forgotPass.fulfilled, (state) => {
+            state.isLoading = false;
+            state.changeSusses = true;
+        });
     },
 });
 
