@@ -6,6 +6,8 @@ export interface ObtainTokenProps {
 export interface LogoutTokenProps {
     refreshToken: string;
 }
+
+// token forgot password
 export interface ForgotPasswordProps {
     email: string;
 }

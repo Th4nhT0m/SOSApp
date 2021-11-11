@@ -28,9 +28,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
         resolver: yupResolver(loginSchema),
     });
     const dispatch = useAppDispatch();
-  
-    const auth = useAppSelector((state: RootState) => state.auth);
-  
+
     const onSignInButtonPress = (values: LoginInProps): void => {
         dispatch(authActions.login(values));
     };

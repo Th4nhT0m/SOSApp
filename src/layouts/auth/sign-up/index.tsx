@@ -2,7 +2,17 @@ import React from 'react';
 import { View } from 'react-native';
 import { Button, CheckBox, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { ImageOverlay } from './extra/image-overlay.component';
-import { ArrowForwardIconOutline, FacebookIcon, GoogleIcon, HeartIconFill, TwitterIcon } from './extra/icons';
+import {
+    Address,
+    PhoneNumber,
+    IDCard,
+    PersonName,
+    FacebookIcon,
+    GoogleIcon,
+    ArrowForwardIconOutLineLeftSide,
+    TwitterIcon,
+    EmailIcon,
+} from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import * as yup from 'yup';
 import { identityCardRegExp, passwordRegExp, phoneRegExp } from '../../../app/app-constants';
@@ -82,31 +92,22 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <ImageOverlay style={styles.headerContainer as any} source={require('./assets/unnamed.png')}>
-                <Button
-                    style={styles.evaButton}
-                    appearance="ghost"
-                    status="control"
-                    size="large"
-                    accessoryLeft={HeartIconFill}
-                >
-                    EVA
-                </Button>
                 <View style={styles.signUpContainer}>
-                    <Text style={styles.signInLabel} category="h4" status="control">
-                        SIGN UP
-                    </Text>
                     <Button
                         style={styles.signInButton}
                         appearance="ghost"
                         status="control"
                         size="giant"
-                        accessoryLeft={ArrowForwardIconOutline}
+                        accessoryRight={ArrowForwardIconOutLineLeftSide}
                         onPress={onSignInButtonPress}
                     >
                         Sign In
                     </Button>
                 </View>
             </ImageOverlay>
+            <Text style={styles.signInLabel} category="h4">
+                SIGN UP
+            </Text>
             <View style={styles.socialAuthContainer}>
                 <Text style={styles.socialAuthHintText}>Sign with a social account</Text>
                 <View style={styles.socialAuthButtonsContainer}>
@@ -125,13 +126,18 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
             <Text style={styles.emailSignLabel}>Sign up with Email</Text>
 
             <View style={[styles.container, styles.formContainer]}>
-                <InputField name={'name'} control={control} label={'Full name'} />
-                <InputField name={'email'} control={control} label={'Email'} />
+                <InputField name={'name'} control={control} label={'Full name'} accessoryRight={PersonName} />
+                <InputField name={'email'} control={control} label={'Email'} accessoryRight={EmailIcon} />
                 <PasswordField name={'password'} control={control} />
-                <InputField name={'identityCard'} control={control} label={'ID Number'} />
-                <InputField name={'numberPhone'} control={control} label={'Phone number'} />
+                <InputField name={'identityCard'} control={control} label={'ID Number'} accessoryRight={IDCard} />
+                <InputField
+                    name={'numberPhone'}
+                    control={control}
+                    label={'Phone number'}
+                    accessoryRight={PhoneNumber}
+                />
                 <DatePicker control={control} name={'dob'} label={'Date of birth'} />
-                <SelectField name={'sex'} control={control} options={genderOptions} />
+                <SelectField name={'sex'} label={'Sex'} control={control} options={genderOptions} />
                 <InputField
                     style={styles.formInput}
                     placeholder="Where are you?"
@@ -139,6 +145,7 @@ const SignUp = ({ navigation }: any): React.ReactElement => {
                     name={'address'}
                     autoCapitalize="words"
                     control={control}
+                    accessoryRight={Address}
                 />
                 <CheckBox
                     style={styles.termsCheckBox}
@@ -165,16 +172,16 @@ const themedStyles = StyleService.create({
         backgroundColor: 'background-basic-color-1',
     },
     headerContainer: {
-        minHeight: 216,
-        paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 44,
+        minHeight: 40,
+        paddingHorizontal: 15,
+        paddingTop: 10,
+        paddingBottom: 10,
     },
     signUpContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 32,
+        marginTop: 15,
     },
     socialAuthContainer: {
         marginTop: 24,
@@ -197,6 +204,7 @@ const themedStyles = StyleService.create({
     },
     signInLabel: {
         flex: 1,
+        alignSelf: 'center',
     },
     signInButton: {
         flexDirection: 'row-reverse',
@@ -212,8 +220,8 @@ const themedStyles = StyleService.create({
     orContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 16,
-        marginTop: 52,
+        marginHorizontal: 12,
+        marginTop: 30,
     },
     divider: {
         flex: 1,
@@ -223,7 +231,7 @@ const themedStyles = StyleService.create({
     },
     emailSignLabel: {
         alignSelf: 'center',
-        marginTop: 8,
+        marginTop: 35,
     },
     formInput: {
         marginTop: 16,

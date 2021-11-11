@@ -9,3 +9,4 @@ export const SettingIcon = (props?: IconProps) => <Icon {...props} name="setting
 export const DoneAllIcon = (props?: IconProps) => <Icon {...props} name="done-all-outline" />;
 export const PersonIcon = (props?: IconProps) => <Icon {...props} name="person-outline" />;
 export const LockIcon = (props?: IconProps) => <Icon {...props} name="lock-outline" />;
+export const HospitalLocationIcon = (props?: IconProps) => <Icon {...props} name="pin-outline" />;

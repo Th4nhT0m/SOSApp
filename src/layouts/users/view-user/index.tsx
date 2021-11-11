@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Image } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import * as yup from 'yup';
 import { identityCardRegExp, phoneRegExp } from '../../../app/app-constants';
@@ -11,10 +11,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RootState } from '../../../app/store-provider';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-import { ArrowForwardIconOutLineLeftSide, SettingIconOutLine } from './extra/icons';
+import { ArrowForwardIconOutLineLeftSide } from './extra/icons';
 import InputField from '../../../components/form-inputs/input-field';
 import DatePicker from '../../../components/form-inputs/date-picker';
-import SelectField from '../../../components/form-inputs/select-field';
+import { ImageOverlay } from './extra/image-overlay.component';
 
 const updateUserSchema = yup.object().shape({
     name: yup.string().required('Name is required').typeError('Invalid name'),
@@ -99,23 +99,22 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <Button
-                style={styles.backButton}
-                appearance="ghost"
-                status="control"
-                size="giant"
-                accessoryLeft={ArrowForwardIconOutLineLeftSide}
-                onPress={onBackButtonPress}
-            >
-                Back
-            </Button>
+            <ImageOverlay style={styles.headerContainer as any}>
+                <Button
+                    style={styles.backButton}
+                    appearance="ghost"
+                    status="control"
+                    size="giant"
+                    accessoryLeft={ArrowForwardIconOutLineLeftSide}
+                    onPress={onBackButtonPress}
+                >
+                    Back
+                </Button>
+            </ImageOverlay>
 
-            <Button
-                style={styles.iconSetting}
-                appearance="ghost"
-                status="control"
-                size="giant"
-                accessoryLeft={SettingIconOutLine}
+            <Image
+                source={require('./assets/changeIf.png')}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
 
             <View style={styles.orContainer}>
@@ -178,10 +177,9 @@ const themedStyles = StyleService.create({
     },
 
     headerContainer: {
-        minHeight: 216,
+        minHeight: 20,
         paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 44,
+        backgroundColor: '#20b2aa',
     },
     socialAuthHintText: {
         alignSelf: 'center',
@@ -202,7 +200,18 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 15,
-        marginTop: 2,
+        marginTop: 20,
+    },
+    viewEdit: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 15,
+        marginTop: 20,
+    },
+    iconEdit: {
+        width: 75,
+        height: 75,
+        maxWidth: 350,
     },
     divider: {
         flex: 1,
