@@ -5,7 +5,9 @@ import { DoneAllIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
-import { DetailAccidentsAction } from '../../actions/details-accident-actions';
+import getDistance from 'geolib/es/getPreciseDistance';
+import { HelperAction } from '../../actions/helper-actions';
+
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
@@ -28,7 +30,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         timeStart: pops.timeStart,
     }));
 
-    const setOnAccidents = (id: string): void => {
+    const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
                 text: 'Cancel',
@@ -39,15 +41,15 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 text: 'OK',
                 onPress: () => {
                     if (location != undefined) {
-                        console.log(location.coords.latitude + ' ' + location.coords.latitude);
-                        console.log(id);
-                        console.log(getUser);
+                        console.log(latitude + ' ' + longitude);
                         dispatch(
-                            DetailAccidentsAction.creatDetails({
+                            HelperAction.createHelper({
                                 accident: id,
                                 user: getUser,
-                                latitude: String(location.coords.latitude),
-                                longitude: String(location.coords.longitude),
+                                accidentLatitude: latitude,
+                                accidentLongitude: longitude,
+                                helperLatitude: String(location.coords.latitude),
+                                helperLongitude: String(location.coords.longitude),
                             })
                         );
                         onDetailProgress();
@@ -56,6 +58,19 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             },
         ]);
     };
+    //
+    const calculateDistance = (latitude: string, longitude: string) => {
+        if (location !== undefined) {
+            const dis = getDistance(
+                { latitude: Number(latitude), longitude: Number(longitude) },
+                { latitude: location.coords.latitude, longitude: location.coords.longitude }
+            );
+            return dis;
+        } else {
+            return 0;
+        }
+    };
+
     const onDetailProgress = (): void => {
         navigation &&
             navigation.navigate('Home', {
@@ -67,13 +82,16 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
-            <Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>
+            {/*<Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>*/}
+            <Text category="s1">
+                {'Distance: ' + calculateDistance(info.item?.latitude, info.item?.longitude) / 1000 + ' KM'}
+            </Text>
             <Button
                 style={styles.iconButton}
                 size="small"
                 accessoryLeft={DoneAllIcon}
                 onPress={() => {
-                    setOnAccidents(info.item.id);
+                    setOnAccidents(info.item.id, info.item?.latitude, info.item?.longitude);
                 }}
                 // onPress={onDetailProgress}
             />
@@ -86,7 +104,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
                 <View>
                     <Text category="s2">{'Name Accident: ' + info.item?.nameAccident}</Text>
-                    <Text category="s1">{'User created: ' + info.item?.created_by}</Text>
+                    <Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>
                 </View>
             </View>
             <Divider />

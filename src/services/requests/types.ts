@@ -62,6 +62,24 @@ export interface Accidents {
     timeStart: Date;
 }
 
+export interface DetailAccidents {
+    id: string;
+    user: string;
+    accident: string;
+    status: string;
+    latitude: string;
+    longitude: string;
+    content: string;
+    timeOut: Date;
+}
+export interface patchDetailProps {
+    status: string;
+    content: string;
+    timeOut: string;
+    latitude: string;
+    longitude: string;
+}
+
 export interface DetailAccidentsProps {
     accident: string;
     user: string;
@@ -82,4 +100,25 @@ export interface EditUserProps {
 // change passwork
 export interface ChangePassProps {
     password: string;
+}
+
+/// Create Hepler
+
+export interface HelpProps {
+    accident: string;
+    user: string;
+    helperLatitude: string;
+    helperLongitude: string;
+    accidentLatitude: string;
+    accidentLongitude: string;
+}
+//Patch Helper
+export interface PatchHelper {
+    status: string;
+    content: string;
+    timeOut: string;
+    helperLatitude: string;
+    helperLongitude: string;
+    accidentLatitude: string;
+    accidentLongitude: string;
 }
