@@ -5,9 +5,12 @@ import { HomeBottomNavigation } from '../screens/home/bottom-navigation';
 import { DashboardScreen } from '../screens/dashboard/dashboard.component';
 import { SettingNavigator } from './setting.navigator';
 import { NotificationNavigator } from './notification.navigator';
-import { AccidentsScreen } from "../screens/accidents/accidents-create";
-import { AccidentsNavigator } from "./accidents.navigator";
 
+import { MapHospitalNavigator } from './hospital.navigator';
+
+import { AccidentsScreen } from "../screens/accidents/accidents-create";
+import { AccidentsNavigator } from "./accidents.navigator"; 
+  
 const BottomTab = createBottomTabNavigator();
 
 /*
@@ -24,7 +27,7 @@ export const HomeNavigator = (): React.ReactElement => (
     >
         <BottomTab.Screen name="Dashboard" component={AccidentsNavigator} />
         <BottomTab.Screen name="Notification" component={NotificationNavigator} />
-        <BottomTab.Screen name="Hospital" component={SettingNavigator} />
+        <BottomTab.Screen name="Hospital" component={MapHospitalNavigator} />
         <BottomTab.Screen name="Settings" component={SettingNavigator} />
     </BottomTab.Navigator>
     // <BottomTab.Navigator
