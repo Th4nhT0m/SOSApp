@@ -20,6 +20,7 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const { location } = useCurrentGPSPosition();
     const [paddingTop, setPadding] = useState<any>(1);
+
     const [initialPosition, setPosition] = React.useState([
         {
             latitude: 0,
@@ -35,7 +36,6 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
             setPadding(0);
         });
     };
-
 
     React.useEffect(() => {
         if (location !== null && location !== undefined) {
