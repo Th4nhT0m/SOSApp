@@ -3,12 +3,14 @@ import { Dimensions, PermissionsAndroid, StyleSheet, View } from 'react-native';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
 import { useCurrentGPSPosition } from '../../services/hooks';
 import MapViewDirections from 'react-native-maps-directions';
+
 export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
     height?: number;
     width?: number;
     endLatitude: number;
     endLongitude: number;
 }
+
 const window = Dimensions.get('window');
 
 const MapDirectionsViewComponent = (props: MapViewProps) => {
@@ -20,6 +22,7 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const { location } = useCurrentGPSPosition();
     const [paddingTop, setPadding] = useState<any>(1);
+
     const [initialPosition, setPosition] = React.useState([
         {
             latitude: 0,
@@ -30,12 +33,12 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
             longitude: 0,
         },
     ]);
+
     const onMapReady = () => {
         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(() => {
             setPadding(0);
         });
     };
-
 
     React.useEffect(() => {
         if (location !== null && location !== undefined) {

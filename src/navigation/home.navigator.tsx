@@ -6,6 +6,7 @@ import { DashboardScreen } from '../screens/dashboard/dashboard.component';
 import { SettingNavigator } from './setting.navigator';
 import { NotificationNavigator } from './notification.navigator';
 import { MapHospitalNavigator } from './hospital.navigator';
+import { HandbookNavigator } from './handbook.navigator';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -24,6 +25,7 @@ export const HomeNavigator = (): React.ReactElement => (
         <BottomTab.Screen name="Dashboard" component={DashboardScreen} />
         <BottomTab.Screen name="Notification" component={NotificationNavigator} />
         <BottomTab.Screen name="Hospital" component={MapHospitalNavigator} />
+        <BottomTab.Screen name="Handbook" component={HandbookNavigator} />
         <BottomTab.Screen name="Settings" component={SettingNavigator} />
     </BottomTab.Navigator>
 );

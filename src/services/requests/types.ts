@@ -121,8 +121,8 @@ export interface PatchHelper {
     accidentLatitude: string;
     accidentLongitude: string;
 }
-//get Helper
 
+//get Helper
 export interface Helper {
     id: string;
     user: string;
@@ -134,4 +134,14 @@ export interface Helper {
     accidentLongitude: string;
     content: string;
     timeOut: Date;
+}
+
+// get handbook
+export interface Handbook {
+    id: string;
+    content: string;
+    nameHandbook: string;
+    severity: string;
+    icon: string;
+    utensil: string;
 }

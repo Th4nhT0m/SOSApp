@@ -6,6 +6,7 @@ import { urgentReducer } from './urgent-create';
 import { usersReducer } from './users-slice';
 import { detailAccidentsReducer } from './details-accidents-slice';
 import { helpersReducer } from './helper-slice';
+import { handbooksReducer } from './handbook-slice';
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -15,5 +16,6 @@ const rootReducer = combineReducers({
     users: usersReducer,
     detailAccidents: detailAccidentsReducer,
     helpersReducer: helpersReducer,
+    handbooks: handbooksReducer,
 });
 export default rootReducer;

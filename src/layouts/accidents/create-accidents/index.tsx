@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { RootState } from '../../../app/store-provider';
 import { KeyboardAvoidingView } from '../../auth/sign-in/extra/3rd-party';
 
-
 import * as yup from 'yup';
 import { accidentsActions } from '../../../actions/accidents-ations';
 

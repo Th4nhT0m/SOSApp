@@ -17,7 +17,7 @@ async function deleteHelper(id: string) {
     });
 }
 async function getAllHelper() {
-    return await axiosInstance.get(`/helpers`).catch((error) => {
+    return await axiosInstance.get('/helpers').catch((error) => {
         return error;
     });
 }
