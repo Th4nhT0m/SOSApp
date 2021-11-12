@@ -2,12 +2,10 @@ import React from 'react';
 import { LogBox } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeBottomNavigation } from '../screens/home/bottom-navigation';
-import { SettingsScreen } from '../screens/settings/settings.component';
 import { DashboardScreen } from '../screens/dashboard/dashboard.component';
-import { NotificationScreen } from '../screens/notification/notification.component';
-import ViewUser from '../layouts/users/view-user';
 import { SettingNavigator } from './setting.navigator';
 import { NotificationNavigator } from './notification.navigator';
+import { MapHospitalNavigator } from './hospital.navigator';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -25,7 +23,7 @@ export const HomeNavigator = (): React.ReactElement => (
     >
         <BottomTab.Screen name="Dashboard" component={DashboardScreen} />
         <BottomTab.Screen name="Notification" component={NotificationNavigator} />
-        <BottomTab.Screen name="Hospital" component={SettingNavigator} />
+        <BottomTab.Screen name="Hospital" component={MapHospitalNavigator} />
         <BottomTab.Screen name="Settings" component={SettingNavigator} />
     </BottomTab.Navigator>
 );
