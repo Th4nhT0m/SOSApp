@@ -33,14 +33,11 @@ export interface LoginInProps {
 
 // Accident
 export interface AccidentsProps {
-    nameAccidents: string;
-    status: string;
-    content: string;
-    locationName: string;
+    nameAccident: string;
+    accidentType: string;
+    description: string;
     latitude: string;
     longitude: string;
-    user: string;
-    people: string;
 }
 
 export interface UrgentProps {
@@ -52,14 +49,14 @@ export interface UrgentProps {
 
 export interface Accidents {
     id: string;
+    status: string;
     nameAccident: string;
     description: string;
+    accidentType: string;
     latitude: string;
     longitude: string;
     created_by: string;
     modified_by: string;
-    accidentType: string;
-    timeStart: Date;
 }
 
 export interface DetailAccidents {

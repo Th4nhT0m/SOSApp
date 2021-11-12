@@ -4,16 +4,14 @@ import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/c
 import * as yup from 'yup';
 import { passwordRegExp } from '../../../app/app-constants';
 import { LoadingIndicator } from '../../../components/loading-indicator';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useAppDispatch } from '../../../services/hooks';
 import { ChangePassProps } from '../../../services/requests/types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RootState } from '../../../app/store-provider';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-import { ChangeIconOutLine, ArrowForwardIconOutLineLeftSide } from './extra/icons';
+import { ArrowForwardIconOutLineLeftSide } from './extra/icons';
 import { authActions } from '../../../actions/auth-actions';
 import PasswordField from '../../../components/form-inputs/password-field';
-import { ImageOverlay } from './extra/image-overlay.component';
 
 const changePassUser = yup.object().shape({
     password: yup.string().matches(passwordRegExp, 'Please enter a longer password').required('Password is required'),
@@ -35,8 +33,6 @@ const ChangePassword = ({ navigation }: any): React.ReactElement => {
     });
 
     const styles = useStyleSheet(themedStyles);
-
-    const changePass = useAppSelector((state: RootState) => state.auth);
 
     const onChangeButtonPress = (values: ChangePassProps): void => {
         Alert.alert('Notification', 'Do you want to change the password ?', [
@@ -66,7 +62,7 @@ const ChangePassword = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <ImageOverlay style={styles.headerContainer as any}>
+            <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
                     appearance="ghost"
@@ -77,7 +73,7 @@ const ChangePassword = ({ navigation }: any): React.ReactElement => {
                 >
                     Back
                 </Button>
-            </ImageOverlay>
+            </View>
             <Image
                 source={require('./assets/changePass.png')}
                 style={{ width: 100, height: 100, alignSelf: 'center' }}

@@ -99,7 +99,7 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <ImageOverlay style={styles.headerContainer as any}>
+            <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
                     appearance="ghost"
@@ -110,7 +110,7 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
                 >
                     Back
                 </Button>
-            </ImageOverlay>
+            </View>
 
             <Image
                 source={require('./assets/changeIf.png')}

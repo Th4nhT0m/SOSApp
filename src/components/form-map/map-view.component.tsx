@@ -19,12 +19,28 @@ const MapViewComponent = (props: MapViewProps) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
     const { location } = useCurrentGPSPosition();
+
+    const getLatitudeDefault = (): number => {
+        let LA = 0;
+        if (location !== undefined) {
+            LA = location.coords.latitude;
+        }
+        return LA;
+    };
+    const getLongitudeDefault = (): number => {
+        let LO = 0;
+        if (location !== undefined) {
+            LO = location.coords.longitude;
+        }
+        return LO;
+    };
+
     const [paddingTop, setPadding] = useState<any>(1);
     const [initialPosition, setPosition] = React.useState({
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: 0,
-        longitudeDelta: 0,
+        latitude: getLatitudeDefault(),
+        longitude: getLongitudeDefault(),
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
     });
 
     const onMapReady = () => {

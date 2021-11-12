@@ -35,8 +35,6 @@ const ForgotPassword = ({ navigation }: any): React.ReactElement => {
 
     // const [email, setEmail] = React.useState<string>();
 
-    const forgotPass = useAppSelector((state: RootState) => state.users);
-
     const onResetPasswordButtonPress = (values: ForgotPasswordProps): void => {
         dispatch(authActions.forgotPass(values));
     };
