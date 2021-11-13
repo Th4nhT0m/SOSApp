@@ -1,5 +1,5 @@
-import { Alert, Dimensions, View } from 'react-native';
-import { Button, StyleService } from '@ui-kitten/components';
+import { Alert, Dimensions, Image, View } from 'react-native';
+import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import React from 'react';
 import MapDirectionsViewComponent from '../../../components/form-map/map-directions-view.component';
@@ -11,6 +11,7 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const getID = useAppSelector((state) => state.helpersReducer.dateGet.id);
     const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
     const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
+    const styles = useStyleSheet(themedStyles);
 
     // const { location } = useCurrentGPSPosition();
     const onNotification = () => {
@@ -31,12 +32,22 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    // dispatch(
-                    //     HelperAction.patchHelper({
-                    //         id: getID,
-                    //         props: {status:'cancel'},
-                    //     })
-                    // );
+                    if (location !== undefined) {
+                        dispatch(
+                            HelperAction.patchHelper({
+                                id: getID,
+                                props: {
+                                    status: 'Success',
+                                    accidentLongitude: getLongitude,
+                                    accidentLatitude: getLatitude,
+                                    helperLatitude: String(location.coords.latitude),
+                                    helperLongitude: String(location.coords.longitude),
+                                    timeOut: new Date(),
+                                },
+                            })
+                        );
+                        onNotification();
+                    }
                 },
             },
         ]);
@@ -74,7 +85,19 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.orContainer}>
+                <Divider style={styles.divider} />
+                <Text style={styles.orLabel} category="h5">
+                    Progress
+                </Text>
+                <Divider style={styles.divider} />
+            </View>
+            <Image
+                source={require('./extra/10637879451606261172-128.png')}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
+            />
             <MapDirectionsViewComponent
+                style={styles.maps}
                 height={window.height * 0.5}
                 loadingEnabled={true}
                 showsMyLocationButton={true}
@@ -93,10 +116,11 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     );
 };
 
-const styles = StyleService.create({
+const themedStyles = StyleService.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        backgroundColor: 'background-basic-color-1',
     },
     Button: {
         flexDirection: 'row',
@@ -107,19 +131,31 @@ const styles = StyleService.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
-        height: '100%',
+
+        marginTop: 40,
+    },
+    orContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 15,
+        marginTop: 20,
+    },
+    divider: {
+        flex: 1,
+    },
+    orLabel: {
+        marginHorizontal: 8,
     },
     buttons: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
         paddingHorizontal: 8,
-        paddingVertical: 6,
+        paddingVertical: 20,
         borderRadius: 4,
         alignSelf: 'flex-start',
         marginHorizontal: '1%',
-        marginBottom: 6,
+        marginBottom: 35,
         minWidth: '48%',
         textAlign: 'center',
     },

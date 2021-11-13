@@ -29,7 +29,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         created_by: pops.created_by,
         modified_by: pops.modified_by,
         accidentType: pops.accidentType,
-        timeStart: pops.timeStart,
     }));
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
@@ -106,7 +105,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
                 <View>
                     <Text category="s2">{'Name Accident: ' + info.item?.nameAccident}</Text>
-                    <Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>
+                    <Text category="s1">{'User Create: ' + info.item?.id}</Text>
                 </View>
             </View>
             <Divider />

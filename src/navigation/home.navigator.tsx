@@ -5,9 +5,13 @@ import { HomeBottomNavigation } from '../screens/home/bottom-navigation';
 import { DashboardScreen } from '../screens/dashboard/dashboard.component';
 import { SettingNavigator } from './setting.navigator';
 import { NotificationNavigator } from './notification.navigator';
+
 import { MapHospitalNavigator } from './hospital.navigator';
 import { HandbookNavigator } from './handbook.navigator';
 
+import { AccidentsScreen } from "../screens/accidents/accidents-create";
+import { AccidentsNavigator } from "./accidents.navigator"; 
+  
 const BottomTab = createBottomTabNavigator();
 
 /*
@@ -22,12 +26,22 @@ export const HomeNavigator = (): React.ReactElement => (
         initialRouteName={initialTabRoute}
         tabBar={(props) => <HomeBottomNavigation {...props} />}
     >
-        <BottomTab.Screen name="Dashboard" component={DashboardScreen} />
+        <BottomTab.Screen name="Dashboard" component={AccidentsNavigator} />
         <BottomTab.Screen name="Notification" component={NotificationNavigator} />
         <BottomTab.Screen name="Hospital" component={MapHospitalNavigator} />
         <BottomTab.Screen name="Handbook" component={HandbookNavigator} />
         <BottomTab.Screen name="Settings" component={SettingNavigator} />
     </BottomTab.Navigator>
+    // <BottomTab.Navigator
+    //   screenOptions={{ headerShown: false }}
+    //   initialRouteName={initialTabRoute}
+    //   tabBar={(props) => <HomeBottomNavigation {...props} />}
+    // >
+    //     <BottomTab.Screen name="AccidentsNavigator" component={AccidentsNavigator} />
+    //     <BottomTab.Screen name="Notification" component={NotificationNavigator} />
+    //     <BottomTab.Screen name="Hospital" component={SettingNavigator} />
+    //     <BottomTab.Screen name="Settings" component={SettingNavigator} />
+    // </BottomTab.Navigator>
 );
 
 LogBox.ignoreLogs(["Accessing the 'state'"]);
