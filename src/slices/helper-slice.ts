@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Helper, HelpProps } from '../services/requests/types';
+import { Helper } from '../services/requests/types';
 import { HelperAction } from '../actions/helper-actions';
+import { ListResponse } from '../models/common';
 
 export interface HelperProps {
     code?: string;
@@ -11,6 +12,7 @@ interface Props {
     isLoading: boolean;
     dateGet: Helper;
     isPatch: boolean;
+    data: ListResponse<Helper>;
 }
 const initialState: Props = {
     isPatch: false,
@@ -27,8 +29,9 @@ const initialState: Props = {
         accidentLongitude: '',
         timeOut: Date.prototype,
     },
+    data: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
-const helpeSlice = createSlice({
+const helperSlice = createSlice({
     name: 'helpers',
     initialState,
     reducers: {},
@@ -51,13 +54,13 @@ const helpeSlice = createSlice({
         // builder.addCase(HelperAction.deleteHelper.fulfilled, (state, action) => {
         //
         // });
-        // builder.addCase(HelperAction.createHelper.pending, (state) => {
-        //
-        // });
-        // builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
-        //
-        // });
+        builder.addCase(HelperAction.getAllHelper.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(HelperAction.getAllHelper.fulfilled, (state, action) => {
+            state.data = action.payload;
+        });
     },
 });
 
-export const helpersReducer = helpeSlice.reducer;
+export const helpersReducer = helperSlice.reducer;

@@ -22,7 +22,7 @@ async function getAllHelper() {
     });
 }
 
-export const heplerRequest = {
+export const helperRequest = {
     createHelper,
     patchHelper,
     deleteHelper,

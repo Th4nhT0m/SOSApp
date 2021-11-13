@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import { KeyboardAvoidingView } from '../../auth/sign-in/extra/3rd-party';
 import * as yup from 'yup';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
@@ -57,12 +55,12 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
                     accidentType: value.accidentType,
                 })
             );
+            navigation &&
+                navigation.navigate('Home', {
+                    screen: 'Dashboard',
+                    params: { screen: 'DetailHelper' },
+                });
         }
-        // navigation &&
-        //     navigation.navigate('Home', {
-        //         screen: 'Dashboard',
-        //         params: { screen: 'DashboardHome' },
-        //     });
     };
 
     return (
