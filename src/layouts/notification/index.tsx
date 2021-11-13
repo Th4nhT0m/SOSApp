@@ -12,8 +12,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
+
     const setAccidents = useAppSelector((state) => state.accidents.data);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
+
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
     }, [dispatch]);

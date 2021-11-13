@@ -40,25 +40,25 @@ const detailAccidentsSlice = createSlice({
             state.dataCreate = action.payload;
             state.dataGet = action.payload;
         });
-        builder.addCase(DetailAccidentsAction.getDetails.pending, (state) => {
-            state.isLoading = true;
-        });
-        builder.addCase(DetailAccidentsAction.getDetails.fulfilled, (state, action) => {
-            state.dataGet = action.payload;
-        });
-        builder.addCase(DetailAccidentsAction.patchDetails.pending, (state) => {
-            state.isLoading = true;
-        });
-        builder.addCase(DetailAccidentsAction.patchDetails.fulfilled, (state, action) => {
-            state.dataGet = action.payload;
-            state.isPatch = true;
-        });
-        builder.addCase(DetailAccidentsAction.deleteDetails.pending, (state) => {
-            state.isLoading = true;
-        });
-        builder.addCase(DetailAccidentsAction.deleteDetails.fulfilled, (state, action) => {
-            state.dataCreate = action.payload;
-        });
+        // builder.addCase(DetailAccidentsAction.getDetails.pending, (state) => {
+        //     state.isLoading = true;
+        // });
+        // builder.addCase(DetailAccidentsAction.getDetails.fulfilled, (state, action) => {
+        //     state.dataGet = action.payload;
+        // });
+        // builder.addCase(DetailAccidentsAction.patchDetails.pending, (state) => {
+        //     state.isLoading = true;
+        // });
+        // builder.addCase(DetailAccidentsAction.patchDetails.fulfilled, (state, action) => {
+        //     state.dataGet = action.payload;
+        //     state.isPatch = true;
+        // });
+        // builder.addCase(DetailAccidentsAction.deleteDetails.pending, (state) => {
+        //     state.isLoading = true;
+        // });
+        // builder.addCase(DetailAccidentsAction.deleteDetails.fulfilled, (state, action) => {
+        //     state.dataCreate = action.payload;
+        // });
     },
 });
 

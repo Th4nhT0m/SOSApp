@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { KeyboardAvoidingView } from '../../auth/sign-in/extra/3rd-party';
 import * as yup from 'yup';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
