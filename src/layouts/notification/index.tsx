@@ -27,7 +27,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         created_by: pops.created_by,
         modified_by: pops.modified_by,
         accidentType: pops.accidentType,
+        status: pops.status,
     }));
+    // const getList: Accidents[] = notifies.map((pops) => {
+    //     for (let i = 0; i > notifies.length; i++) {
+    //         if (pops.created_by !==getUser)
+    //             getList.add
+    //     }
+    // };
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
@@ -90,7 +97,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 size="small"
                 accessoryLeft={DoneAllIcon}
                 onPress={() => {
-                    setOnAccidents(info.item.id, info.item?.latitude, info.item?.longitude);
+                    setOnAccidents(info.item?.id, info.item?.latitude, info.item?.longitude);
                 }}
                 // onPress={onDetailProgress}
             />
@@ -103,7 +110,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
                 <View>
                     <Text category="s2">{'Name Accident: ' + info.item?.nameAccident}</Text>
-                    <Text category="s1">{'User Create: ' + info.item?.id}</Text>
+                    <Text category="s1">{'User Create: ' + info.item?.created_by}</Text>
                 </View>
             </View>
             <Divider />

@@ -9,12 +9,14 @@ async function creatDetailsAccidents(props: DetailAccidentsProps) {
 async function getDetailsAccidents(id: string) {
     return await axiosInstance.get(`/detailsAccidents/${id}`).catch((error) => error);
 }
+
 async function patchDetailsAccident(id: string, props: patchDetailProps) {
     return await axiosInstance.patch(`/detailsAccidents/${id}`, { ...props }).catch((error) => error);
 }
 async function deleteDetailsAccident(id: string) {
     return await axiosInstance.delete(`/detailsAccidents/${id}`).catch((error) => error);
 }
+
 
 export const DetailsAccidentsRequest = {
     creatDetailsAccidents,
