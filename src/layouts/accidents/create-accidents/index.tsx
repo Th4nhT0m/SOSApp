@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { KeyboardAvoidingView } from '../../auth/sign-in/extra/3rd-party';
+
 import * as yup from 'yup';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Image, View } from 'react-native';
@@ -43,24 +45,24 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
                 params: { screen: 'DashboardHome' },
             });
     };
-    const onCreatePress = (value: AccidentsProps): void => {
+    const onCreatePress = (value: AccidentsProps) => {
         console.log(value);
-        if (location !== undefined) {
-            dispatch(
-                accidentsActions.create({
-                    nameAccident: value.nameAccident,
-                    description: value.description,
-                    latitude: String(location.coords.latitude),
-                    longitude: String(location.coords.longitude),
-                    accidentType: value.accidentType,
-                })
-            );
-            navigation &&
-                navigation.navigate('Home', {
-                    screen: 'Dashboard',
-                    params: { screen: 'DetailHelper' },
-                });
-        }
+        // if (location !== undefined) {
+        //     dispatch(
+        //         accidentsActions.create({
+        //             nameAccident: value.nameAccident,
+        //             description: value.description,
+        //             latitude: String(location.coords.latitude),
+        //             longitude: String(location.coords.longitude),
+        //             accidentType: value.accidentType,
+        //         })
+        //     );
+        // }
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Dashboard',
+                params: { screen: 'DetailHelper' },
+            });
     };
 
     return (
@@ -90,7 +92,7 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <View style={[styles.container, styles.formContainer]}>
-                <InputField label={'Name Accidents'} name={'nameAccidents'} control={control} />
+                <InputField label={'Name Accidents'} name={'nameAccident'} control={control} />
                 <InputField label={'Description'} name={'description'} control={control} />
             </View>
 
@@ -100,7 +102,7 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
                 onPress={handleSubmit(onCreatePress)}
                 accessoryRight={() => LoadingIndicator({ isLoading: isSubmitting })}
             >
-                Change
+                Create
             </Button>
         </KeyboardAvoidingView>
     );

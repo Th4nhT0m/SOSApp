@@ -10,7 +10,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     React.useEffect(() => {
-        dispatch(HelperAction.getAllHelper());
+        dispatch(HelperAction.getHelperByIDAccident(getAccidents));
     }, [dispatch, getAccidents]);
     const setHelper = useAppSelector((state) => state.helpersReducer.data);
 
@@ -37,7 +37,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         <Card style={styles.itemFooter}>
             <Text>{'Name Helper: ' + info.item?.user}</Text>
             <Text>{'Status : ' + info.item?.status}</Text>
-            <Text>{ ""}</Text>
         </Card>
     );
 
@@ -46,7 +45,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h5">
-                    Accidents
+                    List Helper
                 </Text>
                 <Divider style={styles.divider} />
             </View>

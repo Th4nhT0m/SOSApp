@@ -20,9 +20,14 @@ const getAllHelper = createAsyncThunk('getAllHelper', async () => {
     return response;
 });
 
+const getHelperByIDAccident = createAsyncThunk('getAllHelperByID', async (id: string) => {
+    const response = await helperRequest.getHelperByIDAccident(id);
+    return response;
+});
 export const HelperAction = {
     createHelper,
     patchHelper,
     deleteHelper,
     getAllHelper,
+    getHelperByIDAccident,
 };

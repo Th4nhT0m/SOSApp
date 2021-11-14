@@ -48,12 +48,12 @@ const helperSlice = createSlice({
         builder.addCase(HelperAction.patchHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
-        // builder.addCase(HelperAction.deleteHelper.pending, (state) => {
-        //
-        // });
-        // builder.addCase(HelperAction.deleteHelper.fulfilled, (state, action) => {
-        //
-        // });
+        builder.addCase(HelperAction.getHelperByIDAccident.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(HelperAction.getHelperByIDAccident.fulfilled, (state, action) => {
+            state.data = action.payload;
+        });
         builder.addCase(HelperAction.getAllHelper.pending, (state) => {
             state.isLoading = true;
         });
