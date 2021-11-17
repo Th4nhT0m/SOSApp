@@ -140,6 +140,11 @@ const themeStyles = StyleService.create({
         marginTop: 40,
         backgroundColor: '#20b2aa',
     },
+    divi2: {
+        flex: 1,
+        marginTop: 40,
+        backgroundColor: '#20b2aa',
+    },
     itemFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -157,7 +162,6 @@ const themeStyles = StyleService.create({
         maxWidth: 80,
         paddingHorizontal: 0,
     },
-
     headerContainer: {
         minHeight: 20,
         paddingHorizontal: 16,

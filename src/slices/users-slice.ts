@@ -63,6 +63,15 @@ const usersSlice = createSlice({
             state.isLoading = false;
             state.changeSusses = true;
         });
+
+        // view user by id
+        builder.addCase(usersActions.getViewUserInfoById.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(usersActions.getViewUserInfoById.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.currentUser = action.payload;
+        });
     },
 });
 

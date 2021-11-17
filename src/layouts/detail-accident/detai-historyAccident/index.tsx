@@ -1,19 +1,21 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
-import { Helper } from '../../../services/requests/types';
+import { EditUserProps, Helper } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
-import { Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Dimensions, Image, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
+import { KeyboardAvoidingView } from './extra/3rd-party';
+import { usersActions } from '../../../actions/user-actions';
+import { identity } from 'react-native-svg/lib/typescript/lib/Matrix2D';
 
-const DetailHelper = ({ navigation }: any): React.ReactElement => {
+const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
-    const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
 
-    React.useEffect(() => {
-        dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-    }, [dispatch, getAccidents]);
     const setHelper = useAppSelector((state) => state.helpersReducer.data);
+    // const setHelperUserId = useAppSelector((state) => state.helpersReducer.dateGet.user);
+    // const getUser = useAppSelector((state) => state.users);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -27,37 +29,69 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         content: pops.content,
         timeOut: pops.timeOut,
     }));
-    const onBackPress = () => {
+
+    // React.useEffect(() => {
+    //     dispatch(usersActions.getViewUserInfoById(setHelperUserId));
+    // }, [dispatch]);
+    //
+    // const Username: EditUserProps = {
+    //     name: getUser.currentUser.name,
+    //     identityCard: getUser.currentUser.identityCard,
+    //     numberPhone: getUser.currentUser.numberPhone,
+    //     address: getUser.currentUser.address,
+    // };
+
+    const setbackButtonPress = () => {
         navigation &&
             navigation.navigate('Home', {
-                screen: 'Dashboard',
-                params: { screen: 'DashboardHome' },
+                screen: 'Settings',
+                params: {
+                    screen: 'AccidentHistory',
+                },
             });
     };
+
     const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
-        <Card style={styles.itemFooter}>
+        <Card style={styles.list}>
             <Text>{'Name Helper: ' + info.item?.user}</Text>
             <Text>{'Status : ' + info.item?.status}</Text>
+            {/*<Text>hello, {Username.name}</Text>*/}
         </Card>
     );
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container}>
+            <View style={styles.headerContainer as any}>
+                <Button
+                    style={styles.backButton}
+                    appearance="ghost"
+                    status="control"
+                    size="giant"
+                    accessoryLeft={ArrowForwardIconOutLineLeftSide}
+                    onPress={setbackButtonPress}
+                >
+                    Back
+                </Button>
+            </View>
+
+            <Image
+                source={require('./assets/List.png')}
+                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 20 }}
+            />
+
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
-                <Text style={styles.orLabel} category="h5">
+                <Text style={styles.orLabel} category="h4">
                     List Helper
                 </Text>
                 <Divider style={styles.divider} />
             </View>
 
             <List contentContainerStyle={styles.notifyList} data={helpers} numColumns={1} renderItem={renderNotifies} />
-            <View>
-                <Button onPress={onBackPress} />
-            </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
+
 const themedStyles = StyleService.create({
     container: {
         flex: 1,
@@ -67,10 +101,18 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 15,
-        marginTop: 2,
+        marginTop: 20,
     },
     divider: {
         flex: 1,
+    },
+    list: {
+        marginTop: 20,
+    },
+    headerContainer: {
+        minHeight: 20,
+        paddingHorizontal: 16,
+        backgroundColor: '#20b2aa',
     },
     orLabel: {
         marginHorizontal: 8,
@@ -78,6 +120,10 @@ const themedStyles = StyleService.create({
     notifyList: {
         paddingHorizontal: 8,
         paddingVertical: 16,
+    },
+    backButton: {
+        maxWidth: 80,
+        paddingHorizontal: 0,
     },
     productItem: {
         flex: 1,
@@ -104,4 +150,4 @@ const themedStyles = StyleService.create({
     },
 });
 
-export default DetailHelper;
+export default HelperHistoryByAccident;

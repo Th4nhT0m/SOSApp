@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dimensions, View, Text } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { useAppDispatch, useCurrentGPSPosition } from '../../services/hooks';
 import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import MapHospitalViewComponent from '../../components/form-map/mapHospital-view.component';
-
+//import MapViewComponent from '../../components/form-map/map-view.component';
 const window = Dimensions.get('window');
 
 const MapHospital = ({ navigation }: any): React.ReactElement => {
