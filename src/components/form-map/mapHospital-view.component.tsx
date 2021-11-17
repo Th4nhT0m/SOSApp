@@ -9,7 +9,7 @@ export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
     height?: number;
     width?: number;
 }
-
+//MapHospitalViewComponent
 const MapHospitalViewComponent = (props: MapViewProps) => {
     const { height, width, style, ...rest } = props;
     const SCREEN_HEIGHT = height ?? window.height;
@@ -19,8 +19,23 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
     const { location } = useCurrentGPSPosition();
-    const [paddingTop, setPadding] = useState<any>(1);
 
+    // const getLatitudeDefault = (): number => {
+    //     let LA = 0.378801;
+    //     if (location !== undefined) {
+    //         LA = location.coords.latitude;
+    //     }
+    //     return LA;
+    // };
+    // const getLongitudeDefault = (): number => {
+    //     let LO = 106.878399;
+    //     if (location !== undefined) {
+    //         LO = location.coords.longitude;
+    //     }
+    //     return LO;
+    // };
+
+    const [paddingTop, setPadding] = useState<any>(1);
     const [initialPosition, setPosition] = React.useState({
         latitude: 0,
         longitude: 0,
@@ -49,7 +64,12 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
     const renderMap = () => (
         <MapView
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
-            initialRegion={initialPosition}
+            initialRegion={{
+                latitude: initialPosition.latitude,
+                longitude: initialPosition.longitude,
+                latitudeDelta: initialPosition.latitudeDelta,
+                longitudeDelta: initialPosition.longitudeDelta,
+            }}
             onMapReady={onMapReady}
             provider="google"
             mapType="standard"

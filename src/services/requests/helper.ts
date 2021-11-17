@@ -6,21 +6,25 @@ async function createHelper(props: HelpProps) {
         return error;
     });
 }
+
 async function patchHelper(id: string, props: PatchHelper) {
     return await axiosInstance.patch(`/helpers/${id}`, { ...props }).catch((error) => {
         return error;
     });
 }
+
 async function deleteHelper(id: string) {
     return await axiosInstance.delete(`/helpers/${id}`).catch((error) => {
         return error;
     });
 }
+
 async function getAllHelper() {
     return await axiosInstance.get('/helpers').catch((error) => {
         return error;
     });
 }
+
 async function getHelperByIDAccident(id: string) {
     return await axiosInstance.get(`helpers/accidentID?accident=${id}`).catch((error) => {
         return error;

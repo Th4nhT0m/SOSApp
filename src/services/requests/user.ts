@@ -21,9 +21,15 @@ async function updateUserInfo(props: EditUserProps) {
     });
 }
 
+// view user by id
+async function getViewUserById(id: string) {
+    return await axiosInstance.get(`/users/${id}`).catch((error) => error);
+}
+
 export const UsersRequests = {
     getCurrentUserInfo,
     getUserInfo,
     updateUserInfo,
     getViewUserInfo,
+    getViewUserById,
 };

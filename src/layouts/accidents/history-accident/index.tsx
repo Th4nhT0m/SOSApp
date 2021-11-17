@@ -7,6 +7,7 @@ import { Accident } from '../../../services/requests/types';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 import moment from 'moment';
+import { HelperAction } from '../../../actions/helper-actions';
 
 const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -31,8 +32,24 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
         UpdateTime: props.UpdateTime,
     }));
 
+    const setOnHelper = (id: string): void => {
+        dispatch(HelperAction.getHelperByIDAccident(id));
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Settings',
+                params: {
+                    screen: 'HelperHistoryInAccident',
+                },
+            });
+    };
+
     const renderNotifies = (info: ListRenderItemInfo<Accident>): React.ReactElement => (
-        <Card style={styles.list}>
+        <Card
+            style={styles.list}
+            onPress={() => {
+                setOnHelper(info.item.id);
+            }}
+        >
             <View style={styles.itemHeader}>
                 <View>
                     <Text category="h6">{info.item?.nameAccident}</Text>

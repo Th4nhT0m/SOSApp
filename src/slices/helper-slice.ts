@@ -44,14 +44,14 @@ const helperSlice = createSlice({
         builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
-      
+
         builder.addCase(HelperAction.patchHelper.pending, (state) => {
             state.isPatch = false;
         });
         builder.addCase(HelperAction.patchHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
-      
+
         // builder.addCase(HelperAction.deleteHelper.pending, (state) => {
         //
         // });
@@ -64,22 +64,22 @@ const helperSlice = createSlice({
         // builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
         //
         // });
-      
+
         builder.addCase(HelperAction.getMyHistoryHelper.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(HelperAction.getMyHistoryHelper.fulfilled, (state, action) => {
             state.isLoading = false;
             state.dateList = action.payload;
-         });
-      
+        });
+
         builder.addCase(HelperAction.getHelperByIDAccident.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(HelperAction.getHelperByIDAccident.fulfilled, (state, action) => {
             state.data = action.payload;
         });
-      
+
         builder.addCase(HelperAction.getAllHelper.pending, (state) => {
             state.isLoading = true;
         });

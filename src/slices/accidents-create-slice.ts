@@ -54,6 +54,7 @@ const accidentsSlice = createSlice({
         builder.addCase(accidentsActions.getHistoryAccident.fulfilled, (state, action) => {
             state.isLoading = false;
             state.dateList = action.payload;
+        });
         builder.addCase(accidentsActions.createUrgent.pending, (state) => {
             state.isLoading = true;
         });
