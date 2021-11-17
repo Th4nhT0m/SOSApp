@@ -3,6 +3,7 @@ export interface ObtainTokenProps {
     email: string;
     password: string;
 }
+
 export interface LogoutTokenProps {
     refreshToken: string;
 }
@@ -58,6 +59,20 @@ export interface Accidents {
     modified_by?: string;
 }
 
+export interface Accident {
+    id: string;
+    status: string;
+    nameAccident: string;
+    description: string;
+    accidentType: string;
+    latitude: string;
+    longitude: string;
+    created_by: string;
+    modified_by: string;
+    createTime: Date;
+    UpdateTime: Date;
+}
+
 export interface DetailAccidents {
     id: string;
     user: string;
@@ -99,7 +114,6 @@ export interface ChangePassProps {
 }
 
 /// Create Hepler
-
 export interface HelpProps {
     accident: string;
     user: string;
@@ -130,6 +144,22 @@ export interface Helper {
     accidentLongitude: string;
     content: string;
     timeOut: Date;
+}
+
+//get Helper
+export interface Helpers {
+    id: string;
+    user: string;
+    accident: string;
+    status: string;
+    helperLatitude: string;
+    helperLongitude: string;
+    accidentLatitude: string;
+    accidentLongitude: string;
+    content: string;
+    timeOut: Date;
+    createTime: Date;
+    UpdateTime: Date;
 }
 
 // get handbook

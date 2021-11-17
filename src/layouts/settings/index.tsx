@@ -37,8 +37,30 @@ const Settings = ({ navigation }: any): React.ReactElement => {
             });
     };
 
+    const accidentHistoryButtonPress = () => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Settings',
+                params: {
+                    screen: 'AccidentHistory',
+                },
+            });
+    };
+
+    const helperHistoryButtonPress = () => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Settings',
+                params: {
+                    screen: 'HelperHistory',
+                },
+            });
+    };
+
     return (
         <Layout style={styles.container}>
+            <Setting style={styles.setting} hint="History accident" onPress={accidentHistoryButtonPress} />
+            <Setting style={styles.setting} hint="History helper" onPress={helperHistoryButtonPress} />
             <Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />
             <Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />
             <Setting style={[styles.setting, styles.themes]} hint="Themes" hintStyles={{ margin: 10 }}>

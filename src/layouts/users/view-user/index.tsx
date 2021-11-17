@@ -14,7 +14,6 @@ import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from './extra/icons';
 import InputField from '../../../components/form-inputs/input-field';
 import DatePicker from '../../../components/form-inputs/date-picker';
-import { ImageOverlay } from './extra/image-overlay.component';
 
 const updateUserSchema = yup.object().shape({
     name: yup.string().required('Name is required').typeError('Invalid name'),

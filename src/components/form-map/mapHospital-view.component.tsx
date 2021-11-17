@@ -71,7 +71,6 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
             />
         </MapView>
     );
-
     return <View style={{ ...styles.container, paddingTop: paddingTop }}>{renderMap()}</View>;
 };
 

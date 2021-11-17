@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Helper } from '../services/requests/types';
+import { Helper, Helpers } from '../services/requests/types';
 import { HelperAction } from '../actions/helper-actions';
 import { ListResponse } from '../models/common';
 
@@ -12,6 +12,7 @@ interface Props {
     isLoading: boolean;
     dateGet: Helper;
     isPatch: boolean;
+    dateList: ListResponse<Helpers>;
     data: ListResponse<Helper>;
 }
 const initialState: Props = {
@@ -29,6 +30,7 @@ const initialState: Props = {
         accidentLongitude: '',
         timeOut: Date.prototype,
     },
+    dateList: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
     data: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
 const helperSlice = createSlice({
@@ -42,18 +44,42 @@ const helperSlice = createSlice({
         builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
+      
         builder.addCase(HelperAction.patchHelper.pending, (state) => {
             state.isPatch = false;
         });
         builder.addCase(HelperAction.patchHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
+      
+        // builder.addCase(HelperAction.deleteHelper.pending, (state) => {
+        //
+        // });
+        // builder.addCase(HelperAction.deleteHelper.fulfilled, (state, action) => {
+        //
+        // });
+        // builder.addCase(HelperAction.createHelper.pending, (state) => {
+        //
+        // });
+        // builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
+        //
+        // });
+      
+        builder.addCase(HelperAction.getMyHistoryHelper.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(HelperAction.getMyHistoryHelper.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.dateList = action.payload;
+         });
+      
         builder.addCase(HelperAction.getHelperByIDAccident.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(HelperAction.getHelperByIDAccident.fulfilled, (state, action) => {
             state.data = action.payload;
         });
+      
         builder.addCase(HelperAction.getAllHelper.pending, (state) => {
             state.isLoading = true;
         });

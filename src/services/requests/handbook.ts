@@ -6,6 +6,11 @@ async function getAllHandbook() {
     });
 }
 
+async function getHandbook(id: string) {
+    return await axiosInstance.get(`/handbooks/${id}`).catch((error) => error);
+}
+
 export const handbookRequest = {
     getAllHandbook,
+    getHandbook,
 };

@@ -9,8 +9,11 @@ import { MapHospitalNavigator } from './hospital.navigator';
 import { HandbookNavigator } from './handbook.navigator';
 import { AccidentsNavigator } from './accidents.navigator';
 
-const BottomTab = createBottomTabNavigator();
+import { AccidentsScreen } from '../screens/accidents/accidents-create';
+import { AccidentsNavigator } from './accidents.navigator';
 
+const BottomTab = createBottomTabNavigator();
+  
 /*
  * When dev is true in .expo/settings.json (started via `start:dev`),
  * open Components tab as default.

@@ -17,8 +17,15 @@ async function getAllAccident() {
     });
 }
 
+async function getViewHistoryAccident() {
+    return await axiosInstance.get('/accidents/myAccident').catch((error) => {
+        return error;
+    });
+}
+
 export const AccidentsRequest = {
     creatAccident,
     creatUrgentAccident,
     getAllAccident,
+    getViewHistoryAccident,
 };
