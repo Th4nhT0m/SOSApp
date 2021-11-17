@@ -9,9 +9,9 @@ import { NotificationNavigator } from './notification.navigator';
 import { MapHospitalNavigator } from './hospital.navigator';
 import { HandbookNavigator } from './handbook.navigator';
 
-import { AccidentsScreen } from "../screens/accidents/accidents-create";
-import { AccidentsNavigator } from "./accidents.navigator"; 
-  
+import { AccidentsScreen } from '../screens/accidents/accidents-create';
+import { AccidentsNavigator } from './accidents.navigator';
+
 const BottomTab = createBottomTabNavigator();
 
 /*

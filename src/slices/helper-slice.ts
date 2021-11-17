@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Helper, HelpProps } from '../services/requests/types';
+import { Helper, Helpers } from '../services/requests/types';
 import { HelperAction } from '../actions/helper-actions';
+import { ListResponse } from '../models/common';
 
 export interface HelperProps {
     code?: string;
@@ -11,6 +12,7 @@ interface Props {
     isLoading: boolean;
     dateGet: Helper;
     isPatch: boolean;
+    dateList: ListResponse<Helpers>;
 }
 const initialState: Props = {
     isPatch: false,
@@ -27,6 +29,7 @@ const initialState: Props = {
         accidentLongitude: '',
         timeOut: Date.prototype,
     },
+    dateList: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
 const helpeSlice = createSlice({
     name: 'helpers',
@@ -57,6 +60,13 @@ const helpeSlice = createSlice({
         // builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
         //
         // });
+        builder.addCase(HelperAction.getMyHistoryHelper.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(HelperAction.getMyHistoryHelper.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.dateList = action.payload;
+        });
     },
 });
 

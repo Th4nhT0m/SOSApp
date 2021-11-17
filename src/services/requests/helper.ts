@@ -22,9 +22,16 @@ async function getAllHelper() {
     });
 }
 
+async function getHelpByUserId() {
+    return await axiosInstance.get('/helpers/myHelper').catch((error) => {
+        return error;
+    });
+}
+
 export const heplerRequest = {
     createHelper,
     patchHelper,
     deleteHelper,
     getAllHelper,
+    getHelpByUserId,
 };

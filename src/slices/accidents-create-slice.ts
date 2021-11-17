@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { accidentsActions } from '../actions/accidents-ations';
-import { Accidents } from '../services/requests/types';
+import { Accidents, Accident } from '../services/requests/types';
 import { ListResponse } from '../models/common';
 export interface accidentsProps {
     code?: string;
@@ -10,6 +10,7 @@ interface Props {
     isLoading: boolean;
     data: ListResponse<Accidents>;
     dataGet: Accidents;
+    dateList: ListResponse<Accident>;
 }
 
 const initialState: Props = {
@@ -26,6 +27,7 @@ const initialState: Props = {
         modified_by: '',
     },
     data: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
+    dateList: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
 
 const accidentsSlice = createSlice({
@@ -43,7 +45,15 @@ const accidentsSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(accidentsActions.getAllAccidents.fulfilled, (state, action) => {
+            state.isLoading = false;
             state.data = action.payload;
+        });
+        builder.addCase(accidentsActions.getHistoryAccident.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(accidentsActions.getHistoryAccident.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.dateList = action.payload;
         });
     },
 });

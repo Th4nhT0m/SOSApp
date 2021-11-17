@@ -24,8 +24,23 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
         utensil: props.utensil,
     }));
 
+    const setOnHandbook = (id: string): void => {
+        dispatch(handbookActions.getHandbookById(id));
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Handbook',
+                params: {
+                    screen: 'HandbookById',
+                },
+            });
+    };
+
     const renderNotifies = (info: ListRenderItemInfo<Handbook>): React.ReactElement => (
-        <Card>
+        <Card
+            onPress={() => {
+                setOnHandbook(info.item.id);
+            }}
+        >
             <View style={styles.itemHeader}>
                 <View>
                     <Text category="s1">{info.item?.nameHandbook}</Text>
@@ -47,10 +62,12 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
 
             <Image
                 source={require('./assets/bookIcon.png')}
-                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 30 }}
             />
 
-            <Divider style={styles.divi} />
+            <View style={styles.divide}>
+                <Divider style={styles.divideColor} />
+            </View>
 
             <List
                 contentContainerStyle={styles.notifyList}
@@ -70,7 +87,7 @@ const themedStyles = StyleService.create({
     notifyList: {
         paddingHorizontal: 8,
         paddingVertical: 16,
-        marginTop: 10,
+        marginTop: 20,
     },
     orContainer: {
         flexDirection: 'row',
@@ -98,9 +115,11 @@ const themedStyles = StyleService.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    divi: {
-        flex: 1,
+    divide: {
         marginTop: 40,
+        backgroundColor: '#20b2aa',
+    },
+    divideColor: {
         backgroundColor: '#20b2aa',
     },
     itemFooter: {
