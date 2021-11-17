@@ -13,6 +13,7 @@ interface Props {
     dateGet: Helper;
     isPatch: boolean;
     dateList: ListResponse<Helpers>;
+    data: ListResponse<Helper>;
 }
 const initialState: Props = {
     isPatch: false,
@@ -30,8 +31,9 @@ const initialState: Props = {
         timeOut: Date.prototype,
     },
     dateList: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
+    data: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
-const helpeSlice = createSlice({
+const helperSlice = createSlice({
     name: 'helpers',
     initialState,
     reducers: {},
@@ -42,12 +44,14 @@ const helpeSlice = createSlice({
         builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
+      
         builder.addCase(HelperAction.patchHelper.pending, (state) => {
             state.isPatch = false;
         });
         builder.addCase(HelperAction.patchHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
+      
         // builder.addCase(HelperAction.deleteHelper.pending, (state) => {
         //
         // });
@@ -60,14 +64,29 @@ const helpeSlice = createSlice({
         // builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
         //
         // });
+      
         builder.addCase(HelperAction.getMyHistoryHelper.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(HelperAction.getMyHistoryHelper.fulfilled, (state, action) => {
             state.isLoading = false;
             state.dateList = action.payload;
+         });
+      
+        builder.addCase(HelperAction.getHelperByIDAccident.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(HelperAction.getHelperByIDAccident.fulfilled, (state, action) => {
+            state.data = action.payload;
+        });
+      
+        builder.addCase(HelperAction.getAllHelper.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(HelperAction.getAllHelper.fulfilled, (state, action) => {
+            state.data = action.payload;
         });
     },
 });
 
-export const helpersReducer = helpeSlice.reducer;
+export const helpersReducer = helperSlice.reducer;

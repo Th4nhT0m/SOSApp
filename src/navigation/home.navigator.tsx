@@ -2,18 +2,18 @@ import React from 'react';
 import { LogBox } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeBottomNavigation } from '../screens/home/bottom-navigation';
-import { DashboardScreen } from '../screens/dashboard/dashboard.component';
 import { SettingNavigator } from './setting.navigator';
 import { NotificationNavigator } from './notification.navigator';
 
 import { MapHospitalNavigator } from './hospital.navigator';
 import { HandbookNavigator } from './handbook.navigator';
+import { AccidentsNavigator } from './accidents.navigator';
 
 import { AccidentsScreen } from '../screens/accidents/accidents-create';
 import { AccidentsNavigator } from './accidents.navigator';
 
 const BottomTab = createBottomTabNavigator();
-
+  
 /*
  * When dev is true in .expo/settings.json (started via `start:dev`),
  * open Components tab as default.

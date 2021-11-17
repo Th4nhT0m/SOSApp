@@ -5,14 +5,15 @@ import { urgentResponseProps } from '../slices/urgent-create';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
 
+
 const create = createAsyncThunk('accidents', async (props: AccidentsProps) => {
     const response = await AccidentsRequest.creatAccident(props);
     return response;
 });
 
-const createUrgent = createAsyncThunk('accidents/Urgent', async (props: UrgentProps) => {
+const createUrgent = createAsyncThunk('accidents/Urgent', async (props: AccidentsProps) => {
     const response = await AccidentsRequest.creatUrgentAccident(props);
-    return response as urgentResponseProps;
+    return response;
 });
 const getAllAccidents = createAsyncThunk('getAllAccidents', async () => {
     const response = await AccidentsRequest.getAllAccident();

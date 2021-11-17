@@ -20,27 +20,27 @@ const MapViewComponent = (props: MapViewProps) => {
 
     const { location } = useCurrentGPSPosition();
 
-    const getLatitudeDefault = (): number => {
-        let LA = 0;
-        if (location !== undefined) {
-            LA = location.coords.latitude;
-        }
-        return LA;
-    };
-    const getLongitudeDefault = (): number => {
-        let LO = 0;
-        if (location !== undefined) {
-            LO = location.coords.longitude;
-        }
-        return LO;
-    };
+    // const getLatitudeDefault = (): number => {
+    //     let LA = 0.378801;
+    //     if (location !== undefined) {
+    //         LA = location.coords.latitude;
+    //     }
+    //     return LA;
+    // };
+    // const getLongitudeDefault = (): number => {
+    //     let LO = 106.878399;
+    //     if (location !== undefined) {
+    //         LO = location.coords.longitude;
+    //     }
+    //     return LO;
+    // };
 
     const [paddingTop, setPadding] = useState<any>(1);
     const [initialPosition, setPosition] = React.useState({
-        latitude: getLatitudeDefault(),
-        longitude: getLongitudeDefault(),
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0,
+        longitudeDelta: 0,
     });
 
     const onMapReady = () => {

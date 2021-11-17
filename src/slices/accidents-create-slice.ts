@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { accidentsActions } from '../actions/accidents-ations';
 import { Accidents, Accident } from '../services/requests/types';
 import { ListResponse } from '../models/common';
-export interface accidentsProps {
+export interface accidentsResponseProps {
     code?: string;
     message?: string;
 }
@@ -54,6 +54,11 @@ const accidentsSlice = createSlice({
         builder.addCase(accidentsActions.getHistoryAccident.fulfilled, (state, action) => {
             state.isLoading = false;
             state.dateList = action.payload;
+        builder.addCase(accidentsActions.createUrgent.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(accidentsActions.createUrgent.fulfilled, (state, action) => {
+            state.dataGet = action.payload;
         });
     },
 });

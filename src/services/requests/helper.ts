@@ -21,17 +21,22 @@ async function getAllHelper() {
         return error;
     });
 }
+async function getHelperByIDAccident(id: string) {
+    return await axiosInstance.get(`helpers/accidentID?accident=${id}`).catch((error) => {
+        return error;
+    });
+}
 
 async function getHelpByUserId() {
     return await axiosInstance.get('/helpers/myHelper').catch((error) => {
         return error;
     });
 }
-
-export const heplerRequest = {
+export const helperRequest = {
     createHelper,
     patchHelper,
     deleteHelper,
     getAllHelper,
     getHelpByUserId,
+    getHelperByIDAccident,
 };

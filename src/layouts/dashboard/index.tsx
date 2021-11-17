@@ -30,6 +30,11 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                     longitude: String(location.coords.longitude),
                 })
             );
+            navigation &&
+                navigation.navigate('Home', {
+                    screen: 'Dashboard',
+                    params: { screen: 'DetailHelper' },
+                });
         }
     };
     const onAccidents = () => {
@@ -39,7 +44,6 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                 params: { screen: 'Accidents' },
             });
     };
-
     return (
         <View style={[styles.container]}>
             <Card style={{ ...styles.userInfo }} status={'primary'}>
