@@ -47,17 +47,17 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
     };
     const onCreatePress = (value: AccidentsProps) => {
         console.log(value);
-        // if (location !== undefined) {
-        //     dispatch(
-        //         accidentsActions.create({
-        //             nameAccident: value.nameAccident,
-        //             description: value.description,
-        //             latitude: String(location.coords.latitude),
-        //             longitude: String(location.coords.longitude),
-        //             accidentType: value.accidentType,
-        //         })
-        //     );
-        // }
+        if (location !== undefined) {
+            dispatch(
+                accidentsActions.create({
+                    nameAccident: value.nameAccident,
+                    description: value.description,
+                    latitude: String(location.coords.latitude),
+                    longitude: String(location.coords.longitude),
+                    accidentType: value.accidentType,
+                })
+            );
+        }
         navigation &&
             navigation.navigate('Home', {
                 screen: 'Dashboard',

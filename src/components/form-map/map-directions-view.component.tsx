@@ -44,10 +44,12 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
         if (location !== null && location !== undefined) {
             const { latitude, longitude } = location.coords;
             setPosition([
+
                 {
                     latitude: latitude,
                     longitude: longitude,
                 },
+
                 {
                     latitude: props.endLatitude,
                     longitude: props.endLongitude,

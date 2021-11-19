@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Dimensions, PermissionsAndroid, StyleSheet, View } from 'react-native';
+import { Dimensions, PermissionsAndroid, StyleSheet, View, Image } from 'react-native';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
 import { useCurrentGPSPosition } from '../../services/hooks';
+import { markers } from './mapData/mapData';
 
 const window = Dimensions.get('window');
 
@@ -10,6 +11,7 @@ export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
     width?: number;
 }
 //MapHospitalViewComponent
+
 const MapHospitalViewComponent = (props: MapViewProps) => {
     const { height, width, style, ...rest } = props;
     const SCREEN_HEIGHT = height ?? window.height;
@@ -20,28 +22,15 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
 
     const { location } = useCurrentGPSPosition();
 
-    // const getLatitudeDefault = (): number => {
-    //     let LA = 0.378801;
-    //     if (location !== undefined) {
-    //         LA = location.coords.latitude;
-    //     }
-    //     return LA;
-    // };
-    // const getLongitudeDefault = (): number => {
-    //     let LO = 106.878399;
-    //     if (location !== undefined) {
-    //         LO = location.coords.longitude;
-    //     }
-    //     return LO;
-    // };
-
     const [paddingTop, setPadding] = useState<any>(1);
+
     const [initialPosition, setPosition] = React.useState({
         latitude: 0,
         longitude: 0,
         latitudeDelta: 0,
         longitudeDelta: 0,
     });
+    const [initialMarkers] = React.useState({ markers });
 
     const onMapReady = () => {
         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(() => {
@@ -64,31 +53,30 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
     const renderMap = () => (
         <MapView
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
-            initialRegion={{
-                latitude: initialPosition.latitude,
-                longitude: initialPosition.longitude,
-                latitudeDelta: initialPosition.latitudeDelta,
-                longitudeDelta: initialPosition.longitudeDelta,
-            }}
             onMapReady={onMapReady}
             provider="google"
             mapType="standard"
             showsScale={true}
             showsCompass={true}
             {...rest}
+            initialRegion={{
+                latitude: initialPosition.latitude,
+                longitude: initialPosition.longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+            }}
         >
-            <Marker
-                draggable
-                coordinate={initialPosition}
-                onDragEnd={(e) => {
-                    const coords = e.nativeEvent.coordinate;
-                    setPosition({
-                        ...initialPosition,
-                        latitude: coords.latitude,
-                        longitude: coords.longitude,
-                    });
-                }}
-            />
+            <Marker coordinate={initialPosition}>
+                <Image source={require('../../assets/images/mapUser.png')} style={{ height: 40, width: 40 }} />
+            </Marker>
+
+            {initialMarkers.markers.map((post) => {
+                const map = {
+                    latitude: post.latitude,
+                    longitude: post.longitude,
+                };
+                return <Marker coordinate={map} title={post.title} description={post.description} />;
+            })}
         </MapView>
     );
     return <View style={{ ...styles.container, paddingTop: paddingTop }}>{renderMap()}</View>;
