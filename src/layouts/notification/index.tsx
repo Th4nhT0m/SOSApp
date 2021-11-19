@@ -13,7 +13,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
 
-    const setAccidents = useAppSelector((state) => state.accidents.data);
+    const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
 
     React.useEffect(() => {

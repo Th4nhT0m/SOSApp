@@ -13,7 +13,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
     }, [dispatch, getAccidents]);
-    const setHelper = useAppSelector((state) => state.helpersReducer.data);
+    const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({
         id: pops.id,

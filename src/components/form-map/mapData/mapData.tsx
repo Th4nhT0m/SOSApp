@@ -43,20 +43,20 @@ export const markers = [
             'Đường Nguyễn Văn Mạnh, Xã Long Hòa, Huyện Cần Giờ, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
     },
     {
-        latitude: 10.3852663,
-        longitude: 106.8900078,
+        latitude: 10.3818523,
+        longitude: 106.8833373,
         title: 'Trạm y tế xã Đồng Hòa',
         description: 'Duyên Hải, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
     },
     {
-        latitude: 10.4021265,
-        longitude: 106.949204,
+        latitude: 10.4052196,
+        longitude: 106.9373885,
         title: 'Bệnh viện Mới Huyện Cần Giờ',
         description: 'Phan Trọng Tuệ, TT. Cần Thạnh, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
     },
     {
-        latitude: 10.3952064,
-        longitude: 106.8837918,
+        latitude: 10.4112481,
+        longitude: 106.954656,
         title: 'Bệnh Viện Cần Giờ',
         description:
             'Đường Nguyễn Văn Mạnh, Xã Long Hòa, Huyện Cần Giờ, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
