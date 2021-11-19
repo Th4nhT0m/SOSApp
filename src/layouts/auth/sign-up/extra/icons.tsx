@@ -23,3 +23,7 @@ export const GoogleIcon = (style?: ImageStyle) => <Icon {...style} name="google"
 export const HeartIconFill = (style?: ImageStyle) => <Icon {...style} name="heart" />;
 
 export const TwitterIcon = (style?: ImageStyle) => <Icon {...style} name="twitter" />;
+
+export const UserIcon = (style?: ImageStyle) => <Icon {...style} name="person-outline" />;
+
+export default UserIcon;
