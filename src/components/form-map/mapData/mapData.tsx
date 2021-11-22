@@ -1,4 +1,4 @@
-export const markers = [
+export const HospitalMarkers = [
     {
         latitude: 11.27581,
         longitude: 106.127399,
@@ -60,6 +60,45 @@ export const markers = [
         title: 'Bệnh Viện Cần Giờ',
         description:
             'Đường Nguyễn Văn Mạnh, Xã Long Hòa, Huyện Cần Giờ, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+    },
+];
+
+export const CarRepairMarkers = [
+    {
+        latitude: 11.2595654,
+        longitude: 106.138575,
+        title: 'Tiệm Sửa Xe 7 Phước',
+        description: 'Long Hải, Trường Tây, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2541815,
+        longitude: 106.1333992,
+        title: 'Tiệm Sửa Xe A Đức',
+        description: 'Tôn Đức Thắng, Ấp Long Khương, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2623785,
+        longitude: 106.1408453,
+        title: 'Sửa Xe Phước Lợi',
+        description: 'Đường số 21 Ngô Quyền, Long Thành Nam, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.271493,
+        longitude: 106.130952,
+        title: 'Tiệm sửa xe Kim Châu',
+        description: '2 Tôn Đức Thắng, Ấp Long Chí, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2595379,
+        longitude: 106.1338627,
+        title: 'Sửa Xe Hồng Sang',
+        description: 'Long Thành Trung, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2671087,
+        longitude: 106.1300343,
+        title: 'Tiệm Sửa Xe Kim Châu',
+        description: '2 Tôn Đức Thắng, Ấp Long Chí, Hoà Thành, Tây Ninh, Việt Nam',
     },
 ];
 

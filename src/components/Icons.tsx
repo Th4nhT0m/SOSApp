@@ -21,3 +21,4 @@ export const HospitalLocationIcon = (props?: IconProps) => <Icon {...props} name
 
 export const handbookIcon = (props?: IconProps) => <Icon {...props} name="book-outline" />;
 
+export const UtilitiesIcon = (props?: IconProps) => <Icon {...props} name="archive-outline" />;

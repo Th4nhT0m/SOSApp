@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dimensions, PermissionsAndroid, StyleSheet, View, Image } from 'react-native';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
 import { useCurrentGPSPosition } from '../../services/hooks';
-import { HospitalMarkers } from './mapData/mapData';
+import { CarRepairMarkers } from './mapData/mapData';
 
 const window = Dimensions.get('window');
 
@@ -12,7 +12,7 @@ export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
 }
 //MapHospitalViewComponent
 
-const MapHospitalViewComponent = (props: MapViewProps) => {
+const MapCarRepairViewComponent = (props: MapViewProps) => {
     const { height, width, style, ...rest } = props;
     const SCREEN_HEIGHT = height ?? window.height;
     const SCREEN_WIDTH = width ?? window.width;
@@ -30,7 +30,7 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
         latitudeDelta: 0,
         longitudeDelta: 0,
     });
-    const [initialMarkers] = React.useState({ HospitalMarkers });
+    const [initialMarkers] = React.useState({ CarRepairMarkers });
 
     const onMapReady = () => {
         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(() => {
@@ -70,14 +70,17 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
                 <Image source={require('../../assets/images/mapUser.png')} style={{ height: 45, width: 45 }} />
             </Marker>
 
-            {initialMarkers.HospitalMarkers.map((post) => {
+            {initialMarkers.CarRepairMarkers.map((post) => {
                 const map = {
                     latitude: post.latitude,
                     longitude: post.longitude,
                 };
                 return (
                     <Marker coordinate={map} title={post.title} description={post.description}>
-                        <Image source={require('../../assets/images/clinic.png')} style={{ height: 30, width: 30 }} />
+                        <Image
+                            source={require('../../assets/images/car-repair.png')}
+                            style={{ height: 30, width: 30 }}
+                        />
                     </Marker>
                 );
             })}
@@ -103,4 +106,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MapHospitalViewComponent;
+export default MapCarRepairViewComponent;

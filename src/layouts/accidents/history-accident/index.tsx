@@ -3,7 +3,7 @@ import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '
 import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
-import { Accident } from '../../../services/requests/types';
+import { Accidents } from '../../../services/requests/types';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 import moment from 'moment';
@@ -18,7 +18,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
         dispatch(accidentsActions.getHistoryAccident());
     }, [dispatch]);
 
-    const historyAccidentNotifies: Accident[] = setHistoryAccident.results.map((props) => ({
+    const historyAccidentNotifies: Accidents[] = setHistoryAccident.results.map((props) => ({
         id: props.id,
         status: props.status,
         nameAccident: props.nameAccident,
@@ -43,7 +43,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
             });
     };
 
-    const renderNotifies = (info: ListRenderItemInfo<Accident>): React.ReactElement => (
+    const renderNotifies = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <Card
             style={styles.list}
             onPress={() => {
@@ -76,7 +76,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
@@ -92,7 +92,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
 
             <Image
                 source={require('./assets/accidentIcon.png')}
-                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 20 }}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
 
             <View style={styles.orContainer}>
@@ -103,7 +103,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
 
-            <Divider style={styles.divi} />
+            <View style={styles.divi} />
 
             <List
                 contentContainerStyle={styles.notifyList}
@@ -111,7 +111,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 export default ViewHistoryAccident;
@@ -137,12 +137,14 @@ const themedStyles = StyleService.create({
     orLabel: {
         marginHorizontal: 8,
     },
+
     productItem: {
         flex: 1,
         margin: 8,
         maxWidth: Dimensions.get('window').width / 2 - 24,
         backgroundColor: 'background-basic-color-1',
     },
+
     itemHeader: {
         height: 80,
         padding: 5,
