@@ -76,7 +76,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
@@ -92,7 +92,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
 
             <Image
                 source={require('./assets/accidentIcon.png')}
-                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 20 }}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
 
             <View style={styles.orContainer}>
@@ -103,7 +103,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
 
-            <Divider style={styles.divi} />
+            <View style={styles.divi} />
 
             <List
                 contentContainerStyle={styles.notifyList}
@@ -111,7 +111,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 export default ViewHistoryAccident;
@@ -137,12 +137,14 @@ const themedStyles = StyleService.create({
     orLabel: {
         marginHorizontal: 8,
     },
+
     productItem: {
         flex: 1,
         margin: 8,
         maxWidth: Dimensions.get('window').width / 2 - 24,
         backgroundColor: 'background-basic-color-1',
     },
+
     itemHeader: {
         height: 80,
         padding: 5,

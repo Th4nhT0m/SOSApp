@@ -65,7 +65,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
             />
             <View style={[themedStyles.formContainer, themedStyles.container]}>
                 <Button appearance="ghost" status="danger" accessoryLeft={SOSIcon} onPress={onAccidentsButtonPress} />
-                <Button onPress={onAccidents}> Create Accident</Button>
+                {/*<Button onPress={onAccidents}> Create Accident</Button>*/}
             </View>
         </View>
     );

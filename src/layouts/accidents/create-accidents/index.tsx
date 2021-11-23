@@ -38,13 +38,17 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
     const { location } = useCurrentGPSPosition();
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
-    const onBackPress = () => {
+
+    const onBackPress = (): void => {
         navigation &&
             navigation.navigate('Home', {
-                screen: 'Dashboard',
-                params: { screen: 'DashboardHome' },
+                screen: 'Utilities',
+                params: {
+                    screen: 'ViewUtilities',
+                },
             });
     };
+
     const onCreatePress = (value: AccidentsProps) => {
         console.log(value);
         if (location !== undefined) {

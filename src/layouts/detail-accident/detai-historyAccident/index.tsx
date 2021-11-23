@@ -12,8 +12,8 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
 
     const setHelper = useAppSelector((state) => state.helpersReducer.data);
-    // const setHelperUserId = useAppSelector((state) => state.helpersReducer.dateGet.user);
-    // const getUser = useAppSelector((state) => state.users);
+    const setHelperUserId = useAppSelector((state) => state.helpersReducer.dateGet.user);
+    const setIdAccident = useAppSelector((state) => state.accidents.dataGet.id);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -27,6 +27,7 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
         content: pops.content,
         timeOut: pops.timeOut,
     }));
+
 
     // React.useEffect(() => {
     //     dispatch(usersActions.getViewUserInfoById(setHelperUserId));

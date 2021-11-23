@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
+import { Button, Card, Divider, List, ListItem, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Dimensions, ListRenderItemInfo, View, Image, ListView } from 'react-native';
 import { Helpers } from '../../../services/requests/types';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
@@ -61,7 +61,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
@@ -77,7 +77,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
 
             <Image
                 source={require('./assets/historyHelper.png')}
-                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 20 }}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 10 }}
             />
 
             <View style={styles.orContainer}>
@@ -88,7 +88,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
 
-            <Divider style={styles.divi} />
+            <View style={styles.divi}></View>
 
             <List
                 contentContainerStyle={styles.notifyList}
@@ -96,7 +96,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 
@@ -137,14 +137,10 @@ const themeStyles = StyleService.create({
     },
     divi: {
         flex: 1,
-        marginTop: 40,
+        marginTop: 10,
         backgroundColor: '#20b2aa',
     },
-    divi2: {
-        flex: 1,
-        marginTop: 40,
-        backgroundColor: '#20b2aa',
-    },
+
     itemFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -161,6 +157,10 @@ const themeStyles = StyleService.create({
     backButton: {
         maxWidth: 80,
         paddingHorizontal: 0,
+    },
+    textR: {
+        marginTop: 20,
+        alignItems: 'center',
     },
     headerContainer: {
         minHeight: 20,

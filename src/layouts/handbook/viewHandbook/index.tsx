@@ -1,10 +1,11 @@
 import React from 'react';
-import { Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { handbookActions } from '../../../actions/handbook-actions';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { Handbook } from '../../../services/requests/types';
 import { KeyboardAvoidingView } from './extra/3rd-party';
+import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 
 const ViewHandbook = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -28,9 +29,19 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
         dispatch(handbookActions.getHandbookById(id));
         navigation &&
             navigation.navigate('Home', {
-                screen: 'Handbook',
+                screen: 'Utilities',
                 params: {
                     screen: 'HandbookById',
+                },
+            });
+    };
+
+    const onBackButtonPress = (): void => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Utilities',
+                params: {
+                    screen: 'ViewUtilities',
                 },
             });
     };
@@ -52,6 +63,19 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
+            <View style={styles.headerContainer as any}>
+                <Button
+                    style={styles.backButton}
+                    appearance="ghost"
+                    status="control"
+                    size="giant"
+                    accessoryLeft={ArrowForwardIconOutLineLeftSide}
+                    onPress={onBackButtonPress}
+                >
+                    Back
+                </Button>
+            </View>
+
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h5">
@@ -115,12 +139,21 @@ const themedStyles = StyleService.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
+    headerContainer: {
+        minHeight: 20,
+        paddingHorizontal: 16,
+        backgroundColor: '#20b2aa',
+    },
     divide: {
         marginTop: 40,
         backgroundColor: '#20b2aa',
     },
     divideColor: {
         backgroundColor: '#20b2aa',
+    },
+    backButton: {
+        maxWidth: 80,
+        paddingHorizontal: 0,
     },
     itemFooter: {
         flexDirection: 'row',

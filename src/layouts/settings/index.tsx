@@ -5,7 +5,7 @@ import { Setting } from './extra/settings-section.component';
 import { ThemesScreen } from '../../screens/themes/theme-settings';
 import { useAppDispatch } from '../../services/hooks';
 import { authActions } from '../../actions/auth-actions';
-
+import { KeyboardAvoidingView } from './extra/3rd-party';
 // interface SettingsProps {
 //     navigation: any;
 // }
@@ -64,7 +64,7 @@ const Settings = ({ navigation }: any): React.ReactElement => {
             <Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />
             <Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />
             <Setting style={[styles.setting, styles.themes]} hint="Themes" hintStyles={{ margin: 10 }}>
-                <ThemesScreen />
+                <ThemesScreen/>
             </Setting>
             <Setting hint={'Sign Out'} style={[styles.setting]} onPress={onLogoutPress} />
         </Layout>

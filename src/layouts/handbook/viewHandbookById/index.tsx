@@ -15,9 +15,9 @@ const ViewHandbookById = ({ navigation }: any): React.ReactElement => {
     const onBackButtonPress = (): void => {
         navigation &&
             navigation.navigate('Home', {
-                screen: 'Handbook',
+                screen: 'Utilities',
                 params: {
-                    screen: 'GetViewHospital',
+                    screen: 'GetHandbook',
                 },
             });
     };
