@@ -4,7 +4,7 @@ import { TokenProps } from '../slices/auth-slice';
 import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://192.168.1.6:5000/v1',
+    baseURL: 'http://192.168.1.9:5000/v1',
     timeout: 30000,
     headers: {
         accept: '*/*',

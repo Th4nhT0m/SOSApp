@@ -14,8 +14,8 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
 
     const setHelper = useAppSelector((state) => state.helpersReducer.data);
-    // const setHelperUserId = useAppSelector((state) => state.helpersReducer.dateGet.user);
-    // const getUser = useAppSelector((state) => state.users);
+    const setHelperUserId = useAppSelector((state) => state.helpersReducer.dateGet.user);
+    const setIdAccident = useAppSelector((state) => state.accidents.dataGet.id);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -30,16 +30,12 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
         timeOut: pops.timeOut,
     }));
 
-    // React.useEffect(() => {
-    //     dispatch(usersActions.getViewUserInfoById(setHelperUserId));
-    // }, [dispatch]);
-    //
-    // const Username: EditUserProps = {
-    //     name: getUser.currentUser.name,
-    //     identityCard: getUser.currentUser.identityCard,
-    //     numberPhone: getUser.currentUser.numberPhone,
-    //     address: getUser.currentUser.address,
-    // };
+    React.useEffect(() => {
+        dispatch(HelperAction.getHelperByIDAccident(setIdAccident));
+        dispatch(usersActions.getViewUserInfoById(setHelperUserId));
+    }, [dispatch]);
+
+    const getUser = useAppSelector((state) => state.users.currentUser.name);
 
     const setbackButtonPress = () => {
         navigation &&
@@ -55,7 +51,7 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
         <Card style={styles.list}>
             <Text>{'Name Helper: ' + info.item?.user}</Text>
             <Text>{'Status : ' + info.item?.status}</Text>
-            {/*<Text>hello, {Username.name}</Text>*/}
+            <Text>{'Status : ' + getUser}</Text>
         </Card>
     );
 
