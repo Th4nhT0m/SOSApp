@@ -3,7 +3,7 @@ import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '
 import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
-import { Accident } from '../../../services/requests/types';
+import { Accidents } from '../../../services/requests/types';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 import moment from 'moment';
@@ -18,7 +18,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
         dispatch(accidentsActions.getHistoryAccident());
     }, [dispatch]);
 
-    const historyAccidentNotifies: Accident[] = setHistoryAccident.results.map((props) => ({
+    const historyAccidentNotifies: Accidents[] = setHistoryAccident.results.map((props) => ({
         id: props.id,
         status: props.status,
         nameAccident: props.nameAccident,
@@ -43,7 +43,7 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
             });
     };
 
-    const renderNotifies = (info: ListRenderItemInfo<Accident>): React.ReactElement => (
+    const renderNotifies = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <Card
             style={styles.list}
             onPress={() => {

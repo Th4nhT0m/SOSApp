@@ -22,7 +22,6 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const { location } = useCurrentGPSPosition();
     const [paddingTop, setPadding] = useState<any>(1);
-
     const [initialPosition, setPosition] = React.useState([
         {
             latitude: 0,
@@ -44,7 +43,6 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
         if (location !== null && location !== undefined) {
             const { latitude, longitude } = location.coords;
             setPosition([
-
                 {
                     latitude: latitude,
                     longitude: longitude,
@@ -60,6 +58,8 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
 
     const renderMap = () => (
         <MapView
+            showsUserLocation
+            followsUserLocation={true}
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
             onMapReady={onMapReady}
             provider="google"
@@ -74,12 +74,12 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
                 longitudeDelta: LONGITUDE_DELTA,
             }}
         >
-            <Marker coordinate={initialPosition[0]} />
+            {/*<Marker coordinate={initialPosition[0]} />*/}
             <Marker coordinate={initialPosition[1]} />
             <MapViewDirections
                 origin={initialPosition[0]}
                 destination={initialPosition[1]}
-                apikey="google" // insert your API Key here
+                apikey="AIzaSyBQpNl4USbR6UnlA0MoeWa9N" // insert your API Key here
                 strokeWidth={4}
                 strokeColor="#111111"
             />
