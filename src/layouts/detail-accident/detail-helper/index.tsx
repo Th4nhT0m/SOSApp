@@ -1,17 +1,18 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helper } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { accidentsActions } from '../../../actions/accidents-ations';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
-    const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
-
+    const getAccidents = useAppSelector((state) => state.accidents.dataGet);
+    const { location } = useCurrentGPSPosition();
     React.useEffect(() => {
-        dispatch(HelperAction.getHelperByIDAccident(getAccidents));
+        dispatch(HelperAction.getHelperByIDAccident(getAccidents.id));
     }, [dispatch, getAccidents]);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
 
@@ -37,11 +38,23 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    navigation &&
-                        navigation.navigate('Home', {
-                            screen: 'Dashboard',
-                            params: { screen: 'DashboardHome' },
-                        });
+                    if (location !== undefined) {
+                        dispatch(
+                            accidentsActions.patchAllAccident({
+                                id: getAccidents.id,
+                                props: {
+                                    status: 'Cancel',
+                                    latitude: String(location.coords.latitude),
+                                    longitude: String(location.coords.longitude),
+                                },
+                            })
+                        );
+                        navigation &&
+                            navigation.navigate('Home', {
+                                screen: 'Dashboard',
+                                params: { screen: 'DashboardHome' },
+                            });
+                    }
                 },
             },
         ]);

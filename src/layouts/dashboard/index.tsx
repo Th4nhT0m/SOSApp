@@ -18,9 +18,9 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
 
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
-        const socket = io('http://localhost:3000');
+        const socket = io('http://192.168.1.6:3000');
         socket.on('connect', () => {
-            console.log('heloo'); // x8WIv7-mJelg7on_ALbx
+            console.log(socket.id); // x8WIv7-mJelg7on_ALbx
         });
     }, [dispatch]);
 
@@ -41,13 +41,13 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                 });
         }
     };
-    const onAccidents = () => {
-        navigation &&
-            navigation.navigate('Home', {
-                screen: 'Dashboard',
-                params: { screen: 'Accidents' },
-            });
-    };
+    // const onAccidents = () => {
+    //     navigation &&
+    //         navigation.navigate('Home', {
+    //             screen: 'Dashboard',
+    //             params: { screen: 'Accidents' },
+    //         });
+    // };
     return (
         <View style={[styles.container]}>
             <Card style={{ ...styles.userInfo }} status={'primary'}>
