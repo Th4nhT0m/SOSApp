@@ -61,8 +61,8 @@ const Settings = ({ navigation }: any): React.ReactElement => {
         <Layout style={styles.container}>
             <Setting style={styles.setting} hint="History accident" onPress={accidentHistoryButtonPress} />
             <Setting style={styles.setting} hint="History helper" onPress={helperHistoryButtonPress} />
-            {/*<Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />*/}
-            {/*<Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />*/}
+            <Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />
+            <Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />
             <Setting style={[styles.setting, styles.themes]} hint="Themes" hintStyles={{ margin: 10 }}>
                 <ThemesScreen/>
             </Setting>

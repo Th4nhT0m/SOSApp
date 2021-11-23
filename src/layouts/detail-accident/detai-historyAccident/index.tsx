@@ -1,13 +1,11 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
-import { EditUserProps, Helper } from '../../../services/requests/types';
-import { HelperAction } from '../../../actions/helper-actions';
+import { Helper } from '../../../services/requests/types';
 import { Dimensions, Image, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { usersActions } from '../../../actions/user-actions';
-import { identity } from 'react-native-svg/lib/typescript/lib/Matrix2D';
 
 const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
@@ -30,12 +28,23 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
         timeOut: pops.timeOut,
     }));
 
-    React.useEffect(() => {
-        dispatch(HelperAction.getHelperByIDAccident(setIdAccident));
-        dispatch(usersActions.getViewUserInfoById(setHelperUserId));
-    }, [dispatch]);
 
-    const getUser = useAppSelector((state) => state.users.currentUser.name);
+    // React.useEffect(() => {
+    //     dispatch(usersActions.getViewUserInfoById(setHelperUserId));
+    // }, [dispatch]);
+    //
+    // const Username: EditUserProps = {
+    //     name: getUser.currentUser.name,
+    //     identityCard: getUser.currentUser.identityCard,
+    //     numberPhone: getUser.currentUser.numberPhone,
+    //     address: getUser.currentUser.address,
+    // };
+    const getName = (id: string): string => {
+        dispatch(usersActions.getViewUserInfoById(id));
+        // const name = useAppSelector((state) => state.users.currentUser.name);
+        let name = 'kaiba';
+        return name;
+    };
 
     const setbackButtonPress = () => {
         navigation &&
@@ -50,8 +59,7 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
     const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
         <Card style={styles.list}>
             <Text>{'Name Helper: ' + info.item?.user}</Text>
-            <Text>{'Status : ' + info.item?.status}</Text>
-            <Text>{'Status : ' + getUser}</Text>
+            <Text>{'Status : ' + getName(info.item?.status)}</Text>
         </Card>
     );
 

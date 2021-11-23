@@ -31,12 +31,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         accidentType: pops.accidentType,
         status: pops.status,
     }));
-    // const getList: Accidents[] = notifies.map((pops) => {
-    //     for (let i = 0; i > notifies.length; i++) {
-    //         if (pops.created_by !==getUser)
-    //             getList.add
-    //     }
-    // };
+
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [

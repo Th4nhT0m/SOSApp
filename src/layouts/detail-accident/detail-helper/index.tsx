@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { Helper } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
-import { Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
@@ -28,11 +28,23 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         timeOut: pops.timeOut,
     }));
     const onBackPress = () => {
-        navigation &&
-            navigation.navigate('Home', {
-                screen: 'Dashboard',
-                params: { screen: 'DashboardHome' },
-            });
+        Alert.alert('Confirm help', 'Are you sure you got help?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: () => {
+                    navigation &&
+                        navigation.navigate('Home', {
+                            screen: 'Dashboard',
+                            params: { screen: 'DashboardHome' },
+                        });
+                },
+            },
+        ]);
     };
     const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
         <Card style={styles.itemFooter}>
@@ -53,7 +65,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
 
             <List contentContainerStyle={styles.notifyList} data={helpers} numColumns={1} renderItem={renderNotifies} />
             <View>
-                <Button onPress={onBackPress} />
+                <Button onPress={onBackPress}>Helped</Button>
             </View>
         </View>
     );

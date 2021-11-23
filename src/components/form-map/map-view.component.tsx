@@ -63,6 +63,8 @@ const MapViewComponent = (props: MapViewProps) => {
 
     const renderMap = () => (
         <MapView
+            showsUserLocation
+            followsUserLocation={true}
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
             initialRegion={{
                 latitude: initialPosition.latitude,
@@ -76,20 +78,7 @@ const MapViewComponent = (props: MapViewProps) => {
             showsScale={true}
             showsCompass={true}
             {...rest}
-        >
-            <Marker
-                draggable
-                coordinate={initialPosition}
-                onDragEnd={(e) => {
-                    const coords = e.nativeEvent.coordinate;
-                    setPosition({
-                        ...initialPosition,
-                        latitude: coords.latitude,
-                        longitude: coords.longitude,
-                    });
-                }}
-            />
-        </MapView>
+        />
     );
     return <View style={{ ...styles.container, paddingTop: paddingTop }}>{renderMap()}</View>;
 };

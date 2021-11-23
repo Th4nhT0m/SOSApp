@@ -1,12 +1,12 @@
 import React from 'react';
-import { Dimensions, Modal, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import MapViewComponent from '../../components/form-map/map-view.component';
 import { SOSIcon } from './extra/icons';
 import { usersActions } from '../../actions/user-actions';
 import { accidentsActions } from '../../actions/accidents-ations';
-
+import { io } from 'socket.io-client';
 const window = Dimensions.get('window');
 
 const Dashboard = ({ navigation }: any): React.ReactElement => {
@@ -18,6 +18,10 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
 
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
+        const socket = io('http://localhost:3000');
+        socket.on('connect', () => {
+            console.log('heloo'); // x8WIv7-mJelg7on_ALbx
+        });
     }, [dispatch]);
 
     const onAccidentsButtonPress = () => {

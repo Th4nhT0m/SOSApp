@@ -1,10 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AccidentsRequest } from '../services/requests/accidents';
-import { AccidentsProps, UrgentProps } from '../services/requests/types';
-import { urgentResponseProps } from '../slices/urgent-create';
+import { AccidentsProps } from '../services/requests/types';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
-
 
 const create = createAsyncThunk('accidents', async (props: AccidentsProps) => {
     const response = await AccidentsRequest.creatAccident(props);
