@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store-provider';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
-
+import { io } from 'socket.io-client';
 export const useVisibilityAnimation = (visible: boolean): ViewStyle => {
     const animation = React.useRef<Animated.Value>(new Animated.Value(visible ? 1 : 0));
 
@@ -93,8 +93,12 @@ export const useWatchLocation = (options = {}) => {
 
     return { location, cancelLocationWatch, error };
 };
-
-
+export const useSocket = () => {
+    const socket = io('http://192.168.1.6:3000');
+    socket.on('connect', () => {
+        console.log('Connect Socket and ID : ' + socket.id);
+    });
+};
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

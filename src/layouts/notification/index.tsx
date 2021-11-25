@@ -7,6 +7,7 @@ import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
+import { io } from 'socket.io-client';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -15,11 +16,20 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
-
+    const socket = io('http://192.168.1.6:3000');
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
-    }, [dispatch]);
+        socket.on('connect', () => {
+            console.log('Connect Socket and ID : ' + socket.id);
+            socket.emit('getAllAccidents', () => {
+                console.log('Sent');
+                // socket.emit('setAllAccidents');
+                // console.log('456');
+            });
+        });
+    }, [dispatch, socket]);
 
+    // const getListSocket: Accidents[] = null;
     const notifies: Accidents[] = setAccidents.results.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
@@ -31,7 +41,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         accidentType: pops.accidentType,
         status: pops.status,
     }));
-
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [

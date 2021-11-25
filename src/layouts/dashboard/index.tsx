@@ -1,30 +1,26 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, Vibration, View } from 'react-native';
 import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import MapViewComponent from '../../components/form-map/map-view.component';
 import { SOSIcon } from './extra/icons';
 import { usersActions } from '../../actions/user-actions';
 import { accidentsActions } from '../../actions/accidents-ations';
-import { io } from 'socket.io-client';
 const window = Dimensions.get('window');
 
 const Dashboard = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-
     const userInfo = useAppSelector((state) => state.users);
+    // const ONE_SECOND_IN_MS = 10;
+    // const PATTERN = [1 * ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
 
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
-        const socket = io('http://192.168.1.6:3000');
-        socket.on('connect', () => {
-            console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-        });
     }, [dispatch]);
-
     const onAccidentsButtonPress = () => {
+        // Vibration.vibrate(PATTERN, true);
         if (location !== undefined) {
             dispatch(
                 accidentsActions.createUrgent({
