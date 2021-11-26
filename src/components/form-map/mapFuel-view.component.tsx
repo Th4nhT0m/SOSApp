@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dimensions, PermissionsAndroid, StyleSheet, View, Image } from 'react-native';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
 import { useCurrentGPSPosition } from '../../services/hooks';
-import { CarRepairMarkers } from './mapData/mapData';
+import { FuelMarkers } from './mapData/mapData';
 
 const window = Dimensions.get('window');
 
@@ -10,9 +10,8 @@ export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
     height?: number;
     width?: number;
 }
-//MapHospitalViewComponent
 
-const MapCarRepairViewComponent = (props: MapViewProps) => {
+const MapFuelViewComponent = (props: MapViewProps) => {
     const { height, width, style, ...rest } = props;
     const SCREEN_HEIGHT = height ?? window.height;
     const SCREEN_WIDTH = width ?? window.width;
@@ -30,7 +29,7 @@ const MapCarRepairViewComponent = (props: MapViewProps) => {
         latitudeDelta: 0,
         longitudeDelta: 0,
     });
-    const [initialMarkers] = React.useState({ CarRepairMarkers });
+    const [initialMarkers] = React.useState({ FuelMarkers });
 
     const onMapReady = () => {
         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(() => {
@@ -68,8 +67,7 @@ const MapCarRepairViewComponent = (props: MapViewProps) => {
                 longitudeDelta: LONGITUDE_DELTA,
             }}
         >
-
-            {initialMarkers.CarRepairMarkers.map((post) => {
+            {initialMarkers.FuelMarkers.map((post) => {
                 const map = {
                     latitude: post.latitude,
                     longitude: post.longitude,
@@ -77,7 +75,7 @@ const MapCarRepairViewComponent = (props: MapViewProps) => {
                 return (
                     <Marker coordinate={map} title={post.title} description={post.description}>
                         <Image
-                            source={require('../../assets/images/car-repair.png')}
+                            source={require('../../assets/images/gas-station.png')}
                             style={{ height: 30, width: 30 }}
                         />
                     </Marker>
@@ -105,4 +103,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MapCarRepairViewComponent;
+export default MapFuelViewComponent;

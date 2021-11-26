@@ -6,7 +6,7 @@ import { HandbookByIdScreen } from '../screens/Utilities/handbook/hankbookById-v
 import { MapHospitalScreen } from '../screens/Utilities/mapHospital/map-Hospital.component';
 import { AccidentsScreen } from '../screens/Utilities/accidents/accidents-create';
 import { CarRepairScreen } from '../screens/Utilities/mapCarRepair/map-Car-Repair.component';
-
+import { FuelScreen } from '../screens/Utilities/mapFuel/map-Fuel.component';
 const Stack = createStackNavigator();
 
 export const UtilitiesNavigator = (): React.ReactElement => (
@@ -17,5 +17,6 @@ export const UtilitiesNavigator = (): React.ReactElement => (
         <Stack.Screen name="Hospitals" component={MapHospitalScreen} />
         <Stack.Screen name="Accidents" component={AccidentsScreen} />
         <Stack.Screen name="ViewCarRepair" component={CarRepairScreen} />
+        <Stack.Screen name="ViewFuel" component={FuelScreen} />
     </Stack.Navigator>
 );
