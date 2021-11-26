@@ -102,6 +102,46 @@ export const CarRepairMarkers = [
     },
 ];
 
+export const FuelMarkers = [
+    {
+        latitude: 11.2678554,
+        longitude: 106.1296419,
+        title: 'Trạm xăng Long Hoa',
+        description: '34 Phạm Hùng, TT. Hoà Thành, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2708614,
+        longitude: 106.1299306,
+        title: 'CỬA HÀNG XĂNG DẦU SỐ 28',
+        description: '256 Tôn Đức Thắng, Long Chí, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.276535,
+        longitude: 106.149159,
+        title: 'Trạm xăng dầu Đông Á',
+        description: '382 Nguyễn Văn Linh, Trường Tây, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2791268,
+        longitude: 106.1328081,
+        title: 'Trạm xăng dầu Ngọc Lân',
+        description: '56 Nguyễn Văn Linh, Long Thành Bắc, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.2741425,
+        longitude: 106.1472042,
+        title: 'Trạm xăng dầu Phú Gia Khang',
+        description: 'Trịnh Phong Đáng, Trường Hoà, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+    {
+        latitude: 11.248528,
+        longitude: 106.132434,
+        title: 'Trạm xăng dầu PVOIL số 18',
+        description: '694 Tôn Đức Thắng, Long Thánh Nam, Hoà Thành, Tây Ninh, Việt Nam',
+    },
+
+];
+
 export const mapDarkStyle = [
     {
         elementType: 'geometry',

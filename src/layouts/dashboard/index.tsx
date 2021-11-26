@@ -1,27 +1,32 @@
-import React from 'react';
-import { Dimensions, View } from 'react-native';
+import React, { useState } from 'react';
+import { Dimensions, Image, View, Vibration } from 'react-native';
 import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import MapViewComponent from '../../components/form-map/map-view.component';
 import { SOSIcon } from './extra/icons';
 import { usersActions } from '../../actions/user-actions';
 import { accidentsActions } from '../../actions/accidents-ations';
-import { io } from 'socket.io-client';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const window = Dimensions.get('window');
+import Torch from 'react-native-torch';
+import Sound from 'react-native-sound';
 
 const Dashboard = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
 
+    // let sound1;
+    const ONE_SECOND_IN_MS = 10;
+    const PATTERN = [1 * ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
+
+    //Default Keep Awake off
+    const [isTorchOn, setIsTorchOn] = useState(false);
+
     const userInfo = useAppSelector((state) => state.users);
 
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
-        const socket = io('http://localhost:3000');
-        socket.on('connect', () => {
-            console.log('heloo'); // x8WIv7-mJelg7on_ALbx
-        });
     }, [dispatch]);
 
     const onAccidentsButtonPress = () => {
@@ -39,33 +44,36 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                     screen: 'Dashboard',
                     params: { screen: 'DetailHelper' },
                 });
+            handlePress();
         }
     };
-    const onAccidents = () => {
-        navigation &&
-            navigation.navigate('Home', {
-                screen: 'Dashboard',
-                params: { screen: 'Accidents' },
-            });
+
+    const handlePress = () => {
+        Torch.switchState(true);
+        Vibration.vibrate(PATTERN, true);
     };
+
     return (
         <View style={[styles.container]}>
             <Card style={{ ...styles.userInfo }} status={'primary'}>
                 <View style={styles.infoContainer}>
                     <Avatar size={'giant'} source={require('../../assets/images/icon-avatar.png')} />
                     <Text>Hello, {userInfo.currentUser.name}</Text>
+                    <Image source={require('./extra/notification.png')} style={{ width: 37, height: 37, left: 155 }} />
                 </View>
             </Card>
 
             <MapViewComponent
-                height={window.height * 0.5}
+                height={window.height * 0.78}
                 loadingEnabled={true}
                 showsMyLocationButton={true}
                 onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}
             />
+
             <View style={[themedStyles.formContainer, themedStyles.container]}>
-                <Button appearance="ghost" status="danger" accessoryLeft={SOSIcon} onPress={onAccidentsButtonPress} />
-                {/*<Button onPress={onAccidents}> Create Accident</Button>*/}
+                <TouchableOpacity style={styles.layoutSoS} onPress={onAccidentsButtonPress}>
+                    <Image source={require('./extra/sosư.png')} style={{ height: 110, width: 110 }} />
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -84,7 +92,7 @@ const themedStyles = StyleService.create({
     },
     userInfo: {
         marginVertical: 10,
-        width: '80%',
+        width: '100%',
     },
     infoContainer: {
         display: 'flex',
@@ -93,8 +101,8 @@ const themedStyles = StyleService.create({
         alignItems: 'center',
     },
     formContainer: {
-        marginTop: 48,
-        paddingHorizontal: 16,
+        marginTop: 395,
+        paddingHorizontal: 20,
     },
     sosButton: {
         display: 'flex',
@@ -106,5 +114,9 @@ const themedStyles = StyleService.create({
     button: {
         marginVertical: 24,
         marginHorizontal: 16,
+    },
+    layoutSoS: {
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });

@@ -52,6 +52,8 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
 
     const renderMap = () => (
         <MapView
+            showsUserLocation
+            followsUserLocation={true}
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
             onMapReady={onMapReady}
             provider="google"
@@ -66,10 +68,6 @@ const MapHospitalViewComponent = (props: MapViewProps) => {
                 longitudeDelta: LONGITUDE_DELTA,
             }}
         >
-            <Marker coordinate={initialPosition}>
-                <Image source={require('../../assets/images/mapUser.png')} style={{ height: 45, width: 45 }} />
-            </Marker>
-
             {initialMarkers.HospitalMarkers.map((post) => {
                 const map = {
                     latitude: post.latitude,
