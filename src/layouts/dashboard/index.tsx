@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dimensions, Image, View, Vibration } from 'react-native';
 import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
@@ -15,21 +16,16 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-
-    // let sound1;
     const ONE_SECOND_IN_MS = 10;
     const PATTERN = [1 * ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
-
-    //Default Keep Awake off
-    const [isTorchOn, setIsTorchOn] = useState(false);
 
     const userInfo = useAppSelector((state) => state.users);
 
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
     }, [dispatch]);
-
     const onAccidentsButtonPress = () => {
+        // Vibration.vibrate(PATTERN, true);
         if (location !== undefined) {
             dispatch(
                 accidentsActions.createUrgent({
@@ -52,7 +48,6 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
         Torch.switchState(true);
         Vibration.vibrate(PATTERN, true);
     };
-
     return (
         <View style={[styles.container]}>
             <Card style={{ ...styles.userInfo }} status={'primary'}>

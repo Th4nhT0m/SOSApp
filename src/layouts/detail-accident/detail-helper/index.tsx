@@ -1,17 +1,35 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helper } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+
+import { accidentsActions } from '../../../actions/accidents-ations';
+import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Sound from 'react-native-sound';
-import { accidentsActions } from '../../../actions/accidents-ations';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
+
+//     const getAccidents = useAppSelector((state) => state.accidents.dataGet);
+//     const { location } = useCurrentGPSPosition();
+//     const socket = io('http://192.168.1.6:1945');
+//     React.useEffect(() => {
+//         dispatch(HelperAction.getHelperByIDAccident(getAccidents.id));
+//         dispatch(HelperAction.getAllHelper);
+//         socket.on('helper', () => {
+//             console.log('Connect Socket and ID : ' + socket.id);
+//             // socket.on('getHelper', () => {
+//             //     socket.on('AllAccidents', (data) => {
+//             //         console.log(data);
+//             // });
+//         });
+//     }, [dispatch, getAccidents.id, socket]);
+  
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
 
     let sound1: Sound;
@@ -48,12 +66,24 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    navigation &&
-                        navigation.navigate('Home', {
-                            screen: 'Dashboard',
-                            params: { screen: 'DashboardHome' },
-                        });
-                    onCancel();
+                    if (location !== undefined) {
+                        dispatch(
+                            accidentsActions.patchAllAccident({
+                                id: getAccidents.id,
+                                props: {
+                                    status: 'Cancel',
+                                    latitude: String(location.coords.latitude),
+                                    longitude: String(location.coords.longitude),
+                                },
+                            })
+                        );
+                        navigation &&
+                            navigation.navigate('Home', {
+                                screen: 'Dashboard',
+                                params: { screen: 'DashboardHome' },
+                            });
+                    }
+
                 },
             },
         ]);

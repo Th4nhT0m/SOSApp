@@ -61,6 +61,12 @@ const accidentsSlice = createSlice({
         builder.addCase(accidentsActions.createUrgent.fulfilled, (state, action) => {
             state.dataGet = action.payload;
         });
+        builder.addCase(accidentsActions.patchAllAccident.pending, (state) => {
+            state.isLoading = false;
+        });
+        builder.addCase(accidentsActions.patchAllAccident.fulfilled, (state, action) => {
+            state.dataGet = action.payload;
+        });
     },
 });
 
