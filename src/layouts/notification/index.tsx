@@ -16,13 +16,15 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
-    const socket = io('http://192.168.1.6:3000');
+    const socket = io('http://192.168.1.6:1945');
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
         socket.on('connect', () => {
             console.log('Connect Socket and ID : ' + socket.id);
-            socket.emit('getAllAccidents', () => {
-                console.log('Sent');
+            socket.on('getAllAccidents', () => {
+                socket.on('setAllAccidents', (data) => {
+                    console.log(data);
+                });
                 // socket.emit('setAllAccidents');
                 // console.log('456');
             });

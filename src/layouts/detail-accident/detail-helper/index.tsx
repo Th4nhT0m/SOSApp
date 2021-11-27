@@ -5,15 +5,25 @@ import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
+import { io } from 'socket.io-client';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
     const getAccidents = useAppSelector((state) => state.accidents.dataGet);
     const { location } = useCurrentGPSPosition();
+    const socket = io('http://192.168.1.6:1945');
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents.id));
-    }, [dispatch, getAccidents]);
+        dispatch(HelperAction.getAllHelper);
+        socket.on('helper', () => {
+            console.log('Connect Socket and ID : ' + socket.id);
+            // socket.on('getHelper', () => {
+            //     socket.on('AllAccidents', (data) => {
+            //         console.log(data);
+            // });
+        });
+    }, [dispatch, getAccidents.id, socket]);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({

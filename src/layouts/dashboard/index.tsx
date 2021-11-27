@@ -13,8 +13,6 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
     const userInfo = useAppSelector((state) => state.users);
-    // const ONE_SECOND_IN_MS = 10;
-    // const PATTERN = [1 * ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
 
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
