@@ -9,7 +9,7 @@ export interface MapViewProps extends Omit<MVProps, 'maximumAge'> {
     height?: number;
     width?: number;
 }
-//MapHospitalViewComponent
+
 const MapViewComponent = (props: MapViewProps) => {
     const { height, width, style, ...rest } = props;
     const SCREEN_HEIGHT = height ?? window.height;

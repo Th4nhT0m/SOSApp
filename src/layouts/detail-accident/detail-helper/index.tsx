@@ -2,28 +2,46 @@ import React from 'react';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helper } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
-import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+
 import { accidentsActions } from '../../../actions/accidents-ations';
 import { io } from 'socket.io-client';
+import Torch from 'react-native-torch';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import Sound from 'react-native-sound';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
-    const getAccidents = useAppSelector((state) => state.accidents.dataGet);
-    const { location } = useCurrentGPSPosition();
-    const socket = io('http://192.168.1.6:1945');
+
+//     const getAccidents = useAppSelector((state) => state.accidents.dataGet);
+//     const { location } = useCurrentGPSPosition();
+//     const socket = io('http://192.168.1.6:1945');
+//     React.useEffect(() => {
+//         dispatch(HelperAction.getHelperByIDAccident(getAccidents.id));
+//         dispatch(HelperAction.getAllHelper);
+//         socket.on('helper', () => {
+//             console.log('Connect Socket and ID : ' + socket.id);
+//             // socket.on('getHelper', () => {
+//             //     socket.on('AllAccidents', (data) => {
+//             //         console.log(data);
+//             // });
+//         });
+//     }, [dispatch, getAccidents.id, socket]);
+  
+    const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
+
+    let sound1: Sound;
+
     React.useEffect(() => {
-        dispatch(HelperAction.getHelperByIDAccident(getAccidents.id));
-        dispatch(HelperAction.getAllHelper);
-        socket.on('helper', () => {
-            console.log('Connect Socket and ID : ' + socket.id);
-            // socket.on('getHelper', () => {
-            //     socket.on('AllAccidents', (data) => {
-            //         console.log(data);
-            // });
-        });
-    }, [dispatch, getAccidents.id, socket]);
+        dispatch(HelperAction.getHelperByIDAccident(getAccidents));
+    }, [dispatch, getAccidents]);
+
+    React.useEffect(() => {
+        start();
+    }, []);
+
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({
@@ -65,10 +83,40 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 params: { screen: 'DashboardHome' },
                             });
                     }
+
                 },
             },
         ]);
     };
+
+    const start = () => {
+        Sound.setCategory('Playback');
+        sound1 = new Sound(require('./sound/dangeralar_o3srdt8a.mp3'), (error) => {
+            if (error) {
+                alert('error' + error.message);
+                return;
+            }
+            console.log('start');
+            sound1.play(() => {
+                sound1.release();
+            });
+            // sound1.setNumberOfLoops(2);
+        });
+    };
+
+    const stop = () => {
+        sound1.stop(() => {
+            console.log('Stop');
+            sound1.play();
+        });
+    };
+
+    const onCancel = () => {
+        // stop();
+        Torch.switchState(false);
+        Vibration.cancel();
+    };
+
     const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
         <Card style={styles.itemFooter}>
             <Text>{'Name Helper: ' + info.item?.user}</Text>
@@ -78,9 +126,22 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
 
     return (
         <View style={styles.container}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.circle}>
+                <View>
+                    <TouchableOpacity style={styles.layoutCircle} onPress={onCancel}>
+                        <Image source={require('./assets/power-on.png')} style={{ height: 48, width: 48 }} />
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+
+            <Image
+                source={require('./assets/listHelper.png')}
+                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: -400 }}
+            />
+
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
-                <Text style={styles.orLabel} category="h5">
+                <Text style={styles.orLabel} category="h3">
                     List Helper
                 </Text>
                 <Divider style={styles.divider} />
@@ -88,7 +149,9 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
 
             <List contentContainerStyle={styles.notifyList} data={helpers} numColumns={1} renderItem={renderNotifies} />
             <View>
-                <Button onPress={onBackPress}>Helped</Button>
+                <Button style={styles.updateButton} size="large" onPress={onBackPress}>
+                    Helped
+                </Button>
             </View>
         </View>
     );
@@ -102,10 +165,14 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 15,
-        marginTop: 2,
+        marginTop: 15,
     },
     divider: {
         flex: 1,
+    },
+    updateButton: {
+        marginVertical: 24,
+        marginHorizontal: 16,
     },
     orLabel: {
         marginHorizontal: 8,
@@ -136,6 +203,18 @@ const themedStyles = StyleService.create({
     },
     iconButton: {
         paddingHorizontal: 0,
+    },
+    circle: {
+        marginRight: -40,
+        marginTop: 10,
+    },
+    layoutCircle: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 70,
+        width: 70,
+        borderRadius: 30,
+        marginLeft: 330,
     },
 });
 

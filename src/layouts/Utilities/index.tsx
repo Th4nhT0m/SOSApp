@@ -1,21 +1,11 @@
 import React from 'react';
-import { View, Alert, Image } from 'react-native';
-import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { View, Image } from 'react-native';
+import { Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const ViewUtilities = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
-
-    const onBackButtonPress = (): void => {
-        navigation &&
-            navigation.navigate('Home', {
-                screen: 'Settings',
-                params: {
-                    screen: 'Setting',
-                },
-            });
-    };
 
     const onHandbookButtonPress = (): void => {
         navigation &&
@@ -49,12 +39,22 @@ const ViewUtilities = ({ navigation }: any): React.ReactElement => {
 
     const onCarRepairButtonPress = (): void => {
         navigation &&
-        navigation.navigate('Home', {
-            screen: 'Utilities',
-            params: {
-                screen: 'ViewCarRepair',
-            },
-        });
+            navigation.navigate('Home', {
+                screen: 'Utilities',
+                params: {
+                    screen: 'ViewCarRepair',
+                },
+            });
+    };
+
+    const onFuelButtonPress = (): void => {
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Utilities',
+                params: {
+                    screen: 'ViewFuel',
+                },
+            });
     };
 
     return (
@@ -104,7 +104,7 @@ const ViewUtilities = ({ navigation }: any): React.ReactElement => {
                 </View>
 
                 <View>
-                    <TouchableOpacity style={styles.layoutFuel}>
+                    <TouchableOpacity style={styles.layoutFuel} onPress={onFuelButtonPress}>
                         <Image source={require('./assets/fuel-pump.png')} style={{ height: 45, width: 45 }} />
                     </TouchableOpacity>
                     <Text style={{ alignSelf: 'center', marginTop: 4 }}>Fuel</Text>
@@ -141,11 +141,11 @@ const themedStyles = StyleService.create({
     },
     circle: {
         marginRight: -40,
-        marginTop: 30,
+        marginTop: 60,
     },
     circle2: {
         marginRight: -20,
-        marginTop: -60,
+        marginTop: -100,
     },
     layoutCircle: {
         alignItems: 'center',
@@ -154,7 +154,7 @@ const themedStyles = StyleService.create({
         width: 80,
         borderRadius: 50,
         backgroundColor: '#5facdb',
-        marginLeft: 30,
+        marginLeft: 40,
     },
     layoutRepairsMoto: {
         alignItems: 'center',
@@ -163,7 +163,7 @@ const themedStyles = StyleService.create({
         width: 80,
         borderRadius: 50,
         backgroundColor: '#ee82ee',
-        marginLeft: 30,
+        marginLeft: 40,
     },
     layoutHandbook: {
         alignItems: 'center',
@@ -172,8 +172,8 @@ const themedStyles = StyleService.create({
         width: 80,
         borderRadius: 50,
         backgroundColor: '#ff5c83',
-        marginRight: 30,
-        marginLeft: 30,
+        marginRight: 40,
+        marginLeft: 40,
     },
     layoutFuel: {
         alignItems: 'center',
@@ -182,8 +182,8 @@ const themedStyles = StyleService.create({
         width: 80,
         borderRadius: 50,
         backgroundColor: '#00ffff',
-        marginRight: 30,
-        marginLeft: 30,
+        marginRight: 40,
+        marginLeft: 40,
     },
     layoutMapHospital: {
         alignItems: 'center',

@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeBottomNavigation } from '../screens/home/bottom-navigation';
 import { SettingNavigator } from './setting.navigator';
 import { NotificationNavigator } from './notification.navigator';
-import { MapHospitalNavigator } from './hospital.navigator';
 import { AccidentsNavigator } from './accidents.navigator';
 import { UtilitiesNavigator } from './utilities.navigator';
 
