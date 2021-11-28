@@ -7,6 +7,7 @@ import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
+import moment from 'moment';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -30,8 +31,9 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         modified_by: pops.modified_by,
         accidentType: pops.accidentType,
         status: pops.status,
+        createTime: pops.createTime,
+        UpdateTime: pops.UpdateTime,
     }));
-
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
@@ -102,21 +104,39 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     );
 
     const renderNotifies = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
-        <Card footer={() => renderItemFooter(info)}>
+        <Card style={styles.list} footer={() => renderItemFooter(info)}>
             <View style={styles.itemHeader}>
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
                 <View>
-                    <Text category="s2">{'Name Accident: ' + info.item?.nameAccident}</Text>
-                    <Text category="s1">{'User Create: ' + info.item?.created_by}</Text>
+                    <Text category="s1">{'User name: ' + info.item?.created_by?.name}</Text>
+                    <Text category="s1">
+                        {'Time: ' + moment(info.item?.createTime).format('DD/MM/YYYY hh:mm:ss a')}
+                    </Text>
                 </View>
             </View>
             <Divider />
+            <Text style={{ marginTop: 15 }}>{'Name accident: ' + info.item?.nameAccident}</Text>
             <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>
     );
 
     return (
-        <List contentContainerStyle={styles.notifyList} data={notifies} numColumns={1} renderItem={renderNotifies} />
+        <View style={styles.container}>
+            <View style={styles.orContainer}>
+                <Divider style={styles.divider} />
+                <Text style={styles.orLabel} category="h3">
+                    List Accident
+                </Text>
+                <Divider style={styles.divider} />
+            </View>
+
+            <List
+                contentContainerStyle={styles.notifyList}
+                data={notifies}
+                numColumns={1}
+                renderItem={renderNotifies}
+            />
+        </View>
     );
 };
 const themedStyles = StyleService.create({
@@ -124,9 +144,22 @@ const themedStyles = StyleService.create({
         flex: 1,
         backgroundColor: 'background-basic-color-2',
     },
+    orLabel: {
+        marginHorizontal: 8,
+    },
     notifyList: {
         paddingHorizontal: 8,
         paddingVertical: 16,
+        marginTop: 10,
+    },
+    divider: {
+        flex: 1,
+    },
+    orContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 15,
+        marginTop: 20,
     },
     productItem: {
         flex: 1,
@@ -141,6 +174,9 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+    },
+    list: {
+        marginTop: 30,
     },
     itemFooter: {
         flexDirection: 'row',

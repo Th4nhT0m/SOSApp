@@ -2,7 +2,6 @@ import React from 'react';
 import { Dimensions, View } from 'react-native';
 import { Button, StyleService, useStyleSheet } from '@ui-kitten/components';
 import MapFuelViewComponent from '../../../components/form-map/mapFuel-view.component';
-import MapViewComponent from '../../../components/form-map/map-view.component';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 const window = Dimensions.get('window');
 
@@ -35,7 +34,7 @@ const MapFuel = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <MapFuelViewComponent
-                height={window.height * 0.78}
+                height={window.height * 0.85}
                 loadingEnabled={true}
                 showsMyLocationButton={true}
                 onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}

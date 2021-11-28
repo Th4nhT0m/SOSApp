@@ -24,8 +24,15 @@ const initialState: Props = {
         accidentType: '',
         latitude: '',
         longitude: '',
-        created_by: '',
+        created_by: {
+            id: '',
+            numberPhone: '',
+            name: '',
+            address: '',
+        },
         modified_by: '',
+        createTime: Date.prototype,
+        UpdateTime: Date.prototype,
     },
     dateList: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
@@ -41,6 +48,8 @@ const accidentsSlice = createSlice({
         builder.addCase(accidentsActions.create.fulfilled, (state, action) => {
             state.dataGet = action.payload;
         });
+
+        // change ---
         builder.addCase(accidentsActions.getAllAccidents.pending, (state) => {
             state.isLoading = true;
         });
@@ -48,6 +57,7 @@ const accidentsSlice = createSlice({
             state.isLoading = false;
             state.dateList = action.payload;
         });
+
         builder.addCase(accidentsActions.getHistoryAccident.pending, (state) => {
             state.isLoading = true;
         });
@@ -55,6 +65,8 @@ const accidentsSlice = createSlice({
             state.isLoading = false;
             state.dateList = action.payload;
         });
+
+        // change
         builder.addCase(accidentsActions.createUrgent.pending, (state) => {
             state.isLoading = true;
         });
