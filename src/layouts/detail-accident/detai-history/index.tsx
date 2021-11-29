@@ -88,7 +88,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
 
-            <View style={styles.divi}></View>
+            <View style={styles.divi} />
 
             <List
                 contentContainerStyle={styles.notifyList}

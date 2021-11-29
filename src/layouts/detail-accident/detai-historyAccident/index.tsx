@@ -28,7 +28,6 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
         timeOut: pops.timeOut,
     }));
 
-
     // React.useEffect(() => {
     //     dispatch(usersActions.getViewUserInfoById(setHelperUserId));
     // }, [dispatch]);

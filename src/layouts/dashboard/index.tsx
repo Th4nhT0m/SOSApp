@@ -1,16 +1,13 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Dimensions, Image, View, Vibration } from 'react-native';
-import { Avatar, Button, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Avatar, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import MapViewComponent from '../../components/form-map/map-view.component';
-import { SOSIcon } from './extra/icons';
 import { usersActions } from '../../actions/user-actions';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const window = Dimensions.get('window');
 import Torch from 'react-native-torch';
-import Sound from 'react-native-sound';
 
 const Dashboard = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -20,12 +17,11 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
     const PATTERN = [1 * ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
 
     const userInfo = useAppSelector((state) => state.users);
-
+    const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
     }, [dispatch]);
     const onAccidentsButtonPress = () => {
-        // Vibration.vibrate(PATTERN, true);
         if (location !== undefined) {
             dispatch(
                 accidentsActions.createUrgent({
@@ -35,13 +31,16 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                     longitude: String(location.coords.longitude),
                 })
             );
+            console.log(getAccidents);
+        }
+        setTimeout(() => {
             navigation &&
                 navigation.navigate('Home', {
                     screen: 'Dashboard',
                     params: { screen: 'DetailHelper' },
                 });
-            handlePress();
-        }
+            // handlePress();
+        }, 500);
     };
 
     const handlePress = () => {

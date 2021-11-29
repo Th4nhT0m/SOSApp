@@ -100,6 +100,30 @@ export const CarRepairMarkers = [
         title: 'Tiệm Sửa Xe Kim Châu',
         description: '2 Tôn Đức Thắng, Ấp Long Chí, Hoà Thành, Tây Ninh, Việt Nam',
     },
+    {
+        latitude: 10.3816052,
+        longitude: 106.8830175,
+        title: 'Tiệm Sửa Xe Tân Tuệ(đoàn cần giờ)',
+        description: '2 Duyên Hải, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+    },
+    {
+        latitude: 10.3934025,
+        longitude: 106.9117195,
+        title: 'Tiệm sửa xe Honda Phương',
+        description: '9WV6+9MQ, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+    },
+    {
+        latitude: 10.3864662,
+        longitude: 106.9121842,
+        title: 'Sửa Xe Ty',
+        description: 'Nguyễn Văn Mạnh, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+    },
+    {
+        latitude: 10.3953817,
+        longitude: 106.9169256,
+        title: 'Hiệu Sửa Xe Nam Tình',
+        description: 'Đối Diện Cây Xăng Đức Thanh Duyên Hải, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam ',
+    },
 ];
 
 export const FuelMarkers = [
@@ -139,7 +163,18 @@ export const FuelMarkers = [
         title: 'Trạm xăng dầu PVOIL số 18',
         description: '694 Tôn Đức Thắng, Long Thánh Nam, Hoà Thành, Tây Ninh, Việt Nam',
     },
-
+    {
+        latitude: 10.3953361,
+        longitude: 106.9166471,
+        title: 'Dịch Vụ Xăng Dầu Đức Thanh',
+        description: '78/2 Duyên Hải, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+    },
+    {
+        latitude: 10.3801844,
+        longitude: 106.88253824,
+        title: '2 Duyên Hải, Long Hoà, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+        description: 'Long Hòa, Cần Giờ, Thành phố Hồ Chí Minh, Việt Nam',
+    },
 ];
 
 export const mapDarkStyle = [
