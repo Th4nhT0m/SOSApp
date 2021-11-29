@@ -1,4 +1,4 @@
-import {  Dimensions, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import React from 'react';

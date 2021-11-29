@@ -68,7 +68,6 @@ const MapCarRepairViewComponent = (props: MapViewProps) => {
                 longitudeDelta: LONGITUDE_DELTA,
             }}
         >
-
             {initialMarkers.CarRepairMarkers.map((post) => {
                 const map = {
                     latitude: post.latitude,

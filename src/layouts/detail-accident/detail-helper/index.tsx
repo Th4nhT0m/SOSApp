@@ -4,7 +4,6 @@ import { Helper } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-
 import { accidentsActions } from '../../../actions/accidents-ations';
 import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
@@ -14,35 +13,23 @@ import Sound from 'react-native-sound';
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
+    const { location } = useCurrentGPSPosition();
 
-//     const getAccidents = useAppSelector((state) => state.accidents.dataGet);
-//     const { location } = useCurrentGPSPosition();
-//     const socket = io('http://192.168.1.6:1945');
-//     React.useEffect(() => {
-//         dispatch(HelperAction.getHelperByIDAccident(getAccidents.id));
-//         dispatch(HelperAction.getAllHelper);
-//         socket.on('helper', () => {
-//             console.log('Connect Socket and ID : ' + socket.id);
-//             // socket.on('getHelper', () => {
-//             //     socket.on('AllAccidents', (data) => {
-//             //         console.log(data);
-//             // });
-//         });
-//     }, [dispatch, getAccidents.id, socket]);
-  
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
-
+    const setHelper = useAppSelector((state) => state.helpersReducer.data);
     let sound1: Sound;
-
+    const socket = io('http://192.168.1.6:1945');
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
+
+        socket.on('connect', () => {
+            console.log(socket.id);
+        });
     }, [dispatch, getAccidents]);
 
-    React.useEffect(() => {
-        start();
-    }, []);
-
-    const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
+    // React.useEffect(() => {
+    //     start();
+    // }, []);
 
     const helpers: Helper[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -69,7 +56,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                     if (location !== undefined) {
                         dispatch(
                             accidentsActions.patchAllAccident({
-                                id: getAccidents.id,
+                                id: getAccidents,
                                 props: {
                                     status: 'Cancel',
                                     latitude: String(location.coords.latitude),
@@ -77,13 +64,13 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
+                        socket.io._destroy(socket);
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',
                                 params: { screen: 'DashboardHome' },
                             });
                     }
-
                 },
             },
         ]);
@@ -112,18 +99,15 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     };
 
     const onCancel = () => {
-        // stop();
         Torch.switchState(false);
         Vibration.cancel();
     };
-
     const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
         <Card style={styles.itemFooter}>
             <Text>{'Name Helper: ' + info.item?.user}</Text>
             <Text>{'Status : ' + info.item?.status}</Text>
         </Card>
     );
-
     return (
         <View style={styles.container}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.circle}>
