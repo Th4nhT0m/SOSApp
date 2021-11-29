@@ -1,13 +1,14 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
-import { DoneAllIcon } from '../../components/Icons';
+import { DoneAllIcon, phoneIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+import call from 'react-native-phone-call';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -85,9 +86,16 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         console.log('Susses');
     };
 
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
+
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
-            {/*<Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>*/}
             <Text category="s1">
                 {'Distance: ' + calculateDistance(info.item?.latitude, info.item?.longitude) / 1000 + ' KM'}
             </Text>
@@ -107,11 +115,20 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         <Card style={styles.list} footer={() => renderItemFooter(info)}>
             <View style={styles.itemHeader}>
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
-                <View>
+                <View style={styles.name}>
                     <Text category="s1">{'User name: ' + info.item?.created_by?.name}</Text>
                     <Text category="s1">
                         {'Time: ' + moment(info.item?.createTime).format('DD/MM/YYYY hh:mm:ss a')}
                     </Text>
+                    <View style={styles.itemPhone}>
+                        <Text category="s1">{'Number phone: ' + info.item?.created_by?.numberPhone}</Text>
+                        <Button
+                            style={styles.iconPhone}
+                            size="small"
+                            accessoryLeft={phoneIcon}
+                            onPress={() => triggerCall(info.item?.created_by?.numberPhone)}
+                        />
+                    </View>
                 </View>
             </View>
             <Divider />
@@ -169,7 +186,7 @@ const themedStyles = StyleService.create({
     },
     itemHeader: {
         height: 80,
-        padding: 20,
+        padding: 5,
         marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'flex-start',
@@ -185,8 +202,21 @@ const themedStyles = StyleService.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
     },
+    itemPhone: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    name: {
+        left: 10,
+    },
     iconButton: {
         paddingHorizontal: 0,
+    },
+    iconPhone: {
+        paddingHorizontal: 0,
+        // marginHorizontal: 155,
+        left: 20,
     },
 });
 

@@ -11,6 +11,7 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const getID = useAppSelector((state) => state.helpersReducer.dateGet.id);
     const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
     const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
+
     const styles = useStyleSheet(themedStyles);
 
     // const { location } = useCurrentGPSPosition();

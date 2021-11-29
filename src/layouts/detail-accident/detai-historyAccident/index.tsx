@@ -4,9 +4,8 @@ import { Helpers } from '../../../services/requests/types';
 import { Dimensions, Image, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
-import { KeyboardAvoidingView } from './extra/3rd-party';
-import { DoneAllIcon } from '../../../components/Icons';
-// import call from 'react-native-phone-call';
+import { phoneIcon } from '../../../components/Icons';
+import call from 'react-native-phone-call';
 
 const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -38,23 +37,29 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
             });
     };
 
-    // const tell = (args: string | undefined) => {
-    //     call(args);
-    // };
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
 
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.list}>
-            <Text>{'Name : ' + info.item?.user?.name}</Text>
+            <View style={styles.itemFooter}>
+                <Text>{'Name : ' + info.item?.user?.name}</Text>
+                <Button
+                    style={styles.iconButton}
+                    size="small"
+                    accessoryLeft={phoneIcon}
+                    onPress={() => triggerCall(info.item?.user?.numberPhone)}
+                />
+            </View>
+
             <Text>{'Status : ' + info.item?.status}</Text>
             <Text>{'Number phone: ' + info.item?.user?.numberPhone}</Text>
             <Text>{'Address : ' + info.item?.user?.address}</Text>
-
-            {/*<Button*/}
-            {/*    style={styles.iconButton}*/}
-            {/*    size="small"*/}
-            {/*    accessoryLeft={DoneAllIcon}*/}
-            {/*    onPress={() => tell(info.item?.user?.address)}*/}
-            {/*/>*/}
         </Card>
     );
 
@@ -108,6 +113,11 @@ const themedStyles = StyleService.create({
     list: {
         marginTop: 20,
     },
+    itemFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     headerContainer: {
         minHeight: 20,
         paddingHorizontal: 16,
@@ -137,12 +147,6 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-    },
-    itemFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 20,
     },
     iconButton: {
         paddingHorizontal: 0,
