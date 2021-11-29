@@ -73,6 +73,13 @@ const accidentsSlice = createSlice({
         builder.addCase(accidentsActions.createUrgent.fulfilled, (state, action) => {
             state.dataGet = action.payload;
         });
+
+        builder.addCase(accidentsActions.getAccidentByID.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(accidentsActions.getAccidentByID.fulfilled, (state, action) => {
+            state.dataGet = action.payload;
+        });
     },
 });
 

@@ -8,7 +8,6 @@ import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
-import call from 'react-native-phone-call';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -86,14 +85,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         console.log('Susses');
     };
 
-    const triggerCall = (inputValue: string | undefined) => {
-        const args = {
-            number: inputValue,
-            prompt: true,
-        };
-        call(args).catch(console.error);
-    };
-
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
             <Text category="s1">
@@ -120,15 +111,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                     <Text category="s1">
                         {'Time: ' + moment(info.item?.createTime).format('DD/MM/YYYY hh:mm:ss a')}
                     </Text>
-                    <View style={styles.itemPhone}>
-                        <Text category="s1">{'Number phone: ' + info.item?.created_by?.numberPhone}</Text>
-                        <Button
-                            style={styles.iconPhone}
-                            size="small"
-                            accessoryLeft={phoneIcon}
-                            onPress={() => triggerCall(info.item?.created_by?.numberPhone)}
-                        />
-                    </View>
                 </View>
             </View>
             <Divider />

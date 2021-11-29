@@ -24,9 +24,15 @@ const getHistoryAccident = createAsyncThunk('getHistoryAccident', async () => {
     return response;
 });
 
+const getAccidentByID = createAsyncThunk('getAccidentByID', async (id: string) => {
+    const response = await AccidentsRequest.getAccidentById(id);
+    return response;
+});
+
 export const accidentsActions = {
     create,
     createUrgent,
     getAllAccidents,
     getHistoryAccident,
+    getAccidentByID,
 };
