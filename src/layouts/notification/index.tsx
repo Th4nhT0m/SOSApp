@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
-import { DoneAllIcon, phoneIcon } from '../../components/Icons';
+import { DoneAllIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
@@ -19,9 +19,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
+        console.log('-------------------------------' + notifies);
     }, [dispatch]);
 
-    const notifies: Accidents[] = setAccidents.results.map((pops) => ({
+    let notifies: Accidents[] = setAccidents.results.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,
@@ -34,6 +35,38 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         createTime: pops.createTime,
         UpdateTime: pops.UpdateTime,
     }));
+
+    notifies = notifies
+        .filter(function (item) {
+            return item.status === 'Waiting' && item.created_by?.id !== getUser;
+        })
+        .map(function ({
+            id,
+            nameAccident,
+            description,
+            latitude,
+            longitude,
+            created_by,
+            modified_by,
+            accidentType,
+            status,
+            createTime,
+            UpdateTime,
+        }) {
+            return {
+                id,
+                nameAccident,
+                description,
+                latitude,
+                longitude,
+                created_by,
+                modified_by,
+                accidentType,
+                status,
+                createTime,
+                UpdateTime,
+            };
+        });
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
@@ -115,6 +148,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             </View>
             <Divider />
             <Text style={{ marginTop: 15 }}>{'Name accident: ' + info.item?.nameAccident}</Text>
+            <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
             <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>
     );
