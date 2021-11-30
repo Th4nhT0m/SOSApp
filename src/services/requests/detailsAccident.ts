@@ -17,7 +17,6 @@ async function deleteDetailsAccident(id: string) {
     return await axiosInstance.delete(`/detailsAccidents/${id}`).catch((error) => error);
 }
 
-
 export const DetailsAccidentsRequest = {
     creatDetailsAccidents,
     getDetailsAccidents,

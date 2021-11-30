@@ -27,6 +27,7 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
         timeOut: pops.timeOut,
     }));
 
+
     const setbackButtonPress = () => {
         navigation &&
             navigation.navigate('Home', {

@@ -8,6 +8,8 @@ import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+import { io } from 'socket.io-client';
+
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -16,8 +18,11 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
-
     React.useEffect(() => {
+        const socket = io('http://192.168.1.6:1945');
+        socket.on('connect', () => {
+            console.log(socket.id);
+        });
         dispatch(accidentsActions.getAllAccidents());
         console.log('-------------------------------' + notifies);
     }, [dispatch]);
@@ -35,6 +40,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         createTime: pops.createTime,
         UpdateTime: pops.UpdateTime,
     }));
+
 
     notifies = notifies
         .filter(function (item) {

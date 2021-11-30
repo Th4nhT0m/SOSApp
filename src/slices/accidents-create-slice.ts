@@ -74,10 +74,18 @@ const accidentsSlice = createSlice({
             state.dataGet = action.payload;
         });
 
+
         builder.addCase(accidentsActions.getAccidentByID.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(accidentsActions.getAccidentByID.fulfilled, (state, action) => {
+             state.dataGet = action.payload;
+        });
+
+       builder.addCase(accidentsActions.patchAllAccident.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(accidentsActions.patchAllAccident.fulfilled, (state, action) => {
             state.dataGet = action.payload;
         });
     },

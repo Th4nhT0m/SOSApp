@@ -4,6 +4,8 @@ import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { accidentsActions } from '../../../actions/accidents-ations';
+import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Sound from 'react-native-sound';
@@ -11,19 +13,22 @@ import Sound from 'react-native-sound';
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
+    const { location } = useCurrentGPSPosition();
+
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
-
+    const setHelper = useAppSelector((state) => state.helpersReducer.data);
     let sound1: Sound;
-
+    const socket = io('http://192.168.1.6:1945');
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-    }, [dispatch]);
+        socket.on('connect', () => {
+            console.log(socket.id);
+        });
+    }, [dispatch, getAccidents]);
 
-    React.useEffect(() => {
-        start();
-    }, []);
-
-    const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
+    // React.useEffect(() => {
+    //     start();
+    // }, []);
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -50,12 +55,24 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    navigation &&
-                        navigation.navigate('Home', {
-                            screen: 'Dashboard',
-                            params: { screen: 'DashboardHome' },
-                        });
-                    onCancel();
+                    if (location !== undefined) {
+                        dispatch(
+                            accidentsActions.patchAllAccident({
+                                id: getAccidents,
+                                props: {
+                                    status: 'Cancel',
+                                    latitude: String(location.coords.latitude),
+                                    longitude: String(location.coords.longitude),
+                                },
+                            })
+                        );
+                        socket.io._destroy(socket);
+                        navigation &&
+                            navigation.navigate('Home', {
+                                screen: 'Dashboard',
+                                params: { screen: 'DashboardHome' },
+                            });
+                    }
                 },
             },
         ]);
@@ -77,7 +94,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     };
 
     const onCancel = () => {
-        // stop();
         Torch.switchState(false);
         Vibration.cancel();
     };
@@ -88,7 +104,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             <Text>{'Status : ' + info.item?.status}</Text>
         </Card>
     );
-
     return (
         <View style={styles.container}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.circle}>

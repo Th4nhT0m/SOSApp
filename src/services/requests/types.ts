@@ -47,6 +47,11 @@ export interface UrgentProps {
     longitude: string;
     user?: string;
 }
+export interface AccidentsPatch {
+    status: string;
+    latitude: string;
+    longitude: string;
+}
 
 export interface Accidents {
     id: string;

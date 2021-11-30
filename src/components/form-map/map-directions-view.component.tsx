@@ -76,13 +76,13 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
         >
             {/*<Marker coordinate={initialPosition[0]} />*/}
             <Marker coordinate={initialPosition[1]} />
-            <MapViewDirections
-                origin={initialPosition[0]}
-                destination={initialPosition[1]}
-                apikey="AIzaSyBQpNl4USbR6UnlA0MoeWa9N" // insert your API Key here
-                strokeWidth={4}
-                strokeColor="#111111"
-            />
+            {/*<MapViewDirections*/}
+            {/*    origin={initialPosition[0]}*/}
+            {/*    destination={initialPosition[1]}*/}
+            {/*    apikey="AIzaSyBQpNl4USbR6UnlA0MoeWa9N" // insert your API Key here*/}
+            {/*    strokeWidth={4}*/}
+            {/*    strokeColor="#111111"*/}
+            {/*/>*/}
         </MapView>
     );
     return <View style={{ ...styles.container, paddingTop: paddingTop }}>{renderMap()}</View>;

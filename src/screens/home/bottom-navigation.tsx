@@ -2,7 +2,7 @@ import React from 'react';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { BottomNavigationTab, Divider, StyleService } from '@ui-kitten/components';
 import { BrandBottomNavigation } from '../../components/brand-bottom-navigation.component';
-import { BellIcon, GridIcon, SettingIcon, HospitalLocationIcon, UtilitiesIcon} from '../../components/Icons';
+import { BellIcon, GridIcon, SettingIcon, HospitalLocationIcon, UtilitiesIcon } from '../../components/Icons';
 
 export const HomeBottomNavigation: React.FC<BottomTabBarProps> = ({ navigation, state }) => {
     const handleSelect = (index: number) => {
