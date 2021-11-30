@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Card, Divider, List, ListItem, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Dimensions, ListRenderItemInfo, View, Image, ListView } from 'react-native';
+import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { Helpers } from '../../../services/requests/types';
-import { KeyboardAvoidingView } from './extra/3rd-party';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { HelperAction } from '../../../actions/helper-actions';
 import moment from 'moment';
@@ -44,7 +43,6 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
             <Divider />
 
             <View style={{ marginTop: 15 }}>
-                <Text>{'User Name: ' + info.item?.accident}</Text>
                 <Text>{'Time : ' + moment(info.item?.createTime).format('DD/MM/YYYY hh:mm:ss a')}</Text>
             </View>
         </Card>
@@ -77,7 +75,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
 
             <Image
                 source={require('./assets/historyHelper.png')}
-                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 10 }}
+                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 10 }}
             />
 
             <View style={styles.orContainer}>
@@ -87,8 +85,6 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
                 </Text>
                 <Divider style={styles.divider} />
             </View>
-
-            <View style={styles.divi} />
 
             <List
                 contentContainerStyle={styles.notifyList}

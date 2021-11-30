@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
-import { Helper } from '../../../services/requests/types';
+import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
@@ -21,7 +21,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const socket = io('http://192.168.1.6:1945');
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-
         socket.on('connect', () => {
             console.log(socket.id);
         });
@@ -31,7 +30,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     //     start();
     // }, []);
 
-    const helpers: Helper[] = setHelper.results.map((pops) => ({
+    const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
         status: pops.status,
         user: pops.user,
@@ -41,8 +40,11 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         accidentLatitude: pops.accidentLatitude,
         accidentLongitude: pops.accidentLongitude,
         content: pops.content,
+        createTime: pops.createTime,
+        UpdateTime: pops.UpdateTime,
         timeOut: pops.timeOut,
     }));
+
     const onBackPress = () => {
         Alert.alert('Confirm help', 'Are you sure you got help?', [
             {
@@ -91,20 +93,14 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         });
     };
 
-    const stop = () => {
-        sound1.stop(() => {
-            console.log('Stop');
-            sound1.play();
-        });
-    };
-
     const onCancel = () => {
         Torch.switchState(false);
         Vibration.cancel();
     };
-    const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
+
+    const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.itemFooter}>
-            <Text>{'Name Helper: ' + info.item?.user}</Text>
+            <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
             <Text>{'Status : ' + info.item?.status}</Text>
         </Card>
     );
@@ -140,6 +136,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         </View>
     );
 };
+
 const themedStyles = StyleService.create({
     container: {
         flex: 1,

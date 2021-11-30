@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Helper, Helpers } from '../services/requests/types';
+import { Helpers } from '../services/requests/types';
 import { HelperAction } from '../actions/helper-actions';
 import { ListResponse } from '../models/common';
 
@@ -8,19 +8,30 @@ export interface HelperProps {
     message?: string;
 }
 
+interface user {
+    id: string;
+    numberPhone: string;
+    name: string;
+    address: string;
+}
+
 interface Props {
     isLoading: boolean;
-    dateGet: Helper;
+    dateGet: Helpers;
     isPatch: boolean;
     dateList: ListResponse<Helpers>;
-    data: ListResponse<Helper>;
 }
 const initialState: Props = {
     isPatch: false,
     isLoading: false,
     dateGet: {
         id: '',
-        user: '',
+        user: {
+            id: '',
+            name: '',
+            address: '',
+            numberPhone: '',
+        },
         status: '',
         accident: '',
         content: '',
@@ -29,9 +40,10 @@ const initialState: Props = {
         accidentLatitude: '',
         accidentLongitude: '',
         timeOut: Date.prototype,
+        createTime: Date.prototype,
+        UpdateTime: Date.prototype,
     },
     dateList: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
-    data: { results: [], page: 0, totalResults: 0, totalPages: 0, limit: 0 },
 };
 const helperSlice = createSlice({
     name: 'helpers',
@@ -45,25 +57,13 @@ const helperSlice = createSlice({
             state.dateGet = action.payload;
         });
 
+        // change
         builder.addCase(HelperAction.patchHelper.pending, (state) => {
             state.isPatch = false;
         });
         builder.addCase(HelperAction.patchHelper.fulfilled, (state, action) => {
             state.dateGet = action.payload;
         });
-
-        // builder.addCase(HelperAction.deleteHelper.pending, (state) => {
-        //
-        // });
-        // builder.addCase(HelperAction.deleteHelper.fulfilled, (state, action) => {
-        //
-        // });
-        // builder.addCase(HelperAction.createHelper.pending, (state) => {
-        //
-        // });
-        // builder.addCase(HelperAction.createHelper.fulfilled, (state, action) => {
-        //
-        // });
 
         builder.addCase(HelperAction.getMyHistoryHelper.pending, (state) => {
             state.isLoading = true;
@@ -73,18 +73,21 @@ const helperSlice = createSlice({
             state.dateList = action.payload;
         });
 
+        // Change 1
         builder.addCase(HelperAction.getHelperByIDAccident.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(HelperAction.getHelperByIDAccident.fulfilled, (state, action) => {
-            state.data = action.payload;
+            state.isLoading = false;
+            state.dateList = action.payload;
         });
 
+        // change
         builder.addCase(HelperAction.getAllHelper.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(HelperAction.getAllHelper.fulfilled, (state, action) => {
-            state.data = action.payload;
+            state.dateList = action.payload;
         });
     },
 });

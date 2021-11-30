@@ -1,49 +1,32 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
-import { Helper } from '../../../services/requests/types';
+import { useAppSelector } from '../../../services/hooks';
+import { Helpers } from '../../../services/requests/types';
 import { Dimensions, Image, ListRenderItemInfo, View } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
-import { KeyboardAvoidingView } from './extra/3rd-party';
-import { usersActions } from '../../../actions/user-actions';
+import { phoneIcon } from '../../../components/Icons';
+import call from 'react-native-phone-call';
 
 const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
-    const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
 
-    const setHelper = useAppSelector((state) => state.helpersReducer.data);
-    const setHelperUserId = useAppSelector((state) => state.helpersReducer.dateGet.user);
-    const setIdAccident = useAppSelector((state) => state.accidents.dataGet.id);
+    const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
 
-    const helpers: Helper[] = setHelper.results.map((pops) => ({
+    const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
-        status: pops.status,
         user: pops.user,
         accident: pops.accident,
+        status: pops.status,
         helperLatitude: pops.helperLatitude,
         helperLongitude: pops.helperLongitude,
         accidentLatitude: pops.accidentLatitude,
         accidentLongitude: pops.accidentLongitude,
         content: pops.content,
+        createTime: pops.createTime,
+        UpdateTime: pops.UpdateTime,
         timeOut: pops.timeOut,
     }));
 
-    // React.useEffect(() => {
-    //     dispatch(usersActions.getViewUserInfoById(setHelperUserId));
-    // }, [dispatch]);
-    //
-    // const Username: EditUserProps = {
-    //     name: getUser.currentUser.name,
-    //     identityCard: getUser.currentUser.identityCard,
-    //     numberPhone: getUser.currentUser.numberPhone,
-    //     address: getUser.currentUser.address,
-    // };
-    const getName = (id: string): string => {
-        dispatch(usersActions.getViewUserInfoById(id));
-        // const name = useAppSelector((state) => state.users.currentUser.name);
-        let name = 'kaiba';
-        return name;
-    };
 
     const setbackButtonPress = () => {
         navigation &&
@@ -55,15 +38,34 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
             });
     };
 
-    const renderNotifies = (info: ListRenderItemInfo<Helper>): React.ReactElement => (
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
+
+    const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.list}>
-            <Text>{'Name Helper: ' + info.item?.user}</Text>
-            <Text>{'Status : ' + getName(info.item?.status)}</Text>
+            <View style={styles.itemFooter}>
+                <Text>{'Name : ' + info.item?.user?.name}</Text>
+                <Button
+                    style={styles.iconButton}
+                    size="small"
+                    accessoryLeft={phoneIcon}
+                    onPress={() => triggerCall(info.item?.user?.numberPhone)}
+                />
+            </View>
+
+            <Text>{'Status : ' + info.item?.status}</Text>
+            <Text>{'Number phone: ' + info.item?.user?.numberPhone}</Text>
+            <Text>{'Address : ' + info.item?.user?.address}</Text>
         </Card>
     );
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
@@ -91,7 +93,7 @@ const HelperHistoryByAccident = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <List contentContainerStyle={styles.notifyList} data={helpers} numColumns={1} renderItem={renderNotifies} />
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 
@@ -111,6 +113,11 @@ const themedStyles = StyleService.create({
     },
     list: {
         marginTop: 20,
+    },
+    itemFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     headerContainer: {
         minHeight: 20,
@@ -141,12 +148,6 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-    },
-    itemFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 20,
     },
     iconButton: {
         paddingHorizontal: 0,

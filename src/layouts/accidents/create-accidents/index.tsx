@@ -84,12 +84,12 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
                 </Button>
             </View>
             <Image
-                source={require('./assets/accident-icon.png')}
-                style={{ width: 100, height: 100, alignSelf: 'center' }}
+                source={require('./assets/healthy-care.png')}
+                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 15 }}
             />
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
-                <Text style={styles.orLabel} category="h5">
+                <Text style={styles.orLabel} category="h3">
                     Accidents
                 </Text>
                 <Divider style={styles.divider} />
@@ -141,7 +141,7 @@ const themedStyles = StyleService.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 15,
-        marginTop: 2,
+        marginTop: 15,
     },
     divider: {
         flex: 1,

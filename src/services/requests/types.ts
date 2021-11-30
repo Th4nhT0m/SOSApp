@@ -61,7 +61,7 @@ export interface Accidents {
     accidentType: string;
     latitude: string;
     longitude: string;
-    created_by?: string;
+    created_by?: HelperByUserId;
     modified_by?: string;
     createTime?: Date;
     UpdateTime?: Date;
@@ -107,7 +107,7 @@ export interface ChangePassProps {
     password: string;
 }
 
-/// Create Hepler
+/// Create Helper
 export interface HelpProps {
     accident: string;
     user: string;
@@ -116,6 +116,7 @@ export interface HelpProps {
     accidentLatitude: string;
     accidentLongitude: string;
 }
+
 //Patch Helper
 export interface PatchHelper {
     status: string;
@@ -124,6 +125,14 @@ export interface PatchHelper {
     helperLongitude: string;
     accidentLatitude: string;
     accidentLongitude: string;
+}
+
+//get Helper
+export interface HelperByUserId {
+    id: string;
+    numberPhone: string;
+    name: string;
+    address: string;
 }
 
 //get Helper
@@ -143,7 +152,7 @@ export interface Helper {
 //get Helper
 export interface Helpers {
     id: string;
-    user: string;
+    user?: HelperByUserId;
     accident: string;
     status: string;
     helperLatitude: string;

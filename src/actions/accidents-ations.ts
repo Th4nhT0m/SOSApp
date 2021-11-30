@@ -31,10 +31,16 @@ const patchAllAccident = createAsyncThunk(
     }
 );
 
+const getAccidentByID = createAsyncThunk('getAccidentByID', async (id: string) => {
+    const response = await AccidentsRequest.getAccidentById(id);
+    return response;
+});
+
 export const accidentsActions = {
     create,
     createUrgent,
     getAllAccidents,
     getHistoryAccident,
+    getAccidentByID,
     patchAllAccident,
 };

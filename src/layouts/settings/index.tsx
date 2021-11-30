@@ -5,10 +5,11 @@ import { Setting } from './extra/settings-section.component';
 import { ThemesScreen } from '../../screens/themes/theme-settings';
 import { useAppDispatch } from '../../services/hooks';
 import { authActions } from '../../actions/auth-actions';
-import { KeyboardAvoidingView } from './extra/3rd-party';
+
 // interface SettingsProps {
 //     navigation: any;
 // }
+
 const Settings = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
 
@@ -59,10 +60,10 @@ const Settings = ({ navigation }: any): React.ReactElement => {
 
     return (
         <Layout style={styles.container}>
-            <Setting style={styles.setting} hint="History accident" onPress={accidentHistoryButtonPress} />
-            {/*<Setting style={styles.setting} hint="History helper" onPress={helperHistoryButtonPress} />*/}
-            {/*<Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />*/}
-            {/*<Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />*/}
+            <Setting style={styles.setting} hint="History Accident" onPress={accidentHistoryButtonPress} />
+            <Setting style={styles.setting} hint="History Helper" onPress={helperHistoryButtonPress} />
+            <Setting style={styles.setting} hint="Edit Profile" onPress={onSignUpButtonPress} />
+            <Setting style={styles.setting} hint="Change Password" onPress={changePassUpButtonPress} />
             <Setting style={[styles.setting, styles.themes]} hint="Themes" hintStyles={{ margin: 10 }}>
                 <ThemesScreen />
             </Setting>

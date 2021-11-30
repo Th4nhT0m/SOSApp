@@ -48,6 +48,7 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
 
     const renderNotifies = (info: ListRenderItemInfo<Handbook>): React.ReactElement => (
         <Card
+            style={styles.list}
             onPress={() => {
                 setOnHandbook(info.item.id);
             }}
@@ -62,7 +63,7 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
     );
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.headerContainer as any}>
                 <Button
                     style={styles.backButton}
@@ -99,7 +100,7 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 
@@ -107,6 +108,9 @@ const themedStyles = StyleService.create({
     container: {
         flex: 1,
         backgroundColor: 'background-basic-color-2',
+    },
+    list: {
+        marginTop: 10,
     },
     notifyList: {
         paddingHorizontal: 8,

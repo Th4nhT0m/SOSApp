@@ -7,7 +7,9 @@ import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
+import moment from 'moment';
 import { io } from 'socket.io-client';
+
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -22,10 +24,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             console.log(socket.id);
         });
         dispatch(accidentsActions.getAllAccidents());
-    }, []);
+        console.log('-------------------------------' + notifies);
+    }, [dispatch]);
 
-    // const getListSocket: Accidents[] = null;
-    const notifies: Accidents[] = setAccidents.results.map((pops) => ({
+    let notifies: Accidents[] = setAccidents.results.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,
@@ -35,7 +37,42 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         modified_by: pops.modified_by,
         accidentType: pops.accidentType,
         status: pops.status,
+        createTime: pops.createTime,
+        UpdateTime: pops.UpdateTime,
     }));
+
+
+    notifies = notifies
+        .filter(function (item) {
+            return item.status === 'Waiting' && item.created_by?.id !== getUser;
+        })
+        .map(function ({
+            id,
+            nameAccident,
+            description,
+            latitude,
+            longitude,
+            created_by,
+            modified_by,
+            accidentType,
+            status,
+            createTime,
+            UpdateTime,
+        }) {
+            return {
+                id,
+                nameAccident,
+                description,
+                latitude,
+                longitude,
+                created_by,
+                modified_by,
+                accidentType,
+                status,
+                createTime,
+                UpdateTime,
+            };
+        });
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
@@ -89,7 +126,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
-            {/*<Text category="s1">{'Time created: ' + info.item?.timeStart}</Text>*/}
             <Text category="s1">
                 {'Distance: ' + calculateDistance(info.item?.latitude, info.item?.longitude) / 1000 + ' KM'}
             </Text>
@@ -106,21 +142,40 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     );
 
     const renderNotifies = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
-        <Card footer={() => renderItemFooter(info)}>
+        <Card style={styles.list} footer={() => renderItemFooter(info)}>
             <View style={styles.itemHeader}>
                 <Avatar size="giant" source={require('../../assets/images/icon-avatar.png')} />
-                <View>
-                    <Text category="s2">{'Name Accident: ' + info.item?.nameAccident}</Text>
-                    <Text category="s1">{'User Create: ' + info.item?.created_by}</Text>
+                <View style={styles.name}>
+                    <Text category="s1">{'User name: ' + info.item?.created_by?.name}</Text>
+                    <Text category="s1">
+                        {'Time: ' + moment(info.item?.createTime).format('DD/MM/YYYY hh:mm:ss a')}
+                    </Text>
                 </View>
             </View>
             <Divider />
+            <Text style={{ marginTop: 15 }}>{'Name accident: ' + info.item?.nameAccident}</Text>
+            <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
             <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>
     );
 
     return (
-        <List contentContainerStyle={styles.notifyList} data={notifies} numColumns={1} renderItem={renderNotifies} />
+        <View style={styles.container}>
+            <View style={styles.orContainer}>
+                <Divider style={styles.divider} />
+                <Text style={styles.orLabel} category="h3">
+                    List Accident
+                </Text>
+                <Divider style={styles.divider} />
+            </View>
+
+            <List
+                contentContainerStyle={styles.notifyList}
+                data={notifies}
+                numColumns={1}
+                renderItem={renderNotifies}
+            />
+        </View>
     );
 };
 const themedStyles = StyleService.create({
@@ -128,9 +183,22 @@ const themedStyles = StyleService.create({
         flex: 1,
         backgroundColor: 'background-basic-color-2',
     },
+    orLabel: {
+        marginHorizontal: 8,
+    },
     notifyList: {
         paddingHorizontal: 8,
         paddingVertical: 16,
+        marginTop: 10,
+    },
+    divider: {
+        flex: 1,
+    },
+    orContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 15,
+        marginTop: 20,
     },
     productItem: {
         flex: 1,
@@ -140,11 +208,14 @@ const themedStyles = StyleService.create({
     },
     itemHeader: {
         height: 80,
-        padding: 20,
+        padding: 5,
         marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+    },
+    list: {
+        marginTop: 30,
     },
     itemFooter: {
         flexDirection: 'row',
@@ -153,8 +224,21 @@ const themedStyles = StyleService.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
     },
+    itemPhone: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    name: {
+        left: 10,
+    },
     iconButton: {
         paddingHorizontal: 0,
+    },
+    iconPhone: {
+        paddingHorizontal: 0,
+        // marginHorizontal: 155,
+        left: 20,
     },
 });
 

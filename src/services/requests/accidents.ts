@@ -22,15 +22,25 @@ async function getViewHistoryAccident() {
         return error;
     });
 }
+
+
+async function getAccidentById(id: string) {
+    return await axiosInstance.get(`/accidents/${id}`).catch((error) => {
+        return error;
+    });
+}
+
 async function patchAccident(id: string, props: AccidentsPatch) {
     return await axiosInstance.patch(`/accidents/${id}`, { ...props }).catch((error) => {
         return error;
     });
 }
+
 export const AccidentsRequest = {
     creatAccident,
     creatUrgentAccident,
     getAllAccident,
     getViewHistoryAccident,
+    getAccidentById,
     patchAccident,
 };

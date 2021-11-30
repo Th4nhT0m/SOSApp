@@ -2,8 +2,8 @@ import React from 'react';
 import { Dimensions, View } from 'react-native';
 import { Button, StyleService, useStyleSheet } from '@ui-kitten/components';
 import MapCarRepairViewComponent from '../../../components/form-map/mapCarRepair-view.component';
-import MapViewComponent from '../../../components/form-map/map-view.component';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
+
 const window = Dimensions.get('window');
 
 const MapCarRepair = ({ navigation }: any): React.ReactElement => {
@@ -35,7 +35,7 @@ const MapCarRepair = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <MapCarRepairViewComponent
-                height={window.height * 0.78}
+                height={window.height * 0.85}
                 loadingEnabled={true}
                 showsMyLocationButton={true}
                 onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}

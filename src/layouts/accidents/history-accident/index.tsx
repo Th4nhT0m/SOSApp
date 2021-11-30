@@ -103,8 +103,6 @@ const ViewHistoryAccident = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
 
-            <View style={styles.divi} />
-
             <List
                 contentContainerStyle={styles.notifyList}
                 data={historyAccidentNotifies}
