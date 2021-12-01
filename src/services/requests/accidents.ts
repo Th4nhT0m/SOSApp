@@ -23,7 +23,6 @@ async function getViewHistoryAccident() {
     });
 }
 
-
 async function getAccidentById(id: string) {
     return await axiosInstance.get(`/accidents/${id}`).catch((error) => {
         return error;

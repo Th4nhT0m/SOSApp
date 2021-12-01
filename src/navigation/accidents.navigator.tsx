@@ -7,6 +7,7 @@ import { DetailHelperScreen } from '../screens/detail-accidents/detail-hepler-co
 const Stack = createStackNavigator();
 
 export const AccidentsNavigator = (): React.ReactElement => (
+
     <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="DashboardHome" component={DashboardScreen} />
         <Stack.Screen name="DetailHelper" component={DetailHelperScreen} />
