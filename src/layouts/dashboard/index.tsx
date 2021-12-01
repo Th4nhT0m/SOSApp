@@ -39,8 +39,8 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                     screen: 'Dashboard',
                     params: { screen: 'DetailHelper' },
                 });
-            // handlePress();
-        }, 500);
+            handlePress();
+        }, 1000);
     };
 
     const handlePress = () => {

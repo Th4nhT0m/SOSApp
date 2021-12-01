@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
@@ -16,15 +16,13 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const { location } = useCurrentGPSPosition();
 
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
-    const setHelper = useAppSelector((state) => state.helpersReducer.data);
+    const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     let sound1: Sound;
-    const socket = io('http://192.168.1.6:1945');
+    const socket = io('http://192.168.1.6:3000');
     React.useEffect(() => {
+        socket.emit('forceDisconnect');
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-        socket.on('connect', () => {
-            console.log(socket.id);
-        });
-    }, [dispatch, getAccidents]);
+    }, [dispatch, socket]);
 
     // React.useEffect(() => {
     //     start();
@@ -60,13 +58,13 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                             accidentsActions.patchAllAccident({
                                 id: getAccidents,
                                 props: {
-                                    status: 'Cancel',
+                                    status: 'Success',
                                     latitude: String(location.coords.latitude),
                                     longitude: String(location.coords.longitude),
                                 },
                             })
                         );
-                        socket.io._destroy(socket);
+                        socket.emit('forceDisconnect');
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',
