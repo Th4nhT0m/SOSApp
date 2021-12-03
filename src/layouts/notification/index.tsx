@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, Platform, View } from 'react-native';
 import { DoneAllIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
@@ -9,6 +9,7 @@ import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
 import { io } from 'socket.io-client';
+import PushNotification from 'react-native-push-notification';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -18,16 +19,18 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
     const nullAccident: Accidents[] = [];
-    const [acc, setAcc] = React.useState(nullAccident);
+    const [acc] = React.useState(nullAccident);
     React.useEffect(() => {
-        dispatch(accidentsActions.getAllAccidents());
-        // socket.on('getAccidents', (Accidents) => {
-        //     console.log('-----------------');
-        //     console.log(Accidents);
-        // });
-        socket.emit('forceDisconnect');
-        setAcc(setAccidents.results);
-        socket.emit('stop', getUser);
+        // dispatch(accidentsActions.getAllAccidents());
+        // // socket.on('getAccidents', (Accidents) => {
+        // //     console.log('-----------------');
+        // //     console.log(Accidents);
+        // // });
+        // socket.emit('forceDisconnect');
+        // setAcc(setAccidents.results);
+        // socket.emit('stop', getUser);
+        notification();
+        createChannels();
     }, [dispatch, socket]);
 
     let notifies: Accidents[] = acc.map((pops) => ({
@@ -75,6 +78,75 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 UpdateTime,
             };
         });
+
+    const notification = () => {
+        PushNotification.configure({
+            // (optional) Called when Token is generated (iOS and Android)
+            onRegister: function (token: any) {
+                console.log('TOKEN:', token);
+            },
+
+            // (required) Called when a remote is received or opened, or local notification is opened
+            onNotification: function (notification: { finish: (arg0: any) => void }) {
+                console.log('NOTIFICATION:', notification);
+
+                // process the notification
+
+                // (required) Called when a remote is received or opened, or local notification is opened
+                // notification.finish(PushNotificationIOS.FetchResult.NoData);
+            },
+
+            // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+            onAction: function (notification: { action: any }) {
+                console.log('ACTION:', notification.action);
+                console.log('NOTIFICATION:', notification);
+
+                // process the action
+            },
+
+            // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+            onRegistrationError: function (err: { message: any }) {
+                console.error(err.message, err);
+            },
+
+            // IOS ONLY (optional): default: all - Permissions to register.
+            permissions: {
+                alert: true,
+                badge: true,
+                sound: true,
+            },
+
+            // Should the initial notification be popped automatically
+            // default: true
+            popInitialNotification: true,
+
+            /**
+             * (optional) default: true
+             * - Specified if permissions (ios) and token (android and ios) will requested or not,
+             * - if not, you must call PushNotificationsHandler.requestPermissions() later
+             * - if you are not using remote notification or do not have Firebase installed, use this:
+             *     requestPermissions: Platform.OS === 'ios'
+             */
+            requestPermissions: Platform.OS === 'ios',
+        });
+    };
+
+    const createChannels = () => {
+        PushNotification.createChannel({
+            channelId: 'accidents-notification',
+            channelName: 'accidentNotification',
+        });
+    };
+
+    const handleNotification = () => {
+        PushNotification.localNotification({
+            /* Android Only Properties */
+            channelId: 'accidents-notification',
+            title: 'Notification accident',
+            message: 'Got into an accident and need your help',
+            largeIconUrl: 'https://reactjs.org/logo-og.png',
+        });
+    };
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
@@ -127,8 +199,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         console.log('Susses');
     };
 
-    
-
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
             <Text category="s1">
@@ -138,9 +208,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 style={styles.iconButton}
                 size="small"
                 accessoryLeft={DoneAllIcon}
-                onPress={() => {
-                    setOnAccidents(info.item?.id, info.item?.latitude, info.item?.longitude);
-                }}
+                onPress={
+                    // setOnAccidents(info.item?.id, info.item?.latitude, info.item?.longitude);
+                    handleNotification
+                }
                 // onPress={onDetailProgress}
             />
         </View>
@@ -180,9 +251,16 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
+
+            <Button
+                style={styles.iconButton}
+                onPress={handleNotification}
+                // onPress={onDetailProgress}
+            />
         </View>
     );
 };
+
 const themedStyles = StyleService.create({
     container: {
         flex: 1,
