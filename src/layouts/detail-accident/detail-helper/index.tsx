@@ -5,7 +5,6 @@ import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
-import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Sound from 'react-native-sound';
@@ -18,12 +17,9 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     let sound1: Sound;
-    const socket = io('http://192.168.1.6:3000');
     React.useEffect(() => {
-        socket.emit('forceDisconnect');
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-    }, [dispatch, socket]);
-
+    }, [dispatch, getAccidents]);
     // React.useEffect(() => {
     //     start();
     // }, []);
@@ -64,7 +60,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
-                        socket.emit('forceDisconnect');
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',
@@ -100,6 +95,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         <Card style={styles.itemFooter}>
             <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
             <Text>{'Status : ' + info.item?.status}</Text>
+            <Text>{'Phone Number : ' + info.item?.user?.numberPhone}</Text>
         </Card>
     );
     return (
@@ -175,7 +171,6 @@ const themedStyles = StyleService.create({
         alignItems: 'center',
     },
     itemFooter: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,
