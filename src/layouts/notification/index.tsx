@@ -8,29 +8,18 @@ import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
-import { io } from 'socket.io-client';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-    const socket = io('http://192.168.1.6:1945');
-    const setAccidents = useAppSelector((state) => state.accidents.dateList);
+    const setAccidents = useAppSelector((state) => state.accidents.dateList.results);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
-    const nullAccident: Accidents[] = [];
-    const [acc, setAcc] = React.useState(nullAccident);
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
-        // socket.on('getAccidents', (Accidents) => {
-        //     console.log('-----------------');
-        //     console.log(Accidents);
-        // });
-        socket.emit('forceDisconnect');
-        setAcc(setAccidents.results);
-        socket.emit('stop', getUser);
-    }, [dispatch, socket]);
+    }, [dispatch]);
 
-    let notifies: Accidents[] = acc.map((pops) => ({
+    let notifies: Accidents[] = setAccidents.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,
@@ -99,7 +88,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                             })
                         );
                         onDetailProgress();
-                        notifies = [];
                     }
                 },
             },
@@ -126,8 +114,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             });
         console.log('Susses');
     };
-
-    
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>

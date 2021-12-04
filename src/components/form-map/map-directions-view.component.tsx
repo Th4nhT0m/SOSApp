@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dimensions, PermissionsAndroid, StyleSheet, View } from 'react-native';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
 import { useCurrentGPSPosition } from '../../services/hooks';
@@ -22,6 +22,7 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     const { location } = useCurrentGPSPosition();
     const [paddingTop, setPadding] = useState<any>(1);
+    const mapRef = useRef<MapView>(null);
     const [initialPosition, setPosition] = React.useState([
         {
             latitude: 0,
@@ -53,11 +54,26 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
                     longitude: props.endLongitude,
                 },
             ]);
+            if (mapRef.current) {
+                mapRef.current.fitToCoordinates(initialPosition, {
+                    edgePadding: { top: 10, right: 10, bottom: 10, left: 10 },
+                    animated: false,
+                });
+            }
         }
     }, [location, props.endLatitude, props.endLongitude]);
 
     const renderMap = () => (
         <MapView
+            ref={mapRef}
+            onLayout={() => {
+                if (mapRef.current) {
+                    mapRef.current.fitToCoordinates(initialPosition, {
+                        edgePadding: { top: 10, right: 10, bottom: 10, left: 10 },
+                        animated: false,
+                    });
+                }
+            }}
             showsUserLocation
             followsUserLocation={true}
             style={[{ ...styles.map, width: width ?? window.width, height: height ?? window.height }, style]}
@@ -76,13 +92,13 @@ const MapDirectionsViewComponent = (props: MapViewProps) => {
         >
             {/*<Marker coordinate={initialPosition[0]} />*/}
             <Marker coordinate={initialPosition[1]} />
-            {/*<MapViewDirections*/}
-            {/*    origin={initialPosition[0]}*/}
-            {/*    destination={initialPosition[1]}*/}
-            {/*    apikey="AIzaSyBQpNl4USbR6UnlA0MoeWa9N" // insert your API Key here*/}
-            {/*    strokeWidth={4}*/}
-            {/*    strokeColor="#111111"*/}
-            {/*/>*/}
+            <MapViewDirections
+                origin={initialPosition[0]}
+                destination={initialPosition[1]}
+                apikey="AIzaSyBQpNl4USbR6UnlA0MoeWa9N" // insert your API Key here
+                strokeWidth={4}
+                strokeColor="#111111"
+            />
         </MapView>
     );
     return <View style={{ ...styles.container, paddingTop: paddingTop }}>{renderMap()}</View>;
