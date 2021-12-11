@@ -7,7 +7,6 @@ import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '
 import { accidentsActions } from '../../../actions/accidents-ations';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Sound from 'react-native-sound';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
@@ -16,13 +15,18 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
 
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
+    const socket = io('http://192.168.1.6:3000');
     let sound1: Sound;
+
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-    }, [dispatch, getAccidents]);
+    }, [dispatch, socket]);
+
+   // }, [dispatch, getAccidents]);
     // React.useEffect(() => {
     //     start();
     // }, []);
+
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -66,24 +70,10 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 params: { screen: 'DashboardHome' },
                             });
                     }
+                    onCancel();
                 },
             },
         ]);
-    };
-
-    const start = () => {
-        Sound.setCategory('Playback');
-        sound1 = new Sound(require('./sound/dangeralar_o3srdt8a.mp3'), (error) => {
-            if (error) {
-                alert('error' + error.message);
-                return;
-            }
-            console.log('start');
-            sound1.play(() => {
-                sound1.release();
-            });
-            // sound1.setNumberOfLoops(2);
-        });
     };
 
     const onCancel = () => {
@@ -94,10 +84,11 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.itemFooter}>
             <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
-            <Text>{'Status : ' + info.item?.status}</Text>
-            <Text>{'Phone Number : ' + info.item?.user?.numberPhone}</Text>
+            <Text>{'Status: ' + info.item?.status}</Text>
+            <Text>{'Number phone: ' + info.item?.user?.numberPhone}</Text>
         </Card>
     );
+
     return (
         <View style={styles.container}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.circle}>
