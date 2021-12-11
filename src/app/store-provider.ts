@@ -19,7 +19,7 @@ export const store = configureStore({
     //         const createDebugger = require('redux-flipper').default;
     //         middlewares.concat(createDebugger());
     //     }
-    //    return middlewares;
+    //     return middlewares;
     // },
 });
 

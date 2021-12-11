@@ -8,21 +8,21 @@ import { accidentsActions } from '../../../actions/accidents-ations';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Sound from 'react-native-sound';
-
+import { io } from 'socket.io-client';
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
     const { location } = useCurrentGPSPosition();
-
+    const socket = io('http://192.168.1.6:3000');
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
+    React.useEffect(() => {
+        start();
+    }, []);
     let sound1: Sound;
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-    }, [dispatch, getAccidents]);
-    // React.useEffect(() => {
-    //     start();
-    // }, []);
+    }, [dispatch, getAccidents, socket]);
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -60,6 +60,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
+                        socket.emit('forceDisconnect');
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',
