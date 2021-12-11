@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, Platform, View } from 'react-native';
 import { DoneAllIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
@@ -10,6 +10,12 @@ import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
 import { io } from 'socket.io-client';
 
+import { io } from 'socket.io-client';
+import PushNotification, { Importance } from 'react-native-push-notification';
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+
+
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
@@ -17,9 +23,20 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const { location } = useCurrentGPSPosition();
     const setAccidents = useAppSelector((state) => state.accidents.dateList.results);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
+    const nullAccident: Accidents[] = [];
+    const [acc, setAcc] = React.useState(nullAccident);
+
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
+    //    socket.on('getAccidents', (Accidents) => {
+//             console.log('-----------------');
+//             console.log(Accidents);
+    //    });
+        socket.emit('forceDisconnect');
+        setAcc(setAccidents.results);
+        socket.emit('stop', getUser); 
     }, [dispatch, socket]);
+
 
     let notifies: Accidents[] = setAccidents.map((pops) => ({
         id: pops.id,
@@ -66,6 +83,8 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 UpdateTime,
             };
         });
+
+ 
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
@@ -129,6 +148,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 accessoryLeft={DoneAllIcon}
                 onPress={() => {
                     setOnAccidents(info.item?.id, info.item?.latitude, info.item?.longitude);
+                    //handleNotification
                 }}
                 // onPress={onDetailProgress}
             />
@@ -169,9 +189,16 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
+
+            {/*<Button*/}
+            {/*    style={styles.iconButton}*/}
+            {/*    onPress={handleNotification}*/}
+            {/*    // onPress={onDetailProgress}*/}
+            {/*/>*/}
         </View>
     );
 };
+
 const themedStyles = StyleService.create({
     container: {
         flex: 1,

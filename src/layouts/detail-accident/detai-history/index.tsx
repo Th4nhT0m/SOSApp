@@ -36,12 +36,12 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
         <Card style={styles.list}>
             <View style={styles.itemHeader}>
                 <View>
-                    <Text category="h6">{info.item?.content}</Text>
-                    <Text category="p2">{'Status:  ' + info.item?.status}</Text>
+                    <Text category="h6">{'Name accident: ' + info.item?.content}</Text>
+                    <Text category="p2">{'Status: ' + info.item?.status}</Text>
+                    <Text category="p2">{'Name: ' + info.item?.user?.name}</Text>
                 </View>
             </View>
             <Divider />
-
             <View style={{ marginTop: 15 }}>
                 <Text>{'Time : ' + moment(info.item?.createTime).format('DD/MM/YYYY hh:mm:ss a')}</Text>
             </View>

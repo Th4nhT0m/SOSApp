@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "518371195337",
+    "project_id": "pushnotification-c067b",
+    "storage_bucket": "pushnotification-c067b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518371195337:android:260c9a03e1ecf81f011018",
+        "android_client_info": {
+          "package_name": "com.sosapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518371195337-o4kdksbn13pet1jq84sjpnntds1k9lob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjRxckIKYA7OtyymX5Hlj-GISk0aGtegw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518371195337-o4kdksbn13pet1jq84sjpnntds1k9lob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

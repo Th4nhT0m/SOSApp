@@ -1,4 +1,4 @@
-import { Dimensions, View } from 'react-native';
+import { Dimensions, Image, View } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import React from 'react';
@@ -21,7 +21,6 @@ const ViewHandbookById = ({ navigation }: any): React.ReactElement => {
                 },
             });
     };
-
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.headerContainer as any}>
@@ -50,6 +49,11 @@ const ViewHandbookById = ({ navigation }: any): React.ReactElement => {
                     {getDateHandbook.severity}
                 </Text>
             </View>
+
+            <Image
+                source={{ uri: getDateHandbook.icon }}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 30 }}
+            />
 
             <View style={styles.orContainerUtensil}>
                 <Text style={styles.orLabel}>
