@@ -5,7 +5,6 @@ import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
-import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -17,10 +16,17 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     const socket = io('http://192.168.1.6:3000');
+    let sound1: Sound;
+
     React.useEffect(() => {
-        socket.emit('forceDisconnect');
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
     }, [dispatch, socket]);
+
+   // }, [dispatch, getAccidents]);
+    // React.useEffect(() => {
+    //     start();
+    // }, []);
+
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -58,7 +64,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
-                        socket.emit('forceDisconnect');
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',
@@ -157,7 +162,6 @@ const themedStyles = StyleService.create({
         alignItems: 'center',
     },
     itemFooter: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,

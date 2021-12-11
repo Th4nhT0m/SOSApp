@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AccidentsRequest } from '../services/requests/accidents';
-import { AccidentsProps, AccidentsPatch } from '../services/requests/types';
+import { AccidentsProps, AccidentsPatch, Accidents } from '../services/requests/types';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
 
