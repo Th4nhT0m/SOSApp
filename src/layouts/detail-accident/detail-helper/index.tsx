@@ -7,21 +7,20 @@ import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '
 import { accidentsActions } from '../../../actions/accidents-ations';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
+import Sound from 'react-native-sound';
+import { io } from 'socket.io-client';
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
     const { location } = useCurrentGPSPosition();
-
+    const socket = io('http://192.168.1.6:3000');
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     const socket = io('http://192.168.1.6:3000');
-    let sound1: Sound;
-
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-    }, [dispatch, socket]);
-
+    }, [dispatch, getAccidents, socket]);
+  //}, [dispatch, socket]); -->
    // }, [dispatch, getAccidents]);
     // React.useEffect(() => {
     //     start();
@@ -64,6 +63,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
+                        socket.emit('forceDisconnect');
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',

@@ -8,6 +8,7 @@ import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+import { io } from 'socket.io-client';
 
 import { io } from 'socket.io-client';
 import PushNotification, { Importance } from 'react-native-push-notification';
@@ -18,6 +19,7 @@ import messaging from '@react-native-firebase/messaging';
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
+    const socket = io('http://192.168.1.6:3000');
     const { location } = useCurrentGPSPosition();
     const setAccidents = useAppSelector((state) => state.accidents.dateList.results);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
@@ -106,6 +108,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 helperLongitude: String(location.coords.longitude),
                             })
                         );
+                        socket.emit('forceDisconnect');
                         onDetailProgress();
                     }
                 },

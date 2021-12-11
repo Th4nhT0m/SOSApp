@@ -1,34 +1,33 @@
 import { Alert, Dimensions, Image, View } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
-import React, { useState } from 'react';
+import React from 'react';
 import MapDirectionsViewComponent from '../../../components/form-map/map-directions-view.component';
 import { HelperAction } from '../../../actions/helper-actions';
-import { handbookActions } from '../../../actions/handbook-actions';
 import { accidentsActions } from '../../../actions/accidents-ations';
-import { Accidents, HelperByUserId } from '../../../services/requests/types';
 import call from 'react-native-phone-call';
-import { phoneIcon } from '../../../components/Icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { io } from 'socket.io-client/build/esm-debug';
 const window = Dimensions.get('window');
 
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
+    const socket = io('http://192.168.1.6:3000');
+    const styles = useStyleSheet(themedStyles);
+
     const getID = useAppSelector((state) => state.helpersReducer.dateGet.id);
     const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
     const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
-
-    const getNumber = useAppSelector((state) => state.accidents.dataGet.created_by?.numberPhone);
     const getAccident = useAppSelector((state) => state.helpersReducer.dateGet.accident);
+    const getNumber = useAppSelector((state) => state.accidents.dataGet.created_by?.numberPhone);
+    const getAccidentStatus = useAppSelector((state) => state.accidents.dataGet.status);
 
     React.useEffect(() => {
         dispatch(accidentsActions.getAccidentByID(getAccident));
-    }, [dispatch]);
+        console.log(getAccidentStatus);
+    }, [dispatch, getAccident, socket]);
 
-    const styles = useStyleSheet(themedStyles);
-
-    // const { location } = useCurrentGPSPosition();
     const onNotification = () => {
         navigation &&
             navigation.navigate('Home', {
@@ -36,36 +35,45 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 params: { screen: 'NotificationAccidents' },
             });
     };
-
     const onPatchHelper = () => {
-        Alert.alert('Confirm Complete', 'You have completed?', [
-            {
-                text: 'Cancel',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-            },
-            {
-                text: 'OK',
-                onPress: () => {
-                    if (location !== undefined) {
-                        dispatch(
-                            HelperAction.patchHelper({
-                                id: getID,
-                                props: {
-                                    status: 'Success',
-                                    accidentLongitude: getLongitude,
-                                    accidentLatitude: getLatitude,
-                                    helperLatitude: String(location.coords.latitude),
-                                    helperLongitude: String(location.coords.longitude),
-                                    timeOut: new Date(),
-                                },
-                            })
-                        );
-                        onNotification();
-                    }
+        if (getAccidentStatus === 'Success') {
+            Alert.alert('Confirm Complete', 'You have completed?', [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
                 },
-            },
-        ]);
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        if (location !== undefined) {
+                            dispatch(
+                                HelperAction.patchHelper({
+                                    id: getID,
+                                    props: {
+                                        status: 'Success',
+                                        accidentLongitude: getLongitude,
+                                        accidentLatitude: getLatitude,
+                                        helperLatitude: String(location.coords.latitude),
+                                        helperLongitude: String(location.coords.longitude),
+                                        timeOut: new Date(),
+                                    },
+                                })
+                            );
+                            socket.emit('forceDisconnect');
+                            onNotification();
+                        }
+                    },
+                },
+            ]);
+        } else {
+            Alert.alert('Unfinished accident', 'The Accidents has not yet been confirmed complete by the requester', [
+                {
+                    text: 'OK',
+                    onPress: () => console.log('OK'),
+                },
+            ]);
+        }
     };
     const onDeleteHelper = () => {
         Alert.alert('Confirm Cancel', 'You have cancel?', [
@@ -91,6 +99,7 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
+                        socket.emit('forceDisconnect');
                         onNotification();
                     }
                 },
