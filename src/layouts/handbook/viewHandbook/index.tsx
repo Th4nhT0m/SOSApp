@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { handbookActions } from '../../../actions/handbook-actions';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { Handbook } from '../../../services/requests/types';
-import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
+
 
 const ViewHandbook = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -54,7 +54,8 @@ const ViewHandbook = ({ navigation }: any): React.ReactElement => {
             }}
         >
             <View style={styles.itemHeader}>
-                <View>
+                <Avatar size="giant" source={{ uri: info.item?.icon }} />
+                <View style={styles.info}>
                     <Text category="s1">{info.item?.nameHandbook}</Text>
                     <Text category="s2">{'Severity:  ' + info.item?.severity}</Text>
                 </View>
@@ -168,6 +169,9 @@ const themedStyles = StyleService.create({
     },
     iconButton: {
         paddingHorizontal: 0,
+    },
+    info: {
+        left: 10,
     },
 });
 
