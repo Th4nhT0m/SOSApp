@@ -12,6 +12,7 @@ import { io } from 'socket.io-client';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
+import { ArrowForwardIconOutLineLeftSide } from '../handbook/viewHandbookById/axtra/incons';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -110,9 +111,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             console.log('NOTIFICATION:', notification);
 
             // process the notification
-
-            // (required) Called when a remote is received or opened, or local notification is opened
-            // notification.finish(PushNotificationIOS.FetchResult.NoData);
         },
 
         // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
@@ -170,8 +168,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             largeIconUrl: 'https://cdn-icons-png.flaticon.com/512/1476/1476799.png',
             bigLargeIcon: 'https://cdn-icons-png.flaticon.com/512/1476/1476799.png',
             bigPictureUrl: options.bigImage,
-            bigLargeIconUrl:
-                'https://cdn-icons-png.flaticon.com/512/1476/1476799.png', // (optional) default: undefined
+            bigLargeIconUrl: 'https://cdn-icons-png.flaticon.com/512/1476/1476799.png', // (optional) default: undefined
             color: 'red',
             vibrate: true,
             vibration: 300,
@@ -232,6 +229,27 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         console.log('Susses');
     };
 
+    const onBackButtonPress = (): void => {
+        Alert.alert('Confirm help', 'Are you sure you got help?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: () => {
+                    socket.emit('forceDisconnect');
+                    navigation &&
+                        navigation.navigate('Home', {
+                            screen: 'Dashboard',
+                            params: { screen: 'DashboardHome' },
+                        });
+                },
+            },
+        ]);
+    };
+
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
             <Text category="s1">
@@ -270,6 +288,16 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     return (
         <View style={styles.container}>
+            <Button
+                style={styles.backButton}
+                appearance="ghost"
+                status="control"
+                size="giant"
+                accessoryLeft={ArrowForwardIconOutLineLeftSide}
+                onPress={onBackButtonPress}
+            >
+                Back
+            </Button>
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h3">
@@ -284,12 +312,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
-
-            {/*<Button*/}
-            {/*    style={styles.iconButton}*/}
-            {/*    onPress={handleNotification}*/}
-            {/*    // onPress={onDetailProgress}*/}
-            {/*/>*/}
         </View>
     );
 };
@@ -298,6 +320,10 @@ const themedStyles = StyleService.create({
     container: {
         flex: 1,
         backgroundColor: 'background-basic-color-2',
+    },
+    backButton: {
+        maxWidth: 90,
+        paddingHorizontal: 0,
     },
     orLabel: {
         marginHorizontal: 8,

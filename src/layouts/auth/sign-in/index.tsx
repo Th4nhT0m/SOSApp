@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputField from '../../../components/form-inputs/input-field';
 import PasswordField from '../../../components/form-inputs/password-field';
+import LottieView from 'lottie-react-native';
 
 const loginSchema = yup.object().shape({
     email: yup.string().email().typeError('Email is invalid').required('Email is required'),
@@ -27,6 +28,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
     } = useForm<SignUpProps>({
         resolver: yupResolver(loginSchema),
     });
+
     const dispatch = useAppDispatch();
 
     const onSignInButtonPress = (values: LoginInProps): void => {
@@ -44,9 +46,7 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
         <KeyboardAvoidingView style={styles.container}>
             <ImageOverlay style={styles.container} source={require('../sign-up/assets/unnamed.png')}>
                 <View style={styles.headerContainer}>
-                    <Text style={styles.signInLabel} category="s1" status="control">
-                        Sign in to your account
-                    </Text>
+                    <LottieView source={require('./assets/iconn.json')} autoPlay loop />
                 </View>
 
                 <View style={styles.formContainer}>
@@ -105,11 +105,10 @@ const styles = StyleSheet.create({
     headerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: 216,
+        minHeight: 320,
     },
     formContainer: {
         flex: 1,
-        marginTop: 32,
         paddingHorizontal: 16,
     },
     signInLabel: {
