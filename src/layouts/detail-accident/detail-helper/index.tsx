@@ -16,16 +16,16 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const socket = io('http://192.168.1.6:3000');
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
-    const socket = io('http://192.168.1.6:3000');
+
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
     }, [dispatch, getAccidents, socket]);
-  //}, [dispatch, socket]); -->
-   // }, [dispatch, getAccidents]);
+
+    //}, [dispatch, socket]); -->
+    // }, [dispatch, getAccidents]);
     // React.useEffect(() => {
     //     start();
     // }, []);
-
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,

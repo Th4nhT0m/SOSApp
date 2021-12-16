@@ -10,12 +10,6 @@ import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
 import { io } from 'socket.io-client';
 
-import { io } from 'socket.io-client';
-import PushNotification, { Importance } from 'react-native-push-notification';
-import firebase from '@react-native-firebase/app';
-import messaging from '@react-native-firebase/messaging';
-
-
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
@@ -28,15 +22,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
-    //    socket.on('getAccidents', (Accidents) => {
-//             console.log('-----------------');
-//             console.log(Accidents);
-    //    });
+        //    socket.on('getAccidents', (Accidents) => {
+        //             console.log('-----------------');
+        //             console.log(Accidents);
+        //    });
         socket.emit('forceDisconnect');
-        setAcc(setAccidents.results);
-        socket.emit('stop', getUser); 
+        //setAcc(setAccidents.results);
+        socket.emit('stop', getUser);
     }, [dispatch, socket]);
-
 
     let notifies: Accidents[] = setAccidents.map((pops) => ({
         id: pops.id,
@@ -83,8 +76,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 UpdateTime,
             };
         });
-
- 
 
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
