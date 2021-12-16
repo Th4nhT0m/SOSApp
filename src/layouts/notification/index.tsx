@@ -14,48 +14,29 @@ import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 import { ArrowForwardIconOutLineLeftSide } from '../handbook/viewHandbookById/axtra/incons';
 
+
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
+    const socket = io('http://192.168.1.6:3000');
     const { location } = useCurrentGPSPosition();
-    const socket = io('http://192.168.1.6:1945');
-    const setAccidents = useAppSelector((state) => state.accidents.dateList);
+    const setAccidents = useAppSelector((state) => state.accidents.dateList.results);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
     const nullAccident: Accidents[] = [];
     const [acc, setAcc] = React.useState(nullAccident);
 
     React.useEffect(() => {
         dispatch(accidentsActions.getAllAccidents());
-        socket.on('getAccidents', (Accidents) => {
-            console.log('-----------------');
-            console.log(Accidents);
-        });
+        //    socket.on('getAccidents', (Accidents) => {
+        //             console.log('-----------------');
+        //             console.log(Accidents);
+        //    });
         socket.emit('forceDisconnect');
-        setAcc(setAccidents.results);
+        //setAcc(setAccidents.results);
         socket.emit('stop', getUser);
-        // notification();
-        // createChannels();
-        messaging()
-            .getToken(firebase.app().options.messagingSenderId)
-            .then((token) => {
-                console.log('token', token);
-            });
-
-        const unsubscribe = messaging().onMessage(async (remoteMsg) => {
-            const changeId = Math.random().toString(36).substring(7);
-            createChannels(changeId);
-            handleNotification(changeId, { bigImage: remoteMsg.notification?.android?.imageUrl });
-            console.log('remoteMsg', remoteMsg);
-        });
-
-        messaging().setBackgroundMessageHandler(async (remoteMsg) => {
-            console.log('remoteMsg Backgroup', remoteMsg);
-        });
-
-        return unsubscribe;
     }, [dispatch, socket]);
 
-    let notifies: Accidents[] = acc.map((pops) => ({
+    let notifies: Accidents[] = setAccidents.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,
@@ -178,6 +159,8 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         });
     };
 
+
+    
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
@@ -200,8 +183,8 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 helperLongitude: String(location.coords.longitude),
                             })
                         );
+                        socket.emit('forceDisconnect');
                         onDetailProgress();
-                        notifies = [];
                     }
                 },
             },
