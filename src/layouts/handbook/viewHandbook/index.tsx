@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { Handbook } from '../../../services/requests/types';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 
-
 const ViewHandbook = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
