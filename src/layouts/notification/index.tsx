@@ -1,19 +1,21 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Alert, Dimensions, ListRenderItemInfo, Platform, View } from 'react-native';
-import { DoneAllIcon } from '../../components/Icons';
+import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { DoneAllIcon, phoneIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+import call from 'react-native-phone-call';
 import { io } from 'socket.io-client';
-
+import { ArrowForwardIconOutLineLeftSide } from '../handbook/viewHandbookById/axtra/incons';
 import { io } from 'socket.io-client';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
+
 
 
 const Notification = ({ navigation }: any): React.ReactElement => {
@@ -21,7 +23,11 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const socket = io('http://192.168.1.6:3000');
     const { location } = useCurrentGPSPosition();
-    const setAccidents = useAppSelector((state) => state.accidents.dateList.results);
+
+    const socket = io('http://192.168.1.6:3000');
+
+    const setAccidents = useAppSelector((state) => state.accidents.dateList);
+
     const getUser = useAppSelector((state) => state.users.currentUser.id);
     const nullAccident: Accidents[] = [];
     const [acc, setAcc] = React.useState(nullAccident);
@@ -33,7 +39,12 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 //             console.log(Accidents);
     //    });
         socket.emit('forceDisconnect');
+        dispatch(accidentsActions.getAllAccidents());
+        // socket.on('getAccidents', (Accidents) => {
+        //     console.log(Accidents);
+        // });
         setAcc(setAccidents.results);
+        // socket.emit('stop', getUser);
         socket.emit('stop', getUser); 
     }, [dispatch, socket]);
 
@@ -84,8 +95,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             };
         });
 
- 
-
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
@@ -109,7 +118,12 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                             })
                         );
                         socket.emit('forceDisconnect');
-                        onDetailProgress();
+                        navigation &&
+                            navigation.navigate('Home', {
+                                screen: 'Notification',
+                                params: { screen: 'DetailProgress' },
+                            });
+                        // notifies = [];
                     }
                 },
             },
@@ -137,6 +151,34 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         console.log('Susses');
     };
 
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
+
+    const onBackButtonPress = (): void => {
+        Alert.alert('Confirm help', 'Are you sure you got help?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: () => {
+                    navigation &&
+                        navigation.navigate('Home', {
+                            screen: 'Dashboard',
+                            params: { screen: 'DashboardHome' },
+                        });
+                },
+            },
+        ]);
+    };
+
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
             <Text category="s1">
@@ -147,10 +189,8 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 size="small"
                 accessoryLeft={DoneAllIcon}
                 onPress={() => {
-                    setOnAccidents(info.item?.id, info.item?.latitude, info.item?.longitude);
-                    //handleNotification
+                    setOnAccidents(info.item.id, info.item?.latitude, info.item?.longitude);
                 }}
-                // onPress={onDetailProgress}
             />
         </View>
     );
@@ -166,8 +206,19 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                     </Text>
                 </View>
             </View>
+
             <Divider />
-            <Text style={{ marginTop: 15 }}>{'Name accident: ' + info.item?.nameAccident}</Text>
+            <View style={styles.itemPhone}>
+                <Text category="s1">{'Name accident: ' + info.item?.nameAccident}</Text>
+                <Button
+                    style={styles.iconPhone}
+                    size="small"
+                    accessoryLeft={phoneIcon}
+                    onPress={() => {
+                        triggerCall(info.item.created_by?.numberPhone);
+                    }}
+                />
+            </View>
             <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
             <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>
@@ -189,12 +240,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 numColumns={1}
                 renderItem={renderNotifies}
             />
-
-            {/*<Button*/}
-            {/*    style={styles.iconButton}*/}
-            {/*    onPress={handleNotification}*/}
-            {/*    // onPress={onDetailProgress}*/}
-            {/*/>*/}
         </View>
     );
 };
@@ -203,6 +248,10 @@ const themedStyles = StyleService.create({
     container: {
         flex: 1,
         backgroundColor: 'background-basic-color-2',
+    },
+    backButton: {
+        maxWidth: 90,
+        paddingHorizontal: 0,
     },
     orLabel: {
         marginHorizontal: 8,
@@ -245,10 +294,12 @@ const themedStyles = StyleService.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
     },
+
     itemPhone: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 10,
     },
     name: {
         left: 10,
@@ -258,8 +309,7 @@ const themedStyles = StyleService.create({
     },
     iconPhone: {
         paddingHorizontal: 0,
-        // marginHorizontal: 155,
-        left: 20,
+        left: 4,
     },
 });
 

@@ -11,7 +11,7 @@ export const NotificationScreen = ({ navigation }: any): React.ReactElement => {
     );
     return (
         <SafeAreaLayout style={styles.safeArea}>
-            <TopNavigation title="Dashboard" accessoryLeft={renderBackAction} />
+            {/*<TopNavigation title="Dashboard" accessoryLeft={renderBackAction} />*/}
             <Notification navigation={navigation} />
         </SafeAreaLayout>
     );

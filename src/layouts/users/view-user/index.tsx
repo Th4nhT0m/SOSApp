@@ -125,13 +125,20 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <View style={[styles.container, styles.formContainer]}>
-                <InputField name={'name'} control={control} label={'Full name'} placeholder={setDataUser.name} />
+                <InputField
+                    name={'name'}
+                    control={control}
+                    label={'Full name'}
+                    placeholder={setDataUser.name}
+                    value={setDataUser.name}
+                />
                 <InputField
                     name={'identityCard'}
                     control={control}
                     label={'ID Number'}
                     placeholder={setDataUser.identityCard}
                 />
+
                 <InputField
                     name={'numberPhone'}
                     control={control}

@@ -48,6 +48,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
         });
 
         return unsubscribe;
+
     }, [dispatch]);
 
     const onAccidentsButtonPress = () => {
