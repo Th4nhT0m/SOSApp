@@ -11,20 +11,33 @@ import moment from 'moment';
 import call from 'react-native-phone-call';
 import { io } from 'socket.io-client';
 import { ArrowForwardIconOutLineLeftSide } from '../handbook/viewHandbookById/axtra/incons';
+import { io } from 'socket.io-client';
+import PushNotification, { Importance } from 'react-native-push-notification';
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+
+
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
+    const socket = io('http://192.168.1.6:3000');
     const { location } = useCurrentGPSPosition();
 
     const socket = io('http://192.168.1.6:3000');
 
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
+
     const getUser = useAppSelector((state) => state.users.currentUser.id);
     const nullAccident: Accidents[] = [];
     const [acc, setAcc] = React.useState(nullAccident);
 
     React.useEffect(() => {
+        dispatch(accidentsActions.getAllAccidents());
+    //    socket.on('getAccidents', (Accidents) => {
+//             console.log('-----------------');
+//             console.log(Accidents);
+    //    });
         socket.emit('forceDisconnect');
         dispatch(accidentsActions.getAllAccidents());
         // socket.on('getAccidents', (Accidents) => {
@@ -32,9 +45,11 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         // });
         setAcc(setAccidents.results);
         // socket.emit('stop', getUser);
+        socket.emit('stop', getUser); 
     }, [dispatch, socket]);
 
-    let notifies: Accidents[] = acc.map((pops) => ({
+
+    let notifies: Accidents[] = setAccidents.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,

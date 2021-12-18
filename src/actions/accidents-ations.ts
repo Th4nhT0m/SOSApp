@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AccidentsRequest } from '../services/requests/accidents';
-import { AccidentsProps, AccidentsPatch } from '../services/requests/types';
+import { AccidentsProps, AccidentsPatch, Accidents } from '../services/requests/types';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
+import {ExtraArgs} from '../app/store-provider';
 
 const create = createAsyncThunk('accidents', async (props: AccidentsProps) => {
     const response = await AccidentsRequest.creatAccident(props);
@@ -35,6 +36,9 @@ const getAccidentByID = createAsyncThunk('getAccidentByID', async (id: string) =
     const response = await AccidentsRequest.getAccidentById(id);
     return response;
 });
+// const getAccidentSockt = createAsyncThunk<Accidents,undefined,ExtraArgs>((payload,{extra})=>{
+//     const {client} = extra;
+// }) => Connect Socket
 
 export const accidentsActions = {
     create,
