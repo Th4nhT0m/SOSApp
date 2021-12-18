@@ -1,28 +1,27 @@
 import { Alert, Dimensions, Image, View } from 'react-native';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
-import React, { useState } from 'react';
+import React from 'react';
 import MapDirectionsViewComponent from '../../../components/form-map/map-directions-view.component';
 import { HelperAction } from '../../../actions/helper-actions';
 import { handbookActions } from '../../../actions/handbook-actions';
 import { accidentsActions } from '../../../actions/accidents-ations';
-import { Accidents, HelperByUserId } from '../../../services/requests/types';
-import call from 'react-native-phone-call';
-import { phoneIcon } from '../../../components/Icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { io } from 'socket.io-client';
 const window = Dimensions.get('window');
 
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
+
     const getID = useAppSelector((state) => state.helpersReducer.dateGet.id);
     const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
     const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
-
-    const getNumber = useAppSelector((state) => state.accidents.dataGet.created_by?.numberPhone);
     const getAccident = useAppSelector((state) => state.helpersReducer.dateGet.accident);
+    const socket = io('http://192.168.1.6:3000');
 
     React.useEffect(() => {
+        socket.emit('forceDisconnect');
         dispatch(accidentsActions.getAccidentByID(getAccident));
     }, [dispatch]);
 
@@ -98,14 +97,6 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
         ]);
     };
 
-    const triggerCall = (inputValue: string | undefined) => {
-        const args = {
-            number: inputValue,
-            prompt: true,
-        };
-        call(args).catch(console.error);
-    };
-
     return (
         <View style={styles.container}>
             <View style={styles.orContainer}>
@@ -120,10 +111,6 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 source={require('./assets/10637879451606261172-128.png')}
                 style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
-
-            <TouchableOpacity style={styles.layoutPhone} onPress={() => triggerCall(getNumber)}>
-                <Image source={require('./assets/phone.png')} style={{ height: 50, width: 50 }} />
-            </TouchableOpacity>
 
             <MapDirectionsViewComponent
                 style={styles.maps}

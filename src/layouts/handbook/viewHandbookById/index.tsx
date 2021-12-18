@@ -21,6 +21,7 @@ const ViewHandbookById = ({ navigation }: any): React.ReactElement => {
                 },
             });
     };
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.headerContainer as any}>
@@ -51,7 +52,7 @@ const ViewHandbookById = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <Image
-                source={{ uri: getDateHandbook.icon }}
+                source={{ uri: getDateHandbook.icons }}
                 style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 30 }}
             />
 

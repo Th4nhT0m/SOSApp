@@ -1,58 +1,37 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Alert, Dimensions, ListRenderItemInfo, Platform, View } from 'react-native';
-import { DoneAllIcon } from '../../components/Icons';
+import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { DoneAllIcon, phoneIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+import call from 'react-native-phone-call';
 import { io } from 'socket.io-client';
-import PushNotification, { Importance } from 'react-native-push-notification';
-import firebase from '@react-native-firebase/app';
-import messaging from '@react-native-firebase/messaging';
 import { ArrowForwardIconOutLineLeftSide } from '../handbook/viewHandbookById/axtra/incons';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-    const socket = io('http://192.168.1.6:1945');
+
+    const socket = io('http://192.168.1.6:3000');
+
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
     const nullAccident: Accidents[] = [];
     const [acc, setAcc] = React.useState(nullAccident);
 
     React.useEffect(() => {
-        dispatch(accidentsActions.getAllAccidents());
-        socket.on('getAccidents', (Accidents) => {
-            console.log('-----------------');
-            console.log(Accidents);
-        });
         socket.emit('forceDisconnect');
+        dispatch(accidentsActions.getAllAccidents());
+        // socket.on('getAccidents', (Accidents) => {
+        //     console.log(Accidents);
+        // });
         setAcc(setAccidents.results);
-        socket.emit('stop', getUser);
-        // notification();
-        // createChannels();
-        messaging()
-            .getToken(firebase.app().options.messagingSenderId)
-            .then((token) => {
-                console.log('token', token);
-            });
-
-        const unsubscribe = messaging().onMessage(async (remoteMsg) => {
-            const changeId = Math.random().toString(36).substring(7);
-            createChannels(changeId);
-            handleNotification(changeId, { bigImage: remoteMsg.notification?.android?.imageUrl });
-            console.log('remoteMsg', remoteMsg);
-        });
-
-        messaging().setBackgroundMessageHandler(async (remoteMsg) => {
-            console.log('remoteMsg Backgroup', remoteMsg);
-        });
-
-        return unsubscribe;
+        // socket.emit('stop', getUser);
     }, [dispatch, socket]);
 
     let notifies: Accidents[] = acc.map((pops) => ({
@@ -101,83 +80,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             };
         });
 
-    PushNotification.configure({
-        onRegister: function (token: any) {
-            console.log('TOKEN:', token);
-        },
-
-        // (required) Called when a remote is received or opened, or local notification is opened
-        onNotification: function (notification: { finish: (arg0: any) => void }) {
-            console.log('NOTIFICATION:', notification);
-
-            // process the notification
-        },
-
-        // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-        onAction: function (notification: { action: any }) {
-            console.log('ACTION:', notification.action);
-            console.log('NOTIFICATION:', notification);
-
-            // process the action
-        },
-
-        // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-        onRegistrationError: function (err: { message: any }) {
-            console.error(err.message, err);
-        },
-
-        // IOS ONLY (optional): default: all - Permissions to register.
-        permissions: {
-            alert: true,
-            badge: true,
-            sound: true,
-        },
-
-        // Should the initial notification be popped automatically
-        // default: true
-        popInitialNotification: true,
-
-        /**
-         * (optional) default: true
-         * - Specified if permissions (ios) and token (android and ios) will requested or not,
-         * - if not, you must call PushNotificationsHandler.requestPermissions() later
-         * - if you are not using remote notification or do not have Firebase installed, use this:
-         *     requestPermissions: Platform.OS === 'ios'
-         */
-        requestPermissions: Platform.OS === 'ios',
-    });
-
-    const createChannels = (channelId: any) => {
-        PushNotification.createChannel({
-            channelId: channelId, // (required)
-            channelName: 'My channel', // (required)
-            channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
-            playSound: false, // (optional) default: true
-            soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-            importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-            vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-        });
-    };
-
-    const handleNotification = (channelId: any, options: any) => {
-        PushNotification.localNotification({
-            /* Android Only Properties */
-            channelId: channelId,
-            largeIcon: 'ic_launcher',
-            bigText: 'Accident',
-            largeIconUrl: 'https://cdn-icons-png.flaticon.com/512/1476/1476799.png',
-            bigLargeIcon: 'https://cdn-icons-png.flaticon.com/512/1476/1476799.png',
-            bigPictureUrl: options.bigImage,
-            bigLargeIconUrl: 'https://cdn-icons-png.flaticon.com/512/1476/1476799.png', // (optional) default: undefined
-            color: 'red',
-            vibrate: true,
-            vibration: 300,
-            priority: 'high',
-            title: 'Notification accident',
-            message: 'Got into an accident and need your help',
-        });
-    };
-
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
@@ -200,8 +102,13 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 helperLongitude: String(location.coords.longitude),
                             })
                         );
-                        onDetailProgress();
-                        notifies = [];
+                        socket.emit('forceDisconnect');
+                        navigation &&
+                            navigation.navigate('Home', {
+                                screen: 'Notification',
+                                params: { screen: 'DetailProgress' },
+                            });
+                        // notifies = [];
                     }
                 },
             },
@@ -229,6 +136,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         console.log('Susses');
     };
 
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
+
     const onBackButtonPress = (): void => {
         Alert.alert('Confirm help', 'Are you sure you got help?', [
             {
@@ -239,7 +154,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             {
                 text: 'OK',
                 onPress: () => {
-                    socket.emit('forceDisconnect');
                     navigation &&
                         navigation.navigate('Home', {
                             screen: 'Dashboard',
@@ -260,10 +174,8 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 size="small"
                 accessoryLeft={DoneAllIcon}
                 onPress={() => {
-                    setOnAccidents(info.item?.id, info.item?.latitude, info.item?.longitude);
-                    //handleNotification
+                    setOnAccidents(info.item.id, info.item?.latitude, info.item?.longitude);
                 }}
-                // onPress={onDetailProgress}
             />
         </View>
     );
@@ -279,8 +191,19 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                     </Text>
                 </View>
             </View>
+
             <Divider />
-            <Text style={{ marginTop: 15 }}>{'Name accident: ' + info.item?.nameAccident}</Text>
+            <View style={styles.itemPhone}>
+                <Text category="s1">{'Name accident: ' + info.item?.nameAccident}</Text>
+                <Button
+                    style={styles.iconPhone}
+                    size="small"
+                    accessoryLeft={phoneIcon}
+                    onPress={() => {
+                        triggerCall(info.item.created_by?.numberPhone);
+                    }}
+                />
+            </View>
             <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
             <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>
@@ -288,16 +211,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     return (
         <View style={styles.container}>
-            <Button
-                style={styles.backButton}
-                appearance="ghost"
-                status="control"
-                size="giant"
-                accessoryLeft={ArrowForwardIconOutLineLeftSide}
-                onPress={onBackButtonPress}
-            >
-                Back
-            </Button>
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h3">
@@ -366,10 +279,12 @@ const themedStyles = StyleService.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
     },
+
     itemPhone: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 10,
     },
     name: {
         left: 10,
@@ -379,8 +294,7 @@ const themedStyles = StyleService.create({
     },
     iconPhone: {
         paddingHorizontal: 0,
-        // marginHorizontal: 155,
-        left: 20,
+        left: 4,
     },
 });
 
