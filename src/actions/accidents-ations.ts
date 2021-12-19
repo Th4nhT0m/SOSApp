@@ -3,7 +3,7 @@ import { AccidentsRequest } from '../services/requests/accidents';
 import { AccidentsProps, AccidentsPatch, Accidents } from '../services/requests/types';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
-import {ExtraArgs} from '../app/store-provider';
+import { ExtraArgs } from '../app/store-provider';
 
 const create = createAsyncThunk('accidents', async (props: AccidentsProps) => {
     const response = await AccidentsRequest.creatAccident(props);

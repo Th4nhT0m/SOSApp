@@ -6,16 +6,12 @@ import MapDirectionsViewComponent from '../../../components/form-map/map-directi
 import { HelperAction } from '../../../actions/helper-actions';
 import { accidentsActions } from '../../../actions/accidents-ations';
 
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { io } from 'socket.io-client';
-import call from 'react-native-phone-call';
-import { io } from 'socket.io-client/build/esm-debug';
 const window = Dimensions.get('window');
 
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-
     const socket = io('http://192.168.1.6:3000');
     const styles = useStyleSheet(themedStyles);
 
@@ -23,16 +19,12 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
     const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
     const getAccident = useAppSelector((state) => state.helpersReducer.dateGet.accident);
-
-    const getNumber = useAppSelector((state) => state.accidents.dataGet.created_by?.numberPhone);
     const getAccidentStatus = useAppSelector((state) => state.accidents.dataGet.status);
 
-
     React.useEffect(() => {
-        socket.emit('forceDisconnect');
         dispatch(accidentsActions.getAccidentByID(getAccident));
         console.log(getAccidentStatus);
-    }, [dispatch, getAccident, socket]);
+    }, [dispatch, getAccident, getAccidentStatus, socket]);
 
     const onNotification = () => {
         navigation &&
@@ -66,7 +58,6 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                                     },
                                 })
                             );
-                            socket.emit('forceDisconnect');
                             onNotification();
                         }
                     },
