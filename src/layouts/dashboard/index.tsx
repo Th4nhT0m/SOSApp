@@ -1,15 +1,15 @@
 import React from 'react';
 import { Dimensions, Image, View, Vibration, Platform } from 'react-native';
 import { Avatar, Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition, useSocket } from '../../services/hooks';
 import MapViewComponent from '../../components/form-map/map-view.component';
 import { usersActions } from '../../actions/user-actions';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const window = Dimensions.get('window');
+// @ts-ignore
 import Torch from 'react-native-torch';
 import messaging from '@react-native-firebase/messaging';
-import firebase from '@react-native-firebase/app';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import Sound from 'react-native-sound';
 
@@ -17,16 +17,18 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
+    const { socket } = useSocket();
     const ONE_SECOND_IN_MS = 10;
-    const PATTERN = [1 * ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
+    const PATTERN = [ONE_SECOND_IN_MS, 2 * ONE_SECOND_IN_MS, 3 * ONE_SECOND_IN_MS];
     let sound1: Sound;
-    const userInfo = useAppSelector((state) => state.users);
-    const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
+    const { currentUser } = useAppSelector((state) => state.users);
     React.useEffect(() => {
         dispatch(usersActions.getCurrentUserInfo());
+    }, [dispatch]);
 
+    React.useEffect(() => {
         messaging()
-            .getToken(firebase.app().options.messagingSenderId)
+            .getToken()
             .then((token) => {
                 console.log('token', token);
             });
@@ -48,19 +50,23 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
         });
 
         return unsubscribe;
-    }, [dispatch]);
+    }, []);
 
     const onAccidentsButtonPress = () => {
-        if (location !== undefined) {
+        if (location && socket) {
             dispatch(
                 accidentsActions.createUrgent({
-                    //locationName: faker.address.cityName(),
-                    latitude: String(location.coords.latitude),
-                    //user: userInfo.currentUser.id,
-                    longitude: String(location.coords.longitude),
+                    data: {
+                        latitude: String(location.coords.latitude),
+                        //user: userInfo.currentUser.id,
+                        longitude: String(location.coords.longitude),
+                    },
+                    onCreateAccident: (values) => {
+                        console.log(values);
+                        socket.emit('sentAccidents', { ...values });
+                    },
                 })
             );
-            console.log(getAccidents);
         }
         setTimeout(() => {
             navigation &&
@@ -69,7 +75,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                     params: { screen: 'DetailHelper' },
                 });
             handlePress();
-        }, 1500);
+        }, 2500);
         start();
     };
 
@@ -104,7 +110,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
         },
 
         // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-        onAction: function (notification: { action: any }) {
+        onAction: (notification) => {
             console.log('ACTION:', notification.action);
             console.log('NOTIFICATION:', notification);
         },
@@ -134,15 +140,20 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
     });
 
     const createChannels = (channelId: any) => {
-        PushNotification.createChannel({
-            channelId: channelId,
-            channelName: 'My channel',
-            channelDescription: 'A channel to categorise your notifications',
-            playSound: false,
-            soundName: 'default',
-            importance: Importance.HIGH,
-            vibrate: true,
-        });
+        PushNotification.createChannel(
+            {
+                channelId: channelId,
+                channelName: 'My channel',
+                channelDescription: 'A channel to categorise your notifications',
+                playSound: false,
+                soundName: 'default',
+                importance: Importance.HIGH,
+                vibrate: true,
+            },
+            () => {
+                console.log('created channel');
+            }
+        );
     };
 
     const handleNotification = (channelId: any, options: any) => {
@@ -168,7 +179,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
             <Card style={{ ...styles.userInfo }} status={'primary'}>
                 <View style={styles.infoContainer}>
                     <Avatar size={'giant'} source={require('../../assets/images/icon-avatar.png')} />
-                    <Text>Hello, {userInfo.currentUser.name}</Text>
+                    <Text>Hello, {currentUser.name}</Text>
                     <Image source={require('./extra/notification.png')} style={{ width: 37, height: 37, left: 155 }} />
                 </View>
             </Card>

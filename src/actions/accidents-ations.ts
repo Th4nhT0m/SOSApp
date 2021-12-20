@@ -3,21 +3,34 @@ import { AccidentsRequest } from '../services/requests/accidents';
 import { AccidentsProps, AccidentsPatch, Accidents } from '../services/requests/types';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
-import { ExtraArgs } from '../app/store-provider';
+import { ListResponse } from '../models/common';
 
 const create = createAsyncThunk('accidents', async (props: AccidentsProps) => {
     const response = await AccidentsRequest.creatAccident(props);
     return response;
 });
 
-const createUrgent = createAsyncThunk('accidents/Urgent', async (props: AccidentsProps) => {
-    const response = await AccidentsRequest.creatUrgentAccident(props);
+interface AccidentSocket {
+    onCreateAccident: (data: Accidents) => void;
+    data: AccidentsProps;
+}
+const createUrgent = createAsyncThunk<Accidents, AccidentSocket>('accidents/Urgent', async (props) => {
+    const response = await AccidentsRequest.creatUrgentAccident(props.data);
+    props.onCreateAccident(response);
     return response;
 });
-const getAllAccidents = createAsyncThunk('getAllAccidents', async () => {
-    const response = await AccidentsRequest.getAllAccident();
-    return response;
-});
+
+interface AccidentSocketProps {
+    onGetAccident: (data: ListResponse<Accidents>) => void;
+}
+const getAllAccidents = createAsyncThunk<ListResponse<Accidents>, AccidentSocketProps>(
+    'getAllAccidents',
+    async (props) => {
+        const response = await AccidentsRequest.getAllAccident();
+        props.onGetAccident(response);
+        return response;
+    }
+);
 
 const getHistoryAccident = createAsyncThunk('getHistoryAccident', async () => {
     const response = await AccidentsRequest.getViewHistoryAccident();
@@ -32,13 +45,15 @@ const patchAllAccident = createAsyncThunk(
     }
 );
 
-const getAccidentByID = createAsyncThunk('getAccidentByID', async (id: string) => {
-    const response = await AccidentsRequest.getAccidentById(id);
+interface AccidentByIDSocket {
+    onCreateAccident: (data: Accidents) => void;
+    data: string;
+}
+const getAccidentByID = createAsyncThunk<Accidents, AccidentByIDSocket>('getAccidentByID', async (pops) => {
+    const response = await AccidentsRequest.getAccidentById(pops.data);
+    pops.onCreateAccident(response);
     return response;
 });
-// const getAccidentSockt = createAsyncThunk<Accidents,undefined,ExtraArgs>((payload,{extra})=>{
-//     const {client} = extra;
-// }) => Connect Socket
 
 export const accidentsActions = {
     create,

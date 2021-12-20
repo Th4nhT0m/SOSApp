@@ -1,41 +1,41 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
-import { DoneAllIcon, phoneIcon, reload } from '../../components/Icons';
-import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
+import { DoneAllIcon, phoneIcon } from '../../components/Icons';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition, useSocket } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+// @ts-ignore
 import call from 'react-native-phone-call';
-// import { io } from 'socket.io-client';
-import { ArrowForwardIconOutLineLeftSide } from '../users/view-user/extra/icons';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-    // const socket = io('http://192.168.1.9:3000');
-    const setAccidents = useAppSelector((state) => state.accidents.dateList);
-    const getUser = useAppSelector((state) => state.users.currentUser.id);
-    const nullAccident: Accidents[] = [];
-    const [acc, setAcc] = React.useState(nullAccident);
-    let cont = 1;
+    const socket = useSocket();
+    const getUser = useAppSelector((state) => state.users.currentUser);
+    const [accident, setAccident] = React.useState<Accidents[]>([]);
     React.useEffect(() => {
-        dispatch(accidentsActions.getAllAccidents());
-    }, [dispatch]);
-    // React.useEffect(() => {
-    //     while (cont !== 0) {
-    //         onBackButtonPress();
-    //     }
-    // }, []);    // React.useEffect(() => {
-    //     while (cont !== 0) {
-    //         onBackButtonPress();
-    //     }
-    // }, []);
+        dispatch(
+            accidentsActions.getAllAccidents({
+                onGetAccident: (value) => {
+                    setAccident(value.results);
+                },
+            })
+        );
+        if (socket) {
+            const { accident: data } = socket;
+            if (data) {
+                console.log(data);
+                setAccident((prevState) => ({ ...prevState, data }));
+            }
+        }
+    }, [dispatch, socket]);
 
-    let notifies: Accidents[] = setAccidents.results.map((pops) => ({
+    let notifies: Accidents[] = accident.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,
@@ -51,7 +51,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     notifies = notifies
         .filter(function (item) {
-            return item.status === 'Waiting' && item.created_by?.id !== getUser;
+            return item.status === 'Waiting' && item.created_by !== getUser;
         })
         .map(function ({
             id,
@@ -96,7 +96,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                         dispatch(
                             HelperAction.createHelper({
                                 accident: id,
-                                user: getUser,
+                                user: getUser.id,
                                 accidentLatitude: latitude,
                                 accidentLongitude: longitude,
                                 helperLatitude: String(location.coords.latitude),
@@ -109,7 +109,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 screen: 'Notification',
                                 params: { screen: 'DetailProgress' },
                             });
-                        cont = 0;
                         // notifies = [];
                     }
                 },
@@ -129,14 +128,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         }
     };
 
-    const onDetailProgress = (): void => {
-        navigation &&
-            navigation.navigate('Home', {
-                screen: 'Notification',
-                params: { screen: 'DetailProgress' },
-            });
-        console.log('Susses');
-    };
+    // const onDetailProgress = (): void => {
+    //     navigation &&
+    //         navigation.navigate('Home', {
+    //             screen: 'Notification',
+    //             params: { screen: 'DetailProgress' },
+    //         });
+    //     console.log('Susses');
+    // };
 
     const triggerCall = (inputValue: string | undefined) => {
         const args = {
@@ -144,10 +143,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             prompt: true,
         };
         call(args).catch(console.error);
-    };
-
-    const onBackButtonPress = (): void => {
-        dispatch(accidentsActions.getAllAccidents());
     };
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
@@ -197,15 +192,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     return (
         <View style={styles.container}>
-            <Button
-                style={styles.backButton}
-                appearance="ghost"
-                status="control"
-                size="giant"
-                accessoryLeft={reload}
-                onPress={onBackButtonPress}
-            >
-            </Button>
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h3">
