@@ -12,30 +12,34 @@ const window = Dimensions.get('window');
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-    const { socket } = useSocket();
+    // const socket = useSocket();
     const styles = useStyleSheet(themedStyles);
-    const { id, accidentLatitude, accidentLongitude, status } = useAppSelector((state) => state.helpersReducer.dateGet);
-    const { created_by } = useAppSelector((state) => state.accidents.dataGet);
+    const { id, accidentLatitude, accidentLongitude, accident } = useAppSelector(
+        (state) => state.helpersReducer.dateGet
+    );
     React.useEffect(() => {
-        if (created_by) {
+        if (accident) {
             dispatch(
                 accidentsActions.getAccidentByID({
-                    data: created_by?.id,
+                    data: accident,
                     onCreateAccident: (value) => {
-                        console.log(value.status);
-                        console.log(value.created_by?.numberPhone);
+                        console.log(value);
                     },
                 })
             );
+        } else {
+            console.log('Dont data ');
         }
     }, [dispatch]);
 
-    React.useEffect(() => {
-        if (socket) {
-            const { accident: data } = socket;
-            console.log(data);
-        }
-    }, [socket]);
+    // React.useEffect(() => {
+    //     if (socket) {
+    //         const { accident: data } = socket;
+    //         if (data) {
+    //             console.log(data);
+    //         }
+    //     }
+    // }, [socket]);
 
     const onNotification = () => {
         navigation &&
@@ -45,42 +49,60 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
             });
     };
     const onPatchHelper = () => {
-        if (status === 'Success') {
-            Alert.alert('Confirm Complete', 'You have completed?', [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                {
-                    text: 'OK',
-                    onPress: () => {
-                        if (location !== undefined) {
-                            dispatch(
-                                HelperAction.patchHelper({
-                                    id: id,
-                                    props: {
-                                        status: 'Success',
-                                        accidentLongitude: accidentLongitude,
-                                        accidentLatitude: accidentLatitude,
-                                        helperLatitude: String(location.coords.latitude),
-                                        helperLongitude: String(location.coords.longitude),
-                                        timeOut: new Date(),
+        let params: string | undefined = '';
+        if (accident) {
+            dispatch(
+                accidentsActions.getAccidentByID({
+                    data: accident,
+                    onCreateAccident: (value) => {
+                        console.log(value.status);
+                        params = value.status;
+                        if (params === 'Success') {
+                            Alert.alert('Confirm Complete', 'You have completed?', [
+                                {
+                                    text: 'Cancel',
+                                    onPress: () => console.log('Cancel Pressed'),
+                                    style: 'cancel',
+                                },
+                                {
+                                    text: 'OK',
+                                    onPress: () => {
+                                        if (location !== undefined) {
+                                            dispatch(
+                                                HelperAction.patchHelper({
+                                                    id: id,
+                                                    props: {
+                                                        status: 'Success',
+                                                        accidentLongitude: accidentLongitude,
+                                                        accidentLatitude: accidentLatitude,
+                                                        helperLatitude: String(location.coords.latitude),
+                                                        helperLongitude: String(location.coords.longitude),
+                                                        timeOut: new Date(),
+                                                    },
+                                                })
+                                            );
+                                            onNotification();
+                                        }
                                     },
-                                })
+                                },
+                            ]);
+                        } else {
+                            Alert.alert(
+                                'Unfinished accident',
+                                'The Accidents has not yet been confirmed complete by the requester',
+                                [
+                                    {
+                                        text: 'OK',
+                                        onPress: () => console.log('OK'),
+                                    },
+                                ]
                             );
-                            onNotification();
                         }
                     },
-                },
-            ]);
+                })
+            );
         } else {
-            Alert.alert('Unfinished accident', 'The Accidents has not yet been confirmed complete by the requester', [
-                {
-                    text: 'OK',
-                    onPress: () => console.log('OK'),
-                },
-            ]);
+            console.log('');
         }
     };
     const onDeleteHelper = () => {

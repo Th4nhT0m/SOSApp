@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, RefreshControl, View } from 'react-native';
 import { DoneAllIcon, phoneIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition, useSocket } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
@@ -23,17 +23,18 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             accidentsActions.getAllAccidents({
                 onGetAccident: (value) => {
                     setAccident(value.results);
+                    console.log(value.results);
                 },
             })
         );
-        if (socket) {
-            const { accident: data } = socket;
-            if (data) {
-                console.log(data);
-                setAccident((prevState) => ({ ...prevState, data }));
-            }
-        }
-    }, [dispatch, socket]);
+        // if (socket) {
+        //     const { accident: data } = socket;
+        //     if (data) {
+        //         console.log(data);
+        //         setAccident((prevState) => ({ ...prevState, data }));
+        //     }
+        // }
+    }, [dispatch]);
 
     let notifies: Accidents[] = accident.map((pops) => ({
         id: pops.id,
@@ -103,13 +104,24 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 helperLongitude: String(location.coords.longitude),
                             })
                         );
-                        // socket.disconnect();
+                        if (accident) {
+                            dispatch(
+                                accidentsActions.getAccidentByID({
+                                    data: id,
+                                    onCreateAccident: (value) => {
+                                        console.log(value);
+                                    },
+                                })
+                            );
+                        } else {
+                            console.log('Don');
+                        }
+
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Notification',
                                 params: { screen: 'DetailProgress' },
                             });
-                        // notifies = [];
                     }
                 },
             },
@@ -127,15 +139,18 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             return 0;
         }
     };
-
-    // const onDetailProgress = (): void => {
-    //     navigation &&
-    //         navigation.navigate('Home', {
-    //             screen: 'Notification',
-    //             params: { screen: 'DetailProgress' },
-    //         });
-    //     console.log('Susses');
-    // };
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(
+            accidentsActions.getAllAccidents({
+                onGetAccident: (value) => {
+                    setAccident(value.results);
+                    setRefreshing(false);
+                },
+            })
+        );
+    }, [dispatch]);
 
     const triggerCall = (inputValue: string | undefined) => {
         const args = {
@@ -205,6 +220,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 data={notifies}
                 numColumns={1}
                 renderItem={renderNotifies}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />
         </View>
     );
