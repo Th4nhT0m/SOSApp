@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Alert, Dimensions, ListRenderItemInfo, RefreshControl, View } from 'react-native';
 import { DoneAllIcon, phoneIcon } from '../../components/Icons';
@@ -10,6 +10,7 @@ import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
 // @ts-ignore
 import call from 'react-native-phone-call';
+
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
@@ -82,6 +83,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             };
         });
 
+    // const handleLoadMore = () => {
+    //     setCurrentPage(currentPage + 1);
+    // };
+
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
@@ -139,6 +144,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             return 0;
         }
     };
+
     const [refreshing, setRefreshing] = React.useState(false);
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -205,6 +211,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         </Card>
     );
 
+    // const renderLoader = () => {
+    //     return (
+    //         <View style={styles.loaderStyle}>
+    //             <ActivityIndicator size="large" color="#aaa" />
+    //         </View>
+    //     );
+    // };
+
     return (
         <View style={styles.container}>
             <View style={styles.orContainer}>
@@ -214,6 +228,16 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 </Text>
                 <Divider style={styles.divider} />
             </View>
+
+            {/*<FlatList*/}
+            {/*    style={styles.notifyList}*/}
+            {/*    data={notifies}*/}
+            {/*    numColumns={1}*/}
+            {/*    renderItem={renderNotifies}*/}
+            {/*    keyExtractor={(item, index) => index.toString()}*/}
+            {/*    ListFooterComponent={renderLoader}*/}
+            {/*    onEndReached={handleLoadMore}*/}
+            {/*/>*/}
 
             <List
                 contentContainerStyle={styles.notifyList}
@@ -269,6 +293,11 @@ const themedStyles = StyleService.create({
     list: {
         marginTop: 30,
     },
+    headerContainer: {
+        minHeight: 20,
+        paddingHorizontal: 16,
+        backgroundColor: '#20b2aa',
+    },
     itemFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -292,6 +321,10 @@ const themedStyles = StyleService.create({
     iconPhone: {
         paddingHorizontal: 0,
         left: 4,
+    },
+    loaderStyle: {
+        marginVertical: 16,
+        alignItems: 'center',
     },
 });
 

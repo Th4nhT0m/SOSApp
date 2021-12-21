@@ -5,9 +5,10 @@ import React from 'react';
 import MapDirectionsViewComponent from '../../../components/form-map/map-directions-view.component';
 import { HelperAction } from '../../../actions/helper-actions';
 import { accidentsActions } from '../../../actions/accidents-ations';
-
-// import { io } from 'socket.io-client';
 const window = Dimensions.get('window');
+import { TouchableOpacity } from 'react-native-gesture-handler';
+// @ts-ignore
+import call from 'react-native-phone-call';
 
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
@@ -105,6 +106,15 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
             console.log('');
         }
     };
+
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
+
     const onDeleteHelper = () => {
         Alert.alert('Confirm Cancel', 'You have cancel?', [
             {
@@ -151,6 +161,10 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 source={require('./assets/10637879451606261172-128.png')}
                 style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
+
+            <TouchableOpacity style={styles.layoutPhone} onPress={() => triggerCall(getNumber)}>
+                <Image source={require('./assets/phone.png')} style={{ height: 50, width: 50 }} />
+            </TouchableOpacity>
 
             <MapDirectionsViewComponent
                 style={styles.maps}

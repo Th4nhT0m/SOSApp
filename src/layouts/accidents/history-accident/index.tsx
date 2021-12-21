@@ -4,7 +4,6 @@ import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 import { Accidents } from '../../../services/requests/types';
-import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
 import moment from 'moment';
 import { HelperAction } from '../../../actions/helper-actions';

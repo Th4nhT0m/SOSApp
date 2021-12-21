@@ -14,6 +14,7 @@ interface AccidentSocket {
     onCreateAccident: (data: Accidents) => void;
     data: AccidentsProps;
 }
+
 const createUrgent = createAsyncThunk<Accidents, AccidentSocket>('accidents/Urgent', async (props) => {
     const response = await AccidentsRequest.creatUrgentAccident(props.data);
     props.onCreateAccident(response);
@@ -37,6 +38,7 @@ const getHistoryAccident = createAsyncThunk('getHistoryAccident', async () => {
     await AppStorage.setItem(USER_INFO, response);
     return response;
 });
+
 const patchAllAccident = createAsyncThunk(
     'patchAccident',
     async ({ id, props }: { id: string; props: AccidentsPatch }) => {

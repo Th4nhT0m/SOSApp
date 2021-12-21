@@ -73,7 +73,6 @@ const helperSlice = createSlice({
             state.dateList = action.payload;
         });
 
-        // Change 1
         builder.addCase(HelperAction.getHelperByIDAccident.pending, (state) => {
             state.isLoading = true;
         });
@@ -82,7 +81,6 @@ const helperSlice = createSlice({
             state.dateList = action.payload;
         });
 
-        // change
         builder.addCase(HelperAction.getAllHelper.pending, (state) => {
             state.isLoading = true;
         });

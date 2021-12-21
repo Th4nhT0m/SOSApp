@@ -103,32 +103,23 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
         onRegister: function (token: any) {
             console.log('TOKEN:', token);
         },
-
-        // (required) Called when a remote is received or opened, or local notification is opened
         onNotification: function (notification: { finish: (arg0: any) => void }) {
             console.log('NOTIFICATION:', notification);
         },
-
-        // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+//        onAction: function (notification: { action: any }) {
         onAction: (notification) => {
             console.log('ACTION:', notification.action);
             console.log('NOTIFICATION:', notification);
         },
-
-        // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
         onRegistrationError: function (err: { message: any }) {
             console.error(err.message, err);
         },
-
-        // IOS ONLY (optional): default: all - Permissions to register.
         permissions: {
             alert: true,
             badge: true,
             sound: true,
         },
-
         popInitialNotification: true,
-
         /**
          * (optional) default: true
          * - Specified if permissions (ios) and token (android and ios) will requested or not,

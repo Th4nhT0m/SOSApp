@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import { Button, StyleService } from '@ui-kitten/components';
 import { useAppSelector } from '../../../services/hooks';
 import MapView, { MapViewProps as MVProps, Marker } from 'react-native-maps';
@@ -28,6 +28,7 @@ const DetailAccidentProgress = (
         },
     ]);
     const GOOGLE_API_KEY = 'AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE';
+
     return (
         <View style={styles.container}>
             <Button />
