@@ -24,3 +24,5 @@ export const handbookIcon = (props?: IconProps) => <Icon {...props} name="book-o
 export const UtilitiesIcon = (props?: IconProps) => <Icon {...props} name="archive-outline" />;
 
 export const phoneIcon = (props?: IconProps) => <Icon {...props} name="phone-call-outline" />;
+
+export const reload = (props?: IconProps) => <Icon {...props} name="refresh-outline" />;

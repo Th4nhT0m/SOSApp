@@ -94,10 +94,28 @@ export const useWatchLocation = (options = {}) => {
     return { location, cancelLocationWatch, error };
 };
 export const useSocket = () => {
-    const socket = io('http://192.168.1.6:3000');
-    socket.on('connect', () => {
-        console.log('Connect Socket and ID : ' + socket.id);
-    });
+    let result = useAppSelector((state) => state.users.currentUser?.id);
+    const socket =
+        result?.length > 0
+            ? io('http://192.168.1.6:3000', {
+                  reconnectionDelayMax: 3000,
+                  auth: {
+                      token: result,
+                  },
+              })
+            : undefined;
+    const [helpers, setHelper] = useState();
+    const [accident, setAccident] = useState();
+    if (socket) {
+        socket.on('getHelp', (data) => {
+            setHelper(data);
+        });
+        socket.on('getAccidents', (data) => {
+            setAccident(data);
+        });
+    }
+    useEffect(() => {}, [helpers, accident]);
+    return { socket, helpers, accident };
 };
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

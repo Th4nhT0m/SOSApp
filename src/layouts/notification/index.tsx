@@ -1,36 +1,43 @@
 import React, { useState } from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
-import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, RefreshControl, View } from 'react-native';
 import { DoneAllIcon, phoneIcon } from '../../components/Icons';
-import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition, useSocket } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
 import getDistance from 'geolib/es/getPreciseDistance';
 import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
+// @ts-ignore
 import call from 'react-native-phone-call';
-import { io } from 'socket.io-client';
+
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-    const socket = io('http://192.168.1.9:3000');
-    // const [accident, setAccident] = useState([]);
-    // const [currentPage, setCurrentPage] = useState(1);
-    const setAccidents = useAppSelector((state) => state.accidents.dateList);
-    const getUser = useAppSelector((state) => state.users.currentUser.id);
-    const nullAccident: Accidents[] = [];
-    const [acc, setAcc] = React.useState(nullAccident);
-
+    const socket = useSocket();
+    const getUser = useAppSelector((state) => state.users.currentUser);
+    const [accident, setAccident] = React.useState<Accidents[]>([]);
     React.useEffect(() => {
-        socket.emit('forceDisconnect');
-        dispatch(accidentsActions.getAllAccidents());
-        setAcc(setAccidents.results);
-        // socket.emit('stop', getUser);
-    }, [dispatch]);
+        dispatch(
+            accidentsActions.getAllAccidents({
+                onGetAccident: (value) => {
+                    setAccident(value.results);
+                    console.log(value.results);
+                },
+            })
+        );
+        if (socket) {
+            const { accident: data } = socket;
+            if (data) {
+                console.log(data);
+                setAccident((prevState) => ({ ...prevState, data }));
+            }
+        }
+    }, [dispatch, socket]);
 
-    let notifies: Accidents[] = acc.map((pops) => ({
+    let notifies: Accidents[] = accident.map((pops) => ({
         id: pops.id,
         nameAccident: pops.nameAccident,
         description: pops.description,
@@ -46,7 +53,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     notifies = notifies
         .filter(function (item) {
-            return item.status === 'Waiting' && item.created_by?.id !== getUser;
+            return item.status === 'Waiting' && item.created_by !== getUser;
         })
         .map(function ({
             id,
@@ -95,20 +102,31 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                         dispatch(
                             HelperAction.createHelper({
                                 accident: id,
-                                user: getUser,
+                                user: getUser.id,
                                 accidentLatitude: latitude,
                                 accidentLongitude: longitude,
                                 helperLatitude: String(location.coords.latitude),
                                 helperLongitude: String(location.coords.longitude),
                             })
                         );
-                        socket.disconnect();
+                        if (accident) {
+                            dispatch(
+                                accidentsActions.getAccidentByID({
+                                    data: id,
+                                    onCreateAccident: (value) => {
+                                        console.log(value);
+                                    },
+                                })
+                            );
+                        } else {
+                            console.log('Don');
+                        }
+
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Notification',
                                 params: { screen: 'DetailProgress' },
                             });
-                        // notifies = [];
                     }
                 },
             },
@@ -126,6 +144,19 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             return 0;
         }
     };
+
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(
+            accidentsActions.getAllAccidents({
+                onGetAccident: (value) => {
+                    setAccident(value.results);
+                    setRefreshing(false);
+                },
+            })
+        );
+    }, [dispatch]);
 
     const triggerCall = (inputValue: string | undefined) => {
         const args = {
@@ -208,7 +239,13 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             {/*    onEndReached={handleLoadMore}*/}
             {/*/>*/}
 
-            <List style={styles.notifyList} data={notifies} numColumns={1} renderItem={renderNotifies} />
+            <List
+                contentContainerStyle={styles.notifyList}
+                data={notifies}
+                numColumns={1}
+                renderItem={renderNotifies}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            />
         </View>
     );
 };

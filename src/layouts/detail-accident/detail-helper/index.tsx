@@ -5,18 +5,18 @@ import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image, Platform } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
-import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
+import Sound from 'react-native-sound';
+import { io } from 'socket.io-client';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const styles = useStyleSheet(themedStyles);
     const { location } = useCurrentGPSPosition();
-
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     const socket = io('http://192.168.1.6:3000');
@@ -46,7 +46,42 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         });
 
         return unsubscribe;
-    }, [dispatch, socket]);
+    }, [dispatch, getAccidents, socket]);
+
+  
+   React.useEffect(() => {
+        messaging()
+            .getToken(firebase.app().options.messagingSenderId)
+            .then((token) => {
+                console.log('token', token);
+            });
+
+        const unsubscribe = messaging().onMessage(async (remoteMsg) => {
+            const changeId = Math.random().toString(36).substring(7);
+            createChannels(changeId);
+            handleNotification(changeId, {
+                bigImage: remoteMsg.notification?.android?.imageUrl,
+                title: remoteMsg.notification?.title,
+                message: remoteMsg.notification?.body,
+                subText: remoteMsg.data?.subtitle,
+            });
+            console.log('remoteMsg', remoteMsg);
+        });
+
+        messaging().setBackgroundMessageHandler(async (remoteMsg) => {
+            console.log('remoteMsg Backgroup', remoteMsg);
+        });
+
+        return unsubscribe;
+    }, []);
+  
+  
+    //}, [dispatch, socket]); -->
+    // }, [dispatch, getAccidents]);
+    // React.useEffect(() => {
+    //     start();
+    // }, []);
+
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -242,7 +277,6 @@ const themedStyles = StyleService.create({
         alignItems: 'center',
     },
     itemFooter: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,
