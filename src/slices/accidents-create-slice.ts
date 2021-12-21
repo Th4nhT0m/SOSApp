@@ -49,7 +49,6 @@ const accidentsSlice = createSlice({
             state.dataGet = action.payload;
         });
 
-        // change ---
         builder.addCase(accidentsActions.getAllAccidents.pending, (state) => {
             state.isLoading = true;
         });
@@ -66,7 +65,6 @@ const accidentsSlice = createSlice({
             state.dateList = action.payload;
         });
 
-        // change
         builder.addCase(accidentsActions.createUrgent.pending, (state) => {
             state.isLoading = true;
         });

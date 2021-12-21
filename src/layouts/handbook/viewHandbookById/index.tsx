@@ -52,7 +52,7 @@ const ViewHandbookById = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <Image
-                source={{ uri: getDateHandbook.icons }}
+                source={{ uri: getDateHandbook.icon }}
                 style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 30 }}
             />
 
@@ -98,7 +98,6 @@ const themedStyles = StyleService.create({
     divide: {
         flex: 1,
         marginTop: 20,
-        //  backgroundColor: '#20b2aa',
     },
     orLabel: {
         marginHorizontal: 15,

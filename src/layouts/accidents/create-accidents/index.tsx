@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { KeyboardAvoidingView } from '../../auth/sign-in/extra/3rd-party';
-
 import * as yup from 'yup';
 import { Button, Divider, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Image, View } from 'react-native';
@@ -18,6 +16,7 @@ const accidentsSchema = yup.object().shape({
     nameAccident: yup.string().required('Name Accidents is required'),
     description: yup.string().required('Description is required'),
 });
+
 const initValues: AccidentsProps = {
     nameAccident: '',
     description: '',
@@ -83,10 +82,12 @@ const CreateAccidents = ({ navigation }: any): React.ReactElement => {
                     Back
                 </Button>
             </View>
+
             <Image
                 source={require('./assets/healthy-care.png')}
                 style={{ width: 120, height: 120, alignSelf: 'center', marginTop: 15 }}
             />
+
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h3">

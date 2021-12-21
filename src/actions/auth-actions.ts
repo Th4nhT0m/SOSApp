@@ -1,18 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthRequest } from '../services/requests/authentication';
-import {
-    ChangePassProps,
-    EditUserProps,
-    ForgotPasswordProps,
-    LoginInProps,
-    SignUpProps,
-} from '../services/requests/types';
+import { ChangePassProps, ForgotPasswordProps, LoginInProps, SignUpProps } from '../services/requests/types';
 import { LoginResponseProps, TokenProps } from '../slices/auth-slice';
 import { registerResponseProps } from '../slices/register-slice';
 import { AppStorage } from '../services/app-storage.service';
-import { UsersRequests } from '../services/requests/user';
 import { USER_INFO } from '../app/app-constants';
-import { userProps } from '../slices/users-slice';
 
 const login = createAsyncThunk('auth/login', async (props: LoginInProps) => {
     const response = await AuthRequest.obtainToken(props);

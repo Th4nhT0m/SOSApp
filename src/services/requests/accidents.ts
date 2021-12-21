@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios-config.service';
-import { UrgentProps, AccidentsProps, Accidents, AccidentsPatch } from './types';
+import { UrgentProps, AccidentsProps, AccidentsPatch } from './types';
 
 async function creatAccident(props: AccidentsProps) {
     return await axiosInstance.post('/accidents', { ...props }).catch((error) => {
@@ -11,6 +11,7 @@ async function creatUrgentAccident(props: UrgentProps) {
         return error;
     });
 }
+
 async function getAllAccident() {
     return await axiosInstance.get('/accidents').catch((error) => {
         return error;

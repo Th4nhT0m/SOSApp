@@ -13,6 +13,7 @@ const createUrgent = createAsyncThunk('accidents/Urgent', async (props: Accident
     const response = await AccidentsRequest.creatUrgentAccident(props);
     return response;
 });
+
 const getAllAccidents = createAsyncThunk('getAllAccidents', async () => {
     const response = await AccidentsRequest.getAllAccident();
     return response;
@@ -23,6 +24,7 @@ const getHistoryAccident = createAsyncThunk('getHistoryAccident', async () => {
     await AppStorage.setItem(USER_INFO, response);
     return response;
 });
+
 const patchAllAccident = createAsyncThunk(
     'patchAccident',
     async ({ id, props }: { id: string; props: AccidentsPatch }) => {

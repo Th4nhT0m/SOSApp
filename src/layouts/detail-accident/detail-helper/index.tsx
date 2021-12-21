@@ -2,12 +2,15 @@ import React from 'react';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
-import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image, Platform } from 'react-native';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import { io } from 'socket.io-client';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import PushNotification, { Importance } from 'react-native-push-notification';
+import messaging from '@react-native-firebase/messaging';
+import firebase from '@react-native-firebase/app';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
@@ -18,8 +21,31 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     const socket = io('http://192.168.1.6:3000');
     React.useEffect(() => {
-        socket.emit('forceDisconnect');
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
+
+        messaging()
+            .getToken(firebase.app().options.messagingSenderId)
+            .then((token) => {
+                console.log('token', token);
+            });
+
+        const unsubscribe = messaging().onMessage(async (remoteMsg) => {
+            const changeId = Math.random().toString(36).substring(7);
+            createChannels(changeId);
+            handleNotification(changeId, {
+                bigImage: remoteMsg.notification?.android?.imageUrl,
+                title: remoteMsg.notification?.title,
+                message: remoteMsg.notification?.body,
+                subText: remoteMsg.data?.subtitle,
+            });
+            console.log('remoteMsg', remoteMsg);
+        });
+
+        messaging().setBackgroundMessageHandler(async (remoteMsg) => {
+            console.log('remoteMsg Backgroup', remoteMsg);
+        });
+
+        return unsubscribe;
     }, [dispatch, socket]);
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
@@ -58,7 +84,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
-                        socket.emit('forceDisconnect');
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Dashboard',
@@ -74,6 +99,66 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const onCancel = () => {
         Torch.switchState(false);
         Vibration.cancel();
+    };
+
+    PushNotification.configure({
+        onRegister: function (token: any) {
+            console.log('TOKEN:', token);
+        },
+        onNotification: function (notification: { finish: (arg0: any) => void }) {
+            console.log('NOTIFICATION:', notification);
+        },
+        onAction: function (notification: { action: any }) {
+            console.log('ACTION:', notification.action);
+            console.log('NOTIFICATION:', notification);
+        },
+        onRegistrationError: function (err: { message: any }) {
+            console.error(err.message, err);
+        },
+        permissions: {
+            alert: true,
+            badge: true,
+            sound: true,
+        },
+        popInitialNotification: true,
+        /**
+         * (optional) default: true
+         * - Specified if permissions (ios) and token (android and ios) will requested or not,
+         * - if not, you must call PushNotificationsHandler.requestPermissions() later
+         * - if you are not using remote notification or do not have Firebase installed, use this:
+         *     requestPermissions: Platform.OS === 'ios'
+         */
+        requestPermissions: Platform.OS === 'ios',
+    });
+
+    const createChannels = (channelId: any) => {
+        PushNotification.createChannel({
+            channelId: channelId,
+            channelName: 'My channel',
+            channelDescription: 'A channel to categorise your notifications',
+            playSound: false,
+            soundName: 'default',
+            importance: Importance.HIGH,
+            vibrate: true,
+        });
+    };
+
+    const handleNotification = (channelId: any, options: any) => {
+        PushNotification.localNotification({
+            channelId: channelId,
+            bigText: options.subText,
+            largeIcon: options.bigImage,
+            largeIconUrl: options.bigImage,
+            bigLargeIcon: options.bigImage,
+            bigPictureUrl: options.bigImage,
+            bigLargeIconUrl: options.bigImage,
+            color: options.color,
+            vibrate: true,
+            vibration: 300,
+            priority: 'high',
+            title: options.title,
+            message: options.message,
+        });
     };
 
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (

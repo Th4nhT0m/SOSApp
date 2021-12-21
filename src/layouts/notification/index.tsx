@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Alert, Dimensions, ListRenderItemInfo, View } from 'react-native';
 import { DoneAllIcon, phoneIcon } from '../../components/Icons';
@@ -10,15 +10,14 @@ import { HelperAction } from '../../actions/helper-actions';
 import moment from 'moment';
 import call from 'react-native-phone-call';
 import { io } from 'socket.io-client';
-import { ArrowForwardIconOutLineLeftSide } from '../handbook/viewHandbookById/axtra/incons';
 
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
-
-    const socket = io('http://192.168.1.6:3000');
-
+    const socket = io('http://192.168.1.9:3000');
+    // const [accident, setAccident] = useState([]);
+    // const [currentPage, setCurrentPage] = useState(1);
     const setAccidents = useAppSelector((state) => state.accidents.dateList);
     const getUser = useAppSelector((state) => state.users.currentUser.id);
     const nullAccident: Accidents[] = [];
@@ -27,12 +26,9 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     React.useEffect(() => {
         socket.emit('forceDisconnect');
         dispatch(accidentsActions.getAllAccidents());
-        // socket.on('getAccidents', (Accidents) => {
-        //     console.log(Accidents);
-        // });
         setAcc(setAccidents.results);
         // socket.emit('stop', getUser);
-    }, [dispatch, socket]);
+    }, [dispatch]);
 
     let notifies: Accidents[] = acc.map((pops) => ({
         id: pops.id,
@@ -80,6 +76,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             };
         });
 
+    // const handleLoadMore = () => {
+    //     setCurrentPage(currentPage + 1);
+    // };
+
     const setOnAccidents = (id: string, latitude: string, longitude: string): void => {
         Alert.alert('Confirm help', 'Do you want to help?', [
             {
@@ -102,7 +102,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                                 helperLongitude: String(location.coords.longitude),
                             })
                         );
-                        socket.emit('forceDisconnect');
+                        socket.disconnect();
                         navigation &&
                             navigation.navigate('Home', {
                                 screen: 'Notification',
@@ -127,41 +127,12 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         }
     };
 
-    const onDetailProgress = (): void => {
-        navigation &&
-            navigation.navigate('Home', {
-                screen: 'Notification',
-                params: { screen: 'DetailProgress' },
-            });
-        console.log('Susses');
-    };
-
     const triggerCall = (inputValue: string | undefined) => {
         const args = {
             number: inputValue,
             prompt: true,
         };
         call(args).catch(console.error);
-    };
-
-    const onBackButtonPress = (): void => {
-        Alert.alert('Confirm help', 'Are you sure you got help?', [
-            {
-                text: 'Cancel',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-            },
-            {
-                text: 'OK',
-                onPress: () => {
-                    navigation &&
-                        navigation.navigate('Home', {
-                            screen: 'Dashboard',
-                            params: { screen: 'DashboardHome' },
-                        });
-                },
-            },
-        ]);
     };
 
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
@@ -209,6 +180,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         </Card>
     );
 
+    // const renderLoader = () => {
+    //     return (
+    //         <View style={styles.loaderStyle}>
+    //             <ActivityIndicator size="large" color="#aaa" />
+    //         </View>
+    //     );
+    // };
+
     return (
         <View style={styles.container}>
             <View style={styles.orContainer}>
@@ -219,12 +198,17 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 <Divider style={styles.divider} />
             </View>
 
-            <List
-                contentContainerStyle={styles.notifyList}
-                data={notifies}
-                numColumns={1}
-                renderItem={renderNotifies}
-            />
+            {/*<FlatList*/}
+            {/*    style={styles.notifyList}*/}
+            {/*    data={notifies}*/}
+            {/*    numColumns={1}*/}
+            {/*    renderItem={renderNotifies}*/}
+            {/*    keyExtractor={(item, index) => index.toString()}*/}
+            {/*    ListFooterComponent={renderLoader}*/}
+            {/*    onEndReached={handleLoadMore}*/}
+            {/*/>*/}
+
+            <List style={styles.notifyList} data={notifies} numColumns={1} renderItem={renderNotifies} />
         </View>
     );
 };
@@ -272,6 +256,11 @@ const themedStyles = StyleService.create({
     list: {
         marginTop: 30,
     },
+    headerContainer: {
+        minHeight: 20,
+        paddingHorizontal: 16,
+        backgroundColor: '#20b2aa',
+    },
     itemFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -295,6 +284,10 @@ const themedStyles = StyleService.create({
     iconPhone: {
         paddingHorizontal: 0,
         left: 4,
+    },
+    loaderStyle: {
+        marginVertical: 16,
+        alignItems: 'center',
     },
 });
 

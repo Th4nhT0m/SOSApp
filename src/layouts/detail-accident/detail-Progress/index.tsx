@@ -4,11 +4,12 @@ import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../
 import React from 'react';
 import MapDirectionsViewComponent from '../../../components/form-map/map-directions-view.component';
 import { HelperAction } from '../../../actions/helper-actions';
-import { handbookActions } from '../../../actions/handbook-actions';
 import { accidentsActions } from '../../../actions/accidents-ations';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { io } from 'socket.io-client';
 const window = Dimensions.get('window');
+import { TouchableOpacity } from 'react-native-gesture-handler';
+// @ts-ignore
+import call from 'react-native-phone-call';
 
 const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
@@ -18,6 +19,9 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
     const getLatitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLatitude);
     const getLongitude = useAppSelector((state) => state.helpersReducer.dateGet.accidentLongitude);
     const getAccident = useAppSelector((state) => state.helpersReducer.dateGet.accident);
+
+    const getNumber = useAppSelector((state) => state.accidents.dataGet.created_by?.numberPhone);
+
     const socket = io('http://192.168.1.6:3000');
 
     React.useEffect(() => {
@@ -66,6 +70,15 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
             },
         ]);
     };
+
+    const triggerCall = (inputValue: string | undefined) => {
+        const args = {
+            number: inputValue,
+            prompt: true,
+        };
+        call(args).catch(console.error);
+    };
+
     const onDeleteHelper = () => {
         Alert.alert('Confirm Cancel', 'You have cancel?', [
             {
@@ -111,6 +124,10 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 source={require('./assets/10637879451606261172-128.png')}
                 style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
+
+            <TouchableOpacity style={styles.layoutPhone} onPress={() => triggerCall(getNumber)}>
+                <Image source={require('./assets/phone.png')} style={{ height: 50, width: 50 }} />
+            </TouchableOpacity>
 
             <MapDirectionsViewComponent
                 style={styles.maps}
