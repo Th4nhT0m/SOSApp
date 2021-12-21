@@ -27,14 +27,14 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 },
             })
         );
-        // if (socket) {
-        //     const { accident: data } = socket;
-        //     if (data) {
-        //         console.log(data);
-        //         setAccident((prevState) => ({ ...prevState, data }));
-        //     }
-        // }
-    }, [dispatch]);
+        if (socket) {
+            const { accident: data } = socket;
+            if (data) {
+                console.log(data);
+                setAccident((prevState) => ({ ...prevState, data }));
+            }
+        }
+    }, [dispatch, socket]);
 
     let notifies: Accidents[] = accident.map((pops) => ({
         id: pops.id,
