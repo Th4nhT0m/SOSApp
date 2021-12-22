@@ -119,7 +119,7 @@ export interface HelpProps {
 
 //Patch Helper
 export interface PatchHelper {
-    status: string;
+    status?: string;
     timeOut: Date;
     helperLatitude: string;
     helperLongitude: string;

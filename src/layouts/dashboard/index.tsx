@@ -106,7 +106,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
         onNotification: function (notification: { finish: (arg0: any) => void }) {
             console.log('NOTIFICATION:', notification);
         },
-//        onAction: function (notification: { action: any }) {
+        //        onAction: function (notification: { action: any }) {
         onAction: (notification) => {
             console.log('ACTION:', notification.action);
             console.log('NOTIFICATION:', notification);

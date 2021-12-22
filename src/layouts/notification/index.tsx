@@ -11,7 +11,6 @@ import moment from 'moment';
 // @ts-ignore
 import call from 'react-native-phone-call';
 
-
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
@@ -158,14 +157,6 @@ const Notification = ({ navigation }: any): React.ReactElement => {
         );
     }, [dispatch]);
 
-    const triggerCall = (inputValue: string | undefined) => {
-        const args = {
-            number: inputValue,
-            prompt: true,
-        };
-        call(args).catch(console.error);
-    };
-
     const renderItemFooter = (info: ListRenderItemInfo<Accidents>): React.ReactElement => (
         <View style={styles.itemFooter}>
             <Text category="s1">
@@ -195,17 +186,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <Divider />
-            <View style={styles.itemPhone}>
-                <Text category="s1">{'Name accident: ' + info.item?.nameAccident}</Text>
-                <Button
-                    style={styles.iconPhone}
-                    size="small"
-                    accessoryLeft={phoneIcon}
-                    onPress={() => {
-                        triggerCall(info.item.created_by?.numberPhone);
-                    }}
-                />
-            </View>
+            <Text category="s1">{'Name accident: ' + info.item?.nameAccident}</Text>
             <Text style={{ marginTop: 15 }}>{'Status: ' + info.item?.status}</Text>
             <Text style={{ marginTop: 15 }}>{'Description: ' + info.item?.description}</Text>
         </Card>

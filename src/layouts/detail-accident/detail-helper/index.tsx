@@ -10,7 +10,6 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
-import Sound from 'react-native-sound';
 import { io } from 'socket.io-client';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
@@ -22,34 +21,9 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const socket = io('http://192.168.1.6:3000');
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
-
-        messaging()
-            .getToken(firebase.app().options.messagingSenderId)
-            .then((token) => {
-                console.log('token', token);
-            });
-
-        const unsubscribe = messaging().onMessage(async (remoteMsg) => {
-            const changeId = Math.random().toString(36).substring(7);
-            createChannels(changeId);
-            handleNotification(changeId, {
-                bigImage: remoteMsg.notification?.android?.imageUrl,
-                title: remoteMsg.notification?.title,
-                message: remoteMsg.notification?.body,
-                subText: remoteMsg.data?.subtitle,
-            });
-            console.log('remoteMsg', remoteMsg);
-        });
-
-        messaging().setBackgroundMessageHandler(async (remoteMsg) => {
-            console.log('remoteMsg Backgroup', remoteMsg);
-        });
-
-        return unsubscribe;
     }, [dispatch, getAccidents, socket]);
 
-  
-   React.useEffect(() => {
+    React.useEffect(() => {
         messaging()
             .getToken(firebase.app().options.messagingSenderId)
             .then((token) => {
@@ -74,14 +48,12 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
 
         return unsubscribe;
     }, []);
-  
-  
+
     //}, [dispatch, socket]); -->
     // }, [dispatch, getAccidents]);
     // React.useEffect(() => {
     //     start();
     // }, []);
-
 
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
@@ -143,7 +115,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         onNotification: function (notification: { finish: (arg0: any) => void }) {
             console.log('NOTIFICATION:', notification);
         },
-        onAction: function (notification: { action: any }) {
+        onAction: (notification) => {
             console.log('ACTION:', notification.action);
             console.log('NOTIFICATION:', notification);
         },
@@ -167,15 +139,20 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     });
 
     const createChannels = (channelId: any) => {
-        PushNotification.createChannel({
-            channelId: channelId,
-            channelName: 'My channel',
-            channelDescription: 'A channel to categorise your notifications',
-            playSound: false,
-            soundName: 'default',
-            importance: Importance.HIGH,
-            vibrate: true,
-        });
+        PushNotification.createChannel(
+            {
+                channelId: channelId,
+                channelName: 'My channel',
+                channelDescription: 'A channel to categorise your notifications',
+                playSound: false,
+                soundName: 'default',
+                importance: Importance.HIGH,
+                vibrate: true,
+            },
+            () => {
+                console.log('created channel');
+            }
+        );
     };
 
     const handleNotification = (channelId: any, options: any) => {
@@ -201,6 +178,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
             <Text>{'Status: ' + info.item?.status}</Text>
             <Text>{'Number phone: ' + info.item?.user?.numberPhone}</Text>
+            <Text>{'ViTri: ' + info.item?.helperLatitude + ' :' + info.item?.helperLongitude}</Text>
         </Card>
     );
 

@@ -2,15 +2,16 @@ import React from 'react';
 import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Dimensions, ListRenderItemInfo, View, Image } from 'react-native';
 import { Helpers } from '../../../services/requests/types';
-import { useAppDispatch, useAppSelector } from '../../../services/hooks';
+import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { HelperAction } from '../../../actions/helper-actions';
 import moment from 'moment';
 import { ArrowForwardIconOutLineLeftSide } from '../../users/view-user/extra/icons';
+import getDistance from 'geolib/es/getPreciseDistance';
 
 const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themeStyles);
     const dispatch = useAppDispatch();
-
+    const { location } = useCurrentGPSPosition();
     const setHistoryHelper = useAppSelector((state) => state.helpersReducer.dateList);
 
     React.useEffect(() => {
@@ -31,6 +32,17 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
         createTime: props.createTime,
         UpdateTime: props.UpdateTime,
     }));
+    const calculateDistance = (latitude: string, longitude: string) => {
+        if (location !== undefined) {
+            const dis = getDistance(
+                { latitude: Number(latitude), longitude: Number(longitude) },
+                { latitude: location.coords.latitude, longitude: location.coords.longitude }
+            );
+            return dis;
+        } else {
+            return 0;
+        }
+    };
 
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.list}>
@@ -38,6 +50,11 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
                 <View>
                     <Text category="h6">{'Name accident: ' + info.item?.content}</Text>
                     <Text category="p2">{'Status: ' + info.item?.status}</Text>
+                    <Text category="p2">
+                        {'Distance: ' +
+                            calculateDistance(info.item?.helperLatitude, info.item?.helperLongitude) / 1000 +
+                            ' KM'}
+                    </Text>
                 </View>
             </View>
             <Divider />
