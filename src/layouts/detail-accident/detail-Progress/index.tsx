@@ -56,7 +56,6 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 accidentsActions.getAccidentByID({
                     data: accident,
                     onCreateAccident: (value) => {
-                        console.log(value.status);
                         params = value.status;
                         if (params === 'Success') {
                             Alert.alert('Confirm Complete', 'You have completed?', [
@@ -98,7 +97,7 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 })
             );
         } else {
-            console.log('');
+            console.log('No Data');
         }
     };
 

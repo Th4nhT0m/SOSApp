@@ -62,7 +62,6 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                         longitude: String(location.coords.longitude),
                     },
                     onCreateAccident: (values) => {
-                        console.log(values);
                         socket.emit('sentAccidents', { ...values });
                     },
                 })
@@ -91,7 +90,6 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                 alert('error' + error.message);
                 return;
             }
-            console.log('start');
             sound1.play(() => {
                 sound1.release();
             });
@@ -179,7 +177,7 @@ const Dashboard = ({ navigation }: any): React.ReactElement => {
                 height={window.height * 0.78}
                 loadingEnabled={true}
                 showsMyLocationButton={true}
-                onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}
+                // onUserLocationChange={(event) => console.log(event.nativeEvent.coordinate)}
             />
 
             <View style={[themedStyles.formContainer, themedStyles.container]}>

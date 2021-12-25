@@ -3,7 +3,7 @@ import { UsersRequests } from '../services/requests/user';
 import { UserInfo } from '../models/user-info.model';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
-import { EditUserProps } from '../services/requests/types';
+import { AccidentsPatch, EditUserProps } from '../services/requests/types';
 import { userProps } from '../slices/users-slice';
 
 const getCurrentUserInfo = createAsyncThunk('users/currentInfo', async () => {
@@ -40,10 +40,17 @@ const getViewUserInfoById = createAsyncThunk('getViewUserInfoById', async (id: s
     return response;
 });
 
+/// ranking
+const updateRank = createAsyncThunk('/users/updateRank', async ({ id, ranking }: { id: string; ranking: number }) => {
+    const response = await UsersRequests.patchRatingUserById(id, ranking);
+    return response;
+});
+
 export const usersActions = {
     getCurrentUserInfo,
     getUserInfo,
     getViewUserInfo,
     updateUserInfo,
     getViewUserInfoById,
+    updateRank,
 };
