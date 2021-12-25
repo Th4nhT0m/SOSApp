@@ -107,12 +107,21 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
         }
     };
 
-    const triggerCall = (inputValue: string | undefined) => {
-        const args = {
-            number: inputValue,
-            prompt: true,
-        };
-        call(args).catch(console.error);
+    const triggerCall = () => {
+        if (accident) {
+            dispatch(
+                accidentsActions.getAccidentByID({
+                    data: accident,
+                    onCreateAccident: (value) => {
+                        const args = {
+                            number: value.created_by?.numberPhone,
+                            prompt: true,
+                        };
+                        call(args).catch(console.error);
+                    },
+                })
+            );
+        }
     };
 
     const onDeleteHelper = () => {
@@ -162,7 +171,7 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
             />
 
-            <TouchableOpacity style={styles.layoutPhone} onPress={() => triggerCall(getNumber)}>
+            <TouchableOpacity style={styles.layoutPhone} onPress={() => triggerCall()}>
                 <Image source={require('./assets/phone.png')} style={{ height: 50, width: 50 }} />
             </TouchableOpacity>
 
@@ -173,6 +182,21 @@ const DetailAccidentProgress = ({ navigation }: any): React.ReactElement => {
                 showsMyLocationButton={true}
                 endLatitude={Number(accidentLatitude)}
                 endLongitude={Number(accidentLongitude)}
+                onUserLocationChange={() => {
+                    if (location !== undefined) {
+                        dispatch(
+                            HelperAction.patchHelper({
+                                id: id,
+                                props: {
+                                    accidentLongitude: accidentLongitude,
+                                    accidentLatitude: accidentLatitude,
+                                    helperLatitude: String(location.coords.latitude),
+                                    helperLongitude: String(location.coords.longitude),
+                                },
+                            })
+                        );
+                    }
+                }}
             />
 
             <View style={styles.Button}>

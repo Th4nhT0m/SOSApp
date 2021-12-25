@@ -9,6 +9,7 @@ const createHelper = createAsyncThunk('createHelper', async (props: HelpProps) =
 
 const patchHelper = createAsyncThunk('patchHelper', async ({ id, props }: { id: string; props: PatchHelper }) => {
     const response = await helperRequest.patchHelper(id, props);
+
     return response;
 });
 const deleteHelper = createAsyncThunk('deleteHelper', async (id: string) => {

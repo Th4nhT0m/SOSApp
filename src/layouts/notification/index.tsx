@@ -11,13 +11,12 @@ import moment from 'moment';
 // @ts-ignore
 import call from 'react-native-phone-call';
 
-
 const Notification = ({ navigation }: any): React.ReactElement => {
     const styles = useStyleSheet(themedStyles);
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
     const socket = useSocket();
-    const getUser = useAppSelector((state) => state.users.currentUser);
+    const getUser = useAppSelector((state) => state.users.currentUser.id);
     const [accident, setAccident] = React.useState<Accidents[]>([]);
     React.useEffect(() => {
         dispatch(
@@ -53,7 +52,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     notifies = notifies
         .filter(function (item) {
-            return item.status === 'Waiting' && item.created_by !== getUser;
+            return item.status === 'Waiting' && item.created_by?.id !== getUser;
         })
         .map(function ({
             id,
@@ -102,7 +101,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                         dispatch(
                             HelperAction.createHelper({
                                 accident: id,
-                                user: getUser.id,
+                                user: getUser,
                                 accidentLatitude: latitude,
                                 accidentLongitude: longitude,
                                 helperLatitude: String(location.coords.latitude),
@@ -122,11 +121,13 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                             console.log('Don');
                         }
 
-                        navigation &&
-                            navigation.navigate('Home', {
-                                screen: 'Notification',
-                                params: { screen: 'DetailProgress' },
-                            });
+                        setTimeout(() => {
+                            navigation &&
+                                navigation.navigate('Home', {
+                                    screen: 'Notification',
+                                    params: { screen: 'DetailProgress' },
+                                });
+                        }, 3000);
                     }
                 },
             },
