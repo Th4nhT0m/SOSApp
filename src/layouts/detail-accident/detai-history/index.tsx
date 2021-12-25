@@ -32,17 +32,7 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
         createTime: props.createTime,
         UpdateTime: props.UpdateTime,
     }));
-    const calculateDistance = (latitude: string, longitude: string) => {
-        if (location !== undefined) {
-            const dis = getDistance(
-                { latitude: Number(latitude), longitude: Number(longitude) },
-                { latitude: location.coords.latitude, longitude: location.coords.longitude }
-            );
-            return dis;
-        } else {
-            return 0;
-        }
-    };
+
 
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.list}>
@@ -50,11 +40,6 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
                 <View>
                     <Text category="h6">{'Name accident: ' + info.item?.content}</Text>
                     <Text category="p2">{'Status: ' + info.item?.status}</Text>
-                    <Text category="p2">
-                        {'Distance: ' +
-                            calculateDistance(info.item?.helperLatitude, info.item?.helperLongitude) / 1000 +
-                            ' KM'}
-                    </Text>
                 </View>
             </View>
             <Divider />

@@ -26,10 +26,15 @@ async function getViewUserById(id: string) {
     return await axiosInstance.get(`/users/${id}`).catch((error) => error);
 }
 
+async function patchRatingUserById(id: string, ranking: number) {
+    return await axiosInstance.patch(`/users/updateRank/${id}`, { ranking }).catch((error) => error);
+}
+
 export const UsersRequests = {
     getCurrentUserInfo,
     getUserInfo,
     updateUserInfo,
     getViewUserInfo,
     getViewUserById,
+    patchRatingUserById,
 };

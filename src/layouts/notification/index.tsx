@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Avatar, Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { Alert, Dimensions, ListRenderItemInfo, RefreshControl, View } from 'react-native';
-import { DoneAllIcon, phoneIcon } from '../../components/Icons';
+import { DoneAllIcon } from '../../components/Icons';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition, useSocket } from '../../services/hooks';
 import { accidentsActions } from '../../actions/accidents-ations';
 import { Accidents } from '../../services/requests/types';
@@ -16,21 +16,19 @@ const Notification = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
     const { location } = useCurrentGPSPosition();
     const socket = useSocket();
-    const getUser = useAppSelector((state) => state.users.currentUser);
+    const getUser = useAppSelector((state) => state.users.currentUser.id);
     const [accident, setAccident] = React.useState<Accidents[]>([]);
     React.useEffect(() => {
         dispatch(
             accidentsActions.getAllAccidents({
                 onGetAccident: (value) => {
                     setAccident(value.results);
-                    console.log(value.results);
                 },
             })
         );
         if (socket) {
             const { accident: data } = socket;
             if (data) {
-                console.log(data);
                 setAccident((prevState) => ({ ...prevState, data }));
             }
         }
@@ -52,7 +50,7 @@ const Notification = ({ navigation }: any): React.ReactElement => {
 
     notifies = notifies
         .filter(function (item) {
-            return item.status === 'Waiting' && item.created_by !== getUser;
+            return item.status === 'Waiting' && item.created_by?.id !== getUser;
         })
         .map(function ({
             id,
@@ -97,11 +95,10 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                 text: 'OK',
                 onPress: () => {
                     if (location != undefined) {
-                        console.log(latitude + ' ' + longitude);
                         dispatch(
                             HelperAction.createHelper({
                                 accident: id,
-                                user: getUser.id,
+                                user: getUser,
                                 accidentLatitude: latitude,
                                 accidentLongitude: longitude,
                                 helperLatitude: String(location.coords.latitude),
@@ -120,12 +117,13 @@ const Notification = ({ navigation }: any): React.ReactElement => {
                         } else {
                             console.log('Don');
                         }
-
-                        navigation &&
-                            navigation.navigate('Home', {
-                                screen: 'Notification',
-                                params: { screen: 'DetailProgress' },
-                            });
+                        setTimeout(() => {
+                            navigation &&
+                                navigation.navigate('Home', {
+                                    screen: 'Notification',
+                                    params: { screen: 'DetailProgress' },
+                                });
+                        }, 2500);
                     }
                 },
             },

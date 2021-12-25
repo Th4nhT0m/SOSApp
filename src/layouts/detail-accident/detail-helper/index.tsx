@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
 import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image, Platform } from 'react-native';
-import { Button, Card, Divider, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Button, Card, Divider, List, Modal, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import Torch from 'react-native-torch';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -11,6 +11,9 @@ import PushNotification, { Importance } from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
 import { io } from 'socket.io-client';
+import getDistance from 'geolib/es/getPreciseDistance';
+import { AirbnbRating, Rating } from 'react-native-ratings';
+import { usersActions } from '../../../actions/user-actions';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const dispatch = useAppDispatch();
@@ -19,6 +22,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     const getAccidents = useAppSelector((state) => state.accidents.dataGet.id);
     const setHelper = useAppSelector((state) => state.helpersReducer.dateList);
     const socket = io('http://192.168.1.6:3000');
+    const [modalVisible, setModalVisible] = useState(false);
     React.useEffect(() => {
         dispatch(HelperAction.getHelperByIDAccident(getAccidents));
     }, [dispatch, getAccidents, socket]);
@@ -91,12 +95,8 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                                 },
                             })
                         );
-                        navigation &&
-                            navigation.navigate('Home', {
-                                screen: 'Dashboard',
-                                params: { screen: 'DashboardHome' },
-                            });
                     }
+                    setModalVisible(!modalVisible);
                     onCancel();
                 },
             },
@@ -172,13 +172,41 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             message: options.message,
         });
     };
+    const ratingCompleted = (rating: number, id: string | undefined) => {
+        console.log('Rating is: ' + rating + ' && Id : ' + id);
+        if (id !== undefined) {
+            dispatch(usersActions.updateRank({ ranking: rating, id: id }));
+        }
+    };
+
+    const calculateDistance = (latitude: string, longitude: string) => {
+        if (location !== undefined) {
+            const dis = getDistance(
+                { latitude: Number(latitude), longitude: Number(longitude) },
+                { latitude: location.coords.latitude, longitude: location.coords.longitude }
+            );
+            return dis;
+        } else {
+            return 0;
+        }
+    };
 
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.itemFooter}>
             <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
             <Text>{'Status: ' + info.item?.status}</Text>
             <Text>{'Number phone: ' + info.item?.user?.numberPhone}</Text>
-            <Text>{'ViTri: ' + info.item?.helperLatitude + ' :' + info.item?.helperLongitude}</Text>
+            <Text>
+                {'Distance: ' + calculateDistance(info.item?.helperLatitude, info.item?.helperLongitude) / 1000 + ' KM'}
+            </Text>
+        </Card>
+    );
+
+    const renderRating = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
+        <Card style={styles.itemRating}>
+            <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
+            <Divider />
+            <AirbnbRating showRating onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)} />
         </Card>
     );
 
@@ -196,7 +224,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                 source={require('./assets/listHelper.png')}
                 style={{ width: 120, height: 120, alignSelf: 'center', marginTop: -400 }}
             />
-
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
                 <Text style={styles.orLabel} category="h3">
@@ -211,6 +238,31 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                     Helped
                 </Button>
             </View>
+            <Modal visible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
+                <View style={styles.orRatingStyles}>
+                    <Divider style={styles.divider} />
+                    <Text style={styles.orLabel} category="h3">
+                        Helper Rating
+                    </Text>
+                    <Divider style={styles.divider} />
+                </View>
+                <Divider />
+                <Card disabled={true}>
+                    <List data={helpers} renderItem={renderRating} />
+                    <Button
+                        onPress={() => {
+                            setModalVisible(false);
+                            navigation &&
+                                navigation.navigate('Home', {
+                                    screen: 'Dashboard',
+                                    params: { screen: 'DashboardHome' },
+                                });
+                        }}
+                    >
+                        DISMISS
+                    </Button>
+                </Card>
+            </Modal>
         </View>
     );
 };
@@ -225,6 +277,13 @@ const themedStyles = StyleService.create({
         alignItems: 'center',
         marginHorizontal: 15,
         marginTop: 15,
+    },
+    orRatingStyles: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 15,
+        marginTop: 15,
+        background: 'darkgrey',
     },
     divider: {
         flex: 1,
@@ -258,6 +317,12 @@ const themedStyles = StyleService.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,
+    },
+    itemRating: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 20,
+        background: 'Green',
     },
     iconButton: {
         paddingHorizontal: 0,
