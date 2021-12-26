@@ -33,7 +33,6 @@ const ViewHistoryHelper = ({ navigation }: any): React.ReactElement => {
         UpdateTime: props.UpdateTime,
     }));
 
-
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <Card style={styles.list}>
             <View style={styles.itemHeader}>

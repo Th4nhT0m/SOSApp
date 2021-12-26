@@ -12,7 +12,7 @@ import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
 import { io } from 'socket.io-client';
 import getDistance from 'geolib/es/getPreciseDistance';
-import { AirbnbRating, Rating } from 'react-native-ratings';
+import { AirbnbRating } from 'react-native-ratings';
 import { usersActions } from '../../../actions/user-actions';
 
 const DetailHelper = ({ navigation }: any): React.ReactElement => {
@@ -203,11 +203,16 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     );
 
     const renderRating = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
-        <Card style={styles.itemRating}>
-            <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
-            <Divider />
-            <AirbnbRating showRating onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)} />
-        </Card>
+        <View style={styles.listRank}>
+            <Card style={styles.itemRating}>
+                <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
+                <Divider style={styles.listRank} />
+                <AirbnbRating
+                    showRating
+                    onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)}
+                />
+            </Card>
+        </View>
     );
 
     return (
@@ -233,22 +238,25 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <List contentContainerStyle={styles.notifyList} data={helpers} numColumns={1} renderItem={renderNotifies} />
+
             <View>
                 <Button style={styles.updateButton} size="large" onPress={onBackPress}>
                     Helped
                 </Button>
             </View>
+
             <Modal visible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
-                <View style={styles.orRatingStyles}>
-                    <Divider style={styles.divider} />
-                    <Text style={styles.orLabel} category="h3">
-                        Helper Rating
-                    </Text>
-                    <Divider style={styles.divider} />
-                </View>
-                <Divider />
-                <Card disabled={true}>
-                    <List data={helpers} renderItem={renderRating} />
+                <Card style={styles.backGroundRank} disabled={true}>
+                    <View style={styles.orRatingStyles}>
+                        <Divider style={styles.divider} />
+                        <Text style={styles.orLabel} category="h3">
+                            Helper Rating
+                        </Text>
+                        <Divider style={styles.divider} />
+                    </View>
+
+                    <List style={styles.listRank} data={helpers} renderItem={renderRating} />
+
                     <Button
                         onPress={() => {
                             setModalVisible(false);
@@ -298,6 +306,7 @@ const themedStyles = StyleService.create({
     notifyList: {
         paddingHorizontal: 8,
         paddingVertical: 16,
+        marginTop: 20,
     },
     productItem: {
         flex: 1,
@@ -314,15 +323,13 @@ const themedStyles = StyleService.create({
         alignItems: 'center',
     },
     itemFooter: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 20,
+        marginTop: 10,
     },
     itemRating: {
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,
-        background: 'Green',
+        marginTop: 20,
     },
     iconButton: {
         paddingHorizontal: 0,
@@ -339,6 +346,12 @@ const themedStyles = StyleService.create({
         borderRadius: 30,
         marginLeft: 330,
     },
+    listRank: {
+        marginTop: 20,
+    },
+    backGroundRank: {
+        backgroundColor: '#66cdaa',
+        background: '#66cdaa',
+    },
 });
-
 export default DetailHelper;
