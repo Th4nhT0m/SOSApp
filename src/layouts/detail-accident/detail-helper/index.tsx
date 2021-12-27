@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
-import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image, Platform } from 'react-native';
+import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image, Platform, RefreshControl } from 'react-native';
 import { Button, Card, Divider, List, Modal, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import Torch from 'react-native-torch';
@@ -75,32 +75,36 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
     }));
 
     const onBackPress = () => {
-        Alert.alert('Confirm help', 'Are you sure you got help?', [
-            {
-                text: 'Cancel',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-            },
-            {
-                text: 'OK',
-                onPress: () => {
-                    if (location !== undefined) {
-                        dispatch(
-                            accidentsActions.patchAllAccident({
-                                id: getAccidents,
-                                props: {
-                                    status: 'Success',
-                                    latitude: String(location.coords.latitude),
-                                    longitude: String(location.coords.longitude),
-                                },
-                            })
-                        );
-                    }
-                    setModalVisible(!modalVisible);
-                    onCancel();
+        if (modalVisible === false) {
+            Alert.alert('Confirm help', 'Are you sure you got help?', [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
                 },
-            },
-        ]);
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        if (location !== undefined) {
+                            dispatch(
+                                accidentsActions.patchAllAccident({
+                                    id: getAccidents,
+                                    props: {
+                                        status: 'Success',
+                                        latitude: String(location.coords.latitude),
+                                        longitude: String(location.coords.longitude),
+                                    },
+                                })
+                            );
+                        }
+                        setModalVisible(!modalVisible);
+                        onCancel();
+                    },
+                },
+            ]);
+        } else {
+            homePressHandler();
+        }
     };
 
     const onCancel = () => {
@@ -173,7 +177,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         });
     };
     const ratingCompleted = (rating: number, id: string | undefined) => {
-        console.log('Rating is: ' + rating + ' && Id : ' + id);
         if (id !== undefined) {
             dispatch(usersActions.updateRank({ ranking: rating, id: id }));
         }
@@ -190,93 +193,79 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             return 0;
         }
     };
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(HelperAction.getHelperByIDAccident(getAccidents));
+    }, [dispatch]);
 
     const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => {
         if (info.item?.user) {
             const km = calculateDistance(info.item.helperLatitude, info.item.helperLongitude) / 1000;
             return (
-                <Card style={styles.itemFooter}>
+                <Card style={{ marginVertical: 10 }}>
                     <Text>{'Name Helper: ' + info.item.user.name}</Text>
                     <Text>{'Status: ' + info.item.status}</Text>
                     <Text>{'Number phone: ' + info.item.user.numberPhone}</Text>
                     <Text>{'Counted helps: ' + info.item.user.countedHelps}</Text>
                     <Text>{`Distance: ${km} KM`}</Text>
-                    <AirbnbRating showRating defaultRating={info.item.user.ranking} isDisabled={true} />
+                    {modalVisible ? (
+                        <AirbnbRating>
+                            showRating onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)}
+                        </AirbnbRating>
+                    ) : (
+                        <Text>{'Rating: ' + info.item.user.ranking}</Text>
+                    )}
                 </Card>
             );
         }
         return <></>;
     };
 
-    const renderRating = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
-        <View style={styles.listRank}>
-            <Card style={styles.itemRating}>
-                <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
-                <Divider style={styles.listRank} />
-                <AirbnbRating
-                    showRating
-                    onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)}
-                />
-            </Card>
-        </View>
-    );
+    const homePressHandler = () => {
+        setModalVisible(false);
+        navigation &&
+            navigation.navigate('Home', {
+                screen: 'Dashboard',
+                params: { screen: 'DashboardHome' },
+            });
+    };
 
     return (
         <View style={styles.container}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.circle}>
-                <View>
-                    <TouchableOpacity style={styles.layoutCircle} onPress={onCancel}>
-                        <Image source={require('./assets/power-on.png')} style={{ height: 48, width: 48 }} />
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-
-            <Image
-                source={require('./assets/listHelper.png')}
-                style={{ width: 120, height: 120, alignSelf: 'center', marginTop: -400 }}
-            />
-            <View style={styles.orContainer}>
-                <Divider style={styles.divider} />
-                <Text style={styles.orLabel} category="h3">
-                    List Helper
-                </Text>
-                <Divider style={styles.divider} />
+            <View style={styles.circle}>
+                <TouchableOpacity onPress={onCancel}>
+                    <Image source={require('./assets/power-on.png')} style={{ height: 48, width: 48 }} />
+                </TouchableOpacity>
             </View>
 
-            <List contentContainerStyle={styles.notifyList} data={helpers} numColumns={1} renderItem={renderNotifies} />
+            <View
+                style={{
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 10,
+                }}
+            >
+                <Image source={require('./assets/listHelper.png')} style={{ width: 120, height: 120 }} />
+                <Text style={{ margin: 10 }} category="h3">
+                    List Helper
+                </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+                <List
+                    data={helpers}
+                    numColumns={1}
+                    renderItem={renderNotifies}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                />
+            </View>
 
-            <View>
-                <Button style={styles.updateButton} size="large" onPress={onBackPress}>
+            <View style={{ alignItems: 'center' }}>
+                <Button style={{ marginVertical: 20, width: '70%' }} size="large" onPress={onBackPress}>
                     Helped
                 </Button>
             </View>
-
-            <Modal visible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
-                <Card style={styles.backGroundRank} disabled={true}>
-                    <View style={styles.orRatingStyles}>
-                        <Divider style={styles.divider} />
-                        <Text style={styles.orLabel} category="h3">
-                            Helper Rating
-                        </Text>
-                        <Divider style={styles.divider} />
-                    </View>
-
-                    <List style={styles.listRank} data={helpers} renderItem={renderRating} />
-
-                    <Button
-                        onPress={() => {
-                            setModalVisible(false);
-                            navigation &&
-                                navigation.navigate('Home', {
-                                    screen: 'Dashboard',
-                                    params: { screen: 'DashboardHome' },
-                                });
-                        }}
-                    >
-                        DISMISS
-                    </Button>
-                </Card>
-            </Modal>
         </View>
     );
 };
@@ -286,78 +275,10 @@ const themedStyles = StyleService.create({
         flex: 1,
         backgroundColor: 'background-basic-color-2',
     },
-    orContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: 15,
-        marginTop: 15,
-    },
-    orRatingStyles: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: 15,
-        marginTop: 15,
-        background: 'darkgrey',
-    },
-    divider: {
-        flex: 1,
-    },
-    updateButton: {
-        marginVertical: 24,
-        marginHorizontal: 16,
-    },
-    orLabel: {
-        marginHorizontal: 8,
-    },
-    notifyList: {
-        paddingHorizontal: 8,
-        paddingVertical: 16,
-        marginTop: 20,
-    },
-    productItem: {
-        flex: 1,
-        margin: 8,
-        maxWidth: Dimensions.get('window').width / 2 - 24,
-        backgroundColor: 'background-basic-color-1',
-    },
-    itemHeader: {
-        height: 80,
-        padding: 20,
-        marginBottom: 10,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-    },
-    itemFooter: {
-        marginTop: 10,
-    },
-    itemRating: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 20,
-        marginTop: 20,
-    },
-    iconButton: {
-        paddingHorizontal: 0,
-    },
     circle: {
-        marginRight: -40,
-        marginTop: 10,
-    },
-    layoutCircle: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 70,
-        width: 70,
-        borderRadius: 30,
-        marginLeft: 330,
-    },
-    listRank: {
-        marginTop: 20,
-    },
-    backGroundRank: {
-        backgroundColor: '#66cdaa',
-        background: '#66cdaa',
+        position: 'absolute',
+        top: 10,
+        right: 20,
     },
 });
 export default DetailHelper;
