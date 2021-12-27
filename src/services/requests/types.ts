@@ -1,5 +1,5 @@
 // authentication
-import { number } from "yup";
+import { number } from 'yup';
 
 export interface ObtainTokenProps {
     email: string;
