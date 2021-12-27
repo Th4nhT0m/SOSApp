@@ -31,6 +31,8 @@ const initialState: Props = {
             name: '',
             address: '',
             numberPhone: '',
+            ranking: 0,
+            countedHelps: 0,
         },
         status: '',
         accident: '',

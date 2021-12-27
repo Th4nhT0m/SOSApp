@@ -1,4 +1,6 @@
 export interface UserInfo {
+    ranking: number;
+    countedHelps: number;
     email: string;
     identityCard: string;
     numberPhone: string;

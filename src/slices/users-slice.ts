@@ -11,6 +11,7 @@ const initialState = {
     isLoading: false,
     data: {},
     currentUser: {
+        ranking: 0,
         email: '',
         dob: '',
         address: '',
@@ -30,6 +31,7 @@ const usersSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
+        //++
         builder.addCase(usersActions.getCurrentUserInfo.pending, (state) => {
             state.isLoading = true;
         });
@@ -46,7 +48,7 @@ const usersSlice = createSlice({
             state.data = action.payload;
         });
 
-        // view user
+        // view user +++
         builder.addCase(usersActions.getViewUserInfo.pending, (state) => {
             state.isLoading = true;
         });

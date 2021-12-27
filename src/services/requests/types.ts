@@ -1,4 +1,6 @@
 // authentication
+import { number } from "yup";
+
 export interface ObtainTokenProps {
     email: string;
     password: string;
@@ -61,7 +63,7 @@ export interface Accidents {
     accidentType: string;
     latitude: string;
     longitude: string;
-    created_by?: HelperByUserId;
+    created_by?: AccidentByUserId;
     modified_by?: string;
     createTime?: Date;
     UpdateTime?: Date;
@@ -98,6 +100,7 @@ export interface EditUserProps {
     identityCard: string;
     numberPhone: string;
     address: string;
+    ranking: number;
     //sex: string;
     // dob: Date;
 }
@@ -127,12 +130,22 @@ export interface PatchHelper {
     accidentLongitude: string;
 }
 
+//get Accident
+export interface AccidentByUserId {
+    id: string;
+    numberPhone: string;
+    name: string;
+    address: string;
+}
+
 //get Helper
 export interface HelperByUserId {
     id: string;
     numberPhone: string;
     name: string;
     address: string;
+    ranking?: number;
+    countedHelps?: number;
 }
 
 //get Helper
