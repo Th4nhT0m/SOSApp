@@ -191,16 +191,22 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         }
     };
 
-    const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
-        <Card style={styles.itemFooter}>
-            <Text>{'Name Helper: ' + info.item?.user?.name}</Text>
-            <Text>{'Status: ' + info.item?.status}</Text>
-            <Text>{'Number phone: ' + info.item?.user?.numberPhone}</Text>
-            <Text>
-                {'Distance: ' + calculateDistance(info.item?.helperLatitude, info.item?.helperLongitude) / 1000 + ' KM'}
-            </Text>
-        </Card>
-    );
+    const renderNotifies = (info: ListRenderItemInfo<Helpers>): React.ReactElement => {
+        if (info.item?.user) {
+            const km = calculateDistance(info.item.helperLatitude, info.item.helperLongitude) / 1000;
+            return (
+                <Card style={styles.itemFooter}>
+                    <Text>{'Name Helper: ' + info.item.user.name}</Text>
+                    <Text>{'Status: ' + info.item.status}</Text>
+                    <Text>{'Number phone: ' + info.item.user.numberPhone}</Text>
+                    <Text>{'Counted helps: ' + info.item.user.countedHelps}</Text>
+                    <AirbnbRating showRating defaultRating={info.item.user.ranking} isDisabled={true} />
+                    <Text>{`Distance: ${km} KM`}</Text>
+                </Card>
+            );
+        }
+        return <></>;
+    };
 
     const renderRating = (info: ListRenderItemInfo<Helpers>): React.ReactElement => (
         <View style={styles.listRank}>

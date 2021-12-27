@@ -14,6 +14,7 @@ import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ArrowForwardIconOutLineLeftSide } from './extra/icons';
 import InputField from '../../../components/form-inputs/input-field';
 import DatePicker from '../../../components/form-inputs/date-picker';
+import { AirbnbRating } from 'react-native-ratings';
 
 const updateUserSchema = yup.object().shape({
     name: yup.string().required('Name is required').typeError('Invalid name'),
@@ -30,6 +31,7 @@ const initValues: EditUserProps = {
     identityCard: '',
     numberPhone: '',
     address: '',
+    ranking: 0,
 };
 
 const ViewUser = ({ navigation }: any): React.ReactElement => {
@@ -56,6 +58,7 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
         identityCard: updateUser.currentUser.identityCard,
         numberPhone: updateUser.currentUser.numberPhone,
         address: updateUser.currentUser.address,
+        ranking: updateUser.currentUser.ranking,
     };
 
     // const onSignUpButtonPress = (values: EditUserProps): void => {
@@ -113,15 +116,19 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
 
             <Image
                 source={require('./assets/changeIf.png')}
-                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 20 }}
+                style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 40 }}
             />
 
             <View style={styles.orContainer}>
                 <Divider style={styles.divider} />
-                <Text style={styles.orLabel} category="h5">
+                <Text style={styles.orLabel} category="h3">
                     Change information
                 </Text>
                 <Divider style={styles.divider} />
+            </View>
+
+            <View>
+                <AirbnbRating showRating defaultRating={setDataUser.ranking} isDisabled={true} />
             </View>
 
             <View style={[styles.container, styles.formContainer]}>

@@ -3,7 +3,7 @@ import { UsersRequests } from '../services/requests/user';
 import { UserInfo } from '../models/user-info.model';
 import { AppStorage } from '../services/app-storage.service';
 import { USER_INFO } from '../app/app-constants';
-import { AccidentsPatch, EditUserProps } from '../services/requests/types';
+import { EditUserProps } from '../services/requests/types';
 import { userProps } from '../slices/users-slice';
 
 const getCurrentUserInfo = createAsyncThunk('users/currentInfo', async () => {
