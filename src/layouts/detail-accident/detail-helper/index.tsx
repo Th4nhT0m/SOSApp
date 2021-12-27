@@ -200,8 +200,8 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                     <Text>{'Status: ' + info.item.status}</Text>
                     <Text>{'Number phone: ' + info.item.user.numberPhone}</Text>
                     <Text>{'Counted helps: ' + info.item.user.countedHelps}</Text>
-                    <AirbnbRating showRating defaultRating={info.item.user.ranking} isDisabled={true} />
                     <Text>{`Distance: ${km} KM`}</Text>
+                    <AirbnbRating showRating defaultRating={info.item.user.ranking} isDisabled={true} />
                 </Card>
             );
         }
