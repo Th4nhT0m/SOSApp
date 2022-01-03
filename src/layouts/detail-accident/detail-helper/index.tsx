@@ -211,7 +211,10 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
             const km = calculateDistance(info.item.helperLatitude, info.item.helperLongitude) / 1000;
             return (
                 <Card style={{ marginVertical: 10 }}>
-                    <Text>{'Name Helper: ' + info.item.user.name}</Text>
+                    <View style={styles.itemFooter}>
+                        <AirbnbRating size={15} showRating defaultRating={info.item.user.ranking} isDisabled={true} />
+                    </View>
+                    <Text>{'Name: ' + info.item.user.name}</Text>
                     <Text>{'Status: ' + info.item.status}</Text>
                     <Text>{'Number phone: ' + info.item.user.numberPhone}</Text>
                     <Text>{'Counted helps: ' + info.item.user.countedHelps}</Text>
@@ -219,6 +222,7 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                     {modalVisible ? (
                         <AirbnbRating
                             showRating
+                            defaultRating={3}
                             onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)}
                         />
                     ) : (
@@ -287,6 +291,10 @@ const themedStyles = StyleService.create({
         position: 'absolute',
         top: 10,
         right: 20,
+    },
+    itemFooter: {
+        marginLeft: 300,
+        marginTop: -100,
     },
 });
 export default DetailHelper;

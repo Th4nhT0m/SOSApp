@@ -46,7 +46,9 @@ const SignIn = ({ navigation }: any): React.ReactElement => {
         <KeyboardAvoidingView style={styles.container}>
             <ImageOverlay style={styles.container} source={require('../sign-up/assets/unnamed.png')}>
                 <View style={styles.headerContainer}>
+
                     {/*<LottieView source={require('./assets/iconn.json')} autoPlay loop />*/}
+
                 </View>
 
                 <View style={styles.formContainer}>
