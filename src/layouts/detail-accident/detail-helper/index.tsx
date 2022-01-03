@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector, useCurrentGPSPosition } from '../../../services/hooks';
 import { Helpers } from '../../../services/requests/types';
 import { HelperAction } from '../../../actions/helper-actions';
-import { Alert, Dimensions, ListRenderItemInfo, View, Vibration, Image, Platform, RefreshControl } from 'react-native';
-import { Button, Card, Divider, List, Modal, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
+import { Alert, ListRenderItemInfo, View, Vibration, Image, Platform, RefreshControl } from 'react-native';
+import { Button, Card, List, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { accidentsActions } from '../../../actions/accidents-ations';
 import Torch from 'react-native-torch';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
@@ -53,12 +53,6 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         return unsubscribe;
     }, []);
 
-    //}, [dispatch, socket]); -->
-    // }, [dispatch, getAccidents]);
-    // React.useEffect(() => {
-    //     start();
-    // }, []);
-
     const helpers: Helpers[] = setHelper.results.map((pops) => ({
         id: pops.id,
         status: pops.status,
@@ -99,6 +93,12 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                         }
                         setModalVisible(!modalVisible);
                         onCancel();
+                        Alert.alert('Rating', 'Rate the person who helped you', [
+                            {
+                                text: 'Okay',
+                                onPress: () => console.log('Cancel Pressed'),
+                            },
+                        ]);
                     },
                 },
             ]);
@@ -177,10 +177,17 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
         });
     };
     const ratingCompleted = (rating: number, id: string | undefined) => {
+        console.log(id + ' ranting' + rating);
         if (id !== undefined) {
             dispatch(usersActions.updateRank({ ranking: rating, id: id }));
         }
     };
+    // const ratingCompleted = (rating: number) => {
+    //     console.log(' ranting' + rating);
+    //     // if (id !== undefined) {
+    //     //     dispatch(usersActions.updateRank({ ranking: rating, id: id }));
+    //     // }
+    // };
 
     const calculateDistance = (latitude: string, longitude: string) => {
         if (location !== undefined) {
@@ -210,9 +217,10 @@ const DetailHelper = ({ navigation }: any): React.ReactElement => {
                     <Text>{'Counted helps: ' + info.item.user.countedHelps}</Text>
                     <Text>{`Distance: ${km} KM`}</Text>
                     {modalVisible ? (
-                        <AirbnbRating>
-                            showRating onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)}
-                        </AirbnbRating>
+                        <AirbnbRating
+                            showRating
+                            onFinishRating={(rating: number) => ratingCompleted(rating, info.item.user?.id)}
+                        />
                     ) : (
                         <Text>{'Rating: ' + info.item.user.ranking}</Text>
                     )}

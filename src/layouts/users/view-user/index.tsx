@@ -128,7 +128,6 @@ const ViewUser = ({ navigation }: any): React.ReactElement => {
             </View>
 
             <View>
-                <Text style={[styles.container, styles.formContainer]}>Rating</Text>
                 <AirbnbRating showRating defaultRating={setDataUser.ranking} isDisabled={true} />
             </View>
 
